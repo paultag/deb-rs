@@ -1,0 +1,50 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.rs"
+      - Cargo.toml
+      - Cargo.lock
+      - .github/workflows/cargo-clippy.yml
+  pull_request:
+    paths:
+      - "**.rs"
+      - Cargo.toml
+      - Cargo.lock
+      - .github/workflows/cargo-clippy.yml
+name: cargo clippy
+jobs:
+  cargoclippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        flags: [
+          "",
+          "--all-features",
+          "--no-default-features --features ''",
+          "--no-default-features --features 'sequoia'",
+          "--no-default-features --features 'serde'",
+          "--no-default-features --features 'chrono'",
+          "--no-default-features --features 'tokio'",
+          "--no-default-features --features 'hex'"
+        ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            clang \
+            llvm \
+            nettle-dev
+        shell: bash
+      - name: Run clippy
+        run: cargo clippy ${{ matrix.flags }} --tests -- -D warnings
+      - name: Cargo check --release
+        run: cargo check --release

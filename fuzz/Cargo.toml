@@ -1,0 +1,53 @@
+[package]
+name = "deb-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+
+[dependencies.deb]
+path = ".."
+features = ["serde"]
+
+# Prevent this from interfering with workspaces
+[workspace]
+members = ["."]
+
+[profile.release]
+debug = 1
+
+[[bin]]
+name = "fuzz_target_version"
+path = "fuzz_targets/fuzz_target_version.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_target_version_dpkg"
+path = "fuzz_targets/fuzz_target_version_dpkg.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_target_dependency"
+path = "fuzz_targets/fuzz_target_dependency.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_target_822"
+path = "fuzz_targets/fuzz_target_822.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_target_822_serde"
+path = "fuzz_targets/fuzz_target_822_serde.rs"
+test = false
+doc = false

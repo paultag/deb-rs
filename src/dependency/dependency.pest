@@ -1,0 +1,83 @@
+alpha = { 'a'..'z' | 'A'..'Z' }
+digit = { '0'..'9' }
+whitespace = { (" " | "\t")+ }
+
+package_name = { (alpha | digit | "-" | "_" | "." | "+")+ }
+
+build_profile_name = { (alpha | digit | "-" | "_" | "." | "+")+ }
+build_profile_constraint = { not? ~ whitespace* ~ build_profile_name }
+build_profile_constraints = {
+  "<" ~
+    whitespace* ~
+    build_profile_constraint ~
+    (
+      whitespace* ~
+      build_profile_constraint ~
+      whitespace*
+    )* ~
+    whitespace* ~
+  ">"
+}
+
+build_profile_restriction_formula = {
+    (whitespace* ~ build_profile_constraints ~ whitespace*)*
+}
+
+not = { "!" }
+
+arch_name = { (alpha | digit)+ }
+arch_constraint = { not? ~ arch_name }
+arch_constraints = {
+  "[" ~ arch_constraint ~ (whitespace* ~ arch_constraint ~ whitespace*)* ~ "]"
+}
+
+version = {
+  (alpha | digit | "." | "+" | "~" | "-" | ":")+
+}
+
+version_operator = {
+    "==" | "=" |
+    ">=" | ">>" |
+    "<=" | "<<"
+}
+
+version_constraint = {
+  "("
+    ~ whitespace* ~
+    version_operator
+    ~ whitespace* ~
+    version
+    ~ whitespace* ~
+  ")"
+}
+
+possibility = {
+  whitespace* ~
+  package_name ~ (":" ~ arch_name)? ~
+  whitespace* ~
+  (
+    whitespace* ~
+    (
+      version_constraint | arch_constraints | build_profile_constraints
+    ) ~
+    whitespace*
+  )* ~
+  whitespace*
+}
+
+relation = {
+  whitespace* ~
+  possibility ~ (whitespace* ~ "|" ~ whitespace* ~ possibility)*
+}
+
+dependency = {
+    SOI ~
+    (
+      relation ~
+      (
+        whitespace* ~ "," ~ whitespace* ~
+        relation
+      )*
+    )? ~
+    EOI
+}

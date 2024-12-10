@@ -1,0 +1,32 @@
+[package]
+name = "deb"
+version = "0.5.0"
+edition = "2021"
+authors = ["Paul Tagliamonte <paultag@debian.org>"]
+license = "MIT"
+homepage = "https://github.com/paultag/deb-rs"
+description = "Utilities for working with files and formats commonly found when working with Debian's project tooling, or infrastructure."
+
+[features]
+full = [
+  "chrono",
+  "hex",
+  "serde",
+  "sequoia",
+  "tokio"
+]
+chrono = ["dep:chrono"]
+hex = ["dep:hex"]
+serde = ["dep:serde"]
+sequoia = ["dep:sequoia-openpgp", "dep:anyhow"]
+tokio = ["dep:tokio"]
+
+[dependencies]
+anyhow = { version = "1.0", optional = true }
+chrono = { version = "0.4", optional = true, features = ["serde"] }
+hex = { version = "0.4", optional = true, features = ["serde"] }
+pest = "2.7"
+pest_derive = "2.7"
+sequoia-openpgp = { version = "1.21", optional = true }
+serde = { version = "1.0", optional = true, features = ["derive"] }
+tokio = { version = "1", features = ["io-util", "rt", "macros"], optional = true }

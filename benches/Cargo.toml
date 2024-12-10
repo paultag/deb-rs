@@ -1,0 +1,26 @@
+[package]
+name = "deb-benches"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+deb = { path = "../" }
+
+[dev-dependencies]
+criterion = { version = "0.3", features = ["html_reports"] }
+
+[[bench]]
+name = "version_parse"
+harness = false
+
+[[bench]]
+name = "version_to_string"
+harness = false
+
+[[bench]]
+name = "dependency"
+harness = false
+
+[[bench]]
+name = "paragraph"
+harness = false
