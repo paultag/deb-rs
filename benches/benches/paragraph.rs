@@ -56,7 +56,7 @@ Lorem-Ipsum:
  .
  Curabitur in augue aliquam, tempus turpis ut, gravida ex. Proin mattis hendrerit mauris sed
  lacinia. Donec urna est, lacinia non semper eleifend, egestas et arcu. Orci varius natoque
- penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque erat sem, egestas vel
+ penatibus et magnis dis parturient montes, nascetur ridiculous mus. Quisque erat sem, egestas vel
  bibendum sed, consectetur nec metus. Quisque vehicula eros quis augue consectetur varius. In
  bibendum lacinia diam eu pulvinar. Proin lobortis eros quam, at consequat turpis imperdiet at.
  Fusce a ipsum a sapien egestas vehicula. Suspendisse sit amet tempor velit, vehicula ullamcorper

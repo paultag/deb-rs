@@ -21,7 +21,7 @@
 use std::ops::Deref;
 
 /// Wrapper type around a `Vec<String>` which handles encoding and decoding
-/// a list of space seperated String values to and from a single String
+/// a list of space separated String values to and from a single String
 /// as seen throughout the `control` module.
 #[derive(Clone, Debug, PartialEq)]
 #[repr(transparent)]

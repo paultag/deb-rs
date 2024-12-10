@@ -75,7 +75,7 @@ impl std::fmt::Display for VersionOperator {
 /// [crate::dependency::Dependency].
 #[derive(Clone, Debug, PartialEq)]
 pub struct VersionConstraint {
-    /// Compairson to use when evaluating if a [crate::dependency::Possibility]
+    /// Comparison to use when evaluating if a [crate::dependency::Possibility]
     /// satisfies this constraint.
     pub operator: VersionOperator,
 

@@ -59,7 +59,7 @@ pub enum ChangesParseError {
 /// contains source, binaries and/or other files such as metadata about
 /// the build.
 ///
-/// These fiels are clearsigned with a specific Developer or buildd
+/// These fields are clearsigned with a specific Developer or buildd
 /// machine's OpenPGP key.
 ///
 /// There's a lot more information `deb-changes(5)`, and some of the

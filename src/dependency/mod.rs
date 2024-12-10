@@ -41,7 +41,7 @@
 //! This is a bit of a gotcha, since a lot of development control files
 //! contain `dpkg-substvars`, which will throw a parse error as of right
 //! now. There will likely have to be multiple ways in which a Dependency
-//! can be parsed and understood, but for the intial version of this module,
+//! can be parsed and understood, but for the initial version of this module,
 //! the [Dependency] must be free of `dpkg-substvar`s.
 //!
 //! ```

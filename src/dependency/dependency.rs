@@ -32,11 +32,11 @@ use std::str::FromStr;
 /// or in `apt` output.
 ///
 /// Each [Dependency] is comprised of a set of [Relation]s, which must all
-/// be satisifed in order for the [Dependency] to be satisfied. Each [Relation]
+/// be satisfied in order for the [Dependency] to be satisfied. Each [Relation]
 /// is effectively an `AND` operation.
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct Dependency {
-    /// Set of [Relation] values wich must *all* be satisfied in order for
+    /// Set of [Relation] values which must *all* be satisfied in order for
     /// the Dependency to be satisfied.
     pub relations: Vec<Relation>,
 }

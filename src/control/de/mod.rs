@@ -101,7 +101,7 @@ impl de::Error for Error {
     }
 }
 
-/// Deserialize the provided Debian-flavord RFC2822 data into the desired
+/// Deserialize the provided Debian-flavored RFC2822 data into the desired
 /// Rust type from a [std::io::Read].
 ///
 /// ```no_run
@@ -148,7 +148,7 @@ mod _tokio {
     use super::*;
     use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
 
-    /// Deserialize the provided Debian-flavord RFC2822 data into the desired
+    /// Deserialize the provided Debian-flavored RFC2822 data into the desired
     /// Rust type from a [tokio::io::AsyncRead].
     ///
     /// ```no_run
