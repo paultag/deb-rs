@@ -52,7 +52,7 @@
 use std::str::FromStr;
 
 /// Syscall API -- the kernel/operating system that the binary is targeted
-/// to run against. Using the term "Operating System" here can be ambigous,
+/// to run against. Using the term "Operating System" here can be ambiguous,
 /// as can "kernel", so this struct has an awkward, abet super specific
 /// name that is in line with the spec.
 ///

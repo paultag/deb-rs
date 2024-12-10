@@ -186,7 +186,7 @@ pub enum Architecture {
     /// Debian `x32` arch.
     X32,
 
-    /// Other Debain arch not covered by this enum at the time of its
+    /// Other Debian arch not covered by this enum at the time of its
     /// last update.
     Other(String),
 }

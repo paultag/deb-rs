@@ -46,7 +46,7 @@ pub enum ChangesParseError {
     InvalidHashLength,
 
     /// A hash contained in the Changes file contained invalid values, or
-    /// is otherwise a bad ASCII represntation of the digest.
+    /// is otherwise a bad ASCII representation of the digest.
     InvalidHash,
 
     /// A date wasn't able to be parsed from text or was otherwise

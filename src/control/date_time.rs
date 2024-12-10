@@ -44,7 +44,7 @@ impl Deref for DateTime2822 {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum DateTime2822ParseError {
     #[cfg(feature = "chrono")]
-    /// The provided [DateTime2822] had an invalid string represntation of
+    /// The provided [DateTime2822] had an invalid string representation of
     /// a date time.
     InvalidDate,
 }

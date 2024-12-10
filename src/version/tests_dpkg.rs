@@ -5,7 +5,7 @@
 //! not believe the version table at the bottom is copyrightable, but in
 //! the spirit of ensuring we have a clear division in case there's any licensing
 //! concerns -- this is in a separate file, and not shipped in builds using
-//! this libray.
+//! this library.
 
 #[cfg(test)]
 mod test {

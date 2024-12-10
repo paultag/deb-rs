@@ -34,7 +34,7 @@ use pest::iterators::Pair;
 /// [crate::dependency::Dependency].
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct Relation {
-    /// Set of [Possibility] values, any one of which satisifies the
+    /// Set of [Possibility] values, any one of which satisfies the
     /// the [Relation].
     pub possibilities: Vec<Possibility>,
 }

@@ -32,7 +32,7 @@
 //! This crate is under active development, and "soft launched". *Please do
 //! not post widely directing to this crate yet* -- the API shipped today is
 //! unstable, and is likely to change -- fairly significantly -- without much
-//! regard to very precisely following semver until it stabalizes.
+//! regard to very precisely following semver until it stabilizes.
 //!
 //! You're more than welcome to play with this and use it, but it's not
 //! something I would encourage load bearing infrastructure to be written
