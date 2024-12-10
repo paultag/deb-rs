@@ -7,6 +7,9 @@ license = "MIT"
 homepage = "https://github.com/paultag/deb-rs"
 description = "Utilities for working with files and formats commonly found when working with Debian's project tooling, or infrastructure."
 
+[package.metadata.docs.rs]
+all-features = true
+
 [features]
 full = [
   "chrono",
