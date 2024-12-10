@@ -44,7 +44,7 @@ pub enum BuildProfile {
     /// Extension namespace. Can be used whenever the maintainer of
     /// `$sourcepackage` agrees to the use. `$anything` must match the
     /// following regex `[a-z0-9-]+`.
-    Pkg((String, String)),
+    Pkg(String, String),
 
     /// Deprecated. Use a descriptive profile below or from the extension
     /// namespace instead. Must reduce `Build-Depends`. Must not be used
@@ -141,7 +141,7 @@ impl std::fmt::Display for BuildProfile {
         write!(f, "{}", match self {
             $( $bp => $name.to_owned(), )*
             Self::Unknown(v) => v.to_owned(),
-            Self::Pkg((source, anything)) => format!("pkg.{}.{}", source, anything),
+            Self::Pkg(source, anything) => format!("pkg.{}.{}", source, anything),
         })
     }
 }
@@ -159,7 +159,7 @@ impl FromStr for BuildProfile {
         if bp.starts_with("pkg.") {
             match bp.splitn(3, '.').collect::<Vec<_>>()[..] {
                 [_, package, anything] => {
-                    return Ok(Self::Pkg((package.to_owned(), anything.to_owned())))
+                    return Ok(Self::Pkg(package.to_owned(), anything.to_owned()))
                 }
                 _ => {
                     return Err(Error::InvalidPkgFormat)
@@ -233,7 +233,7 @@ mod test {
     #[test]
     fn test_pkg() {
         let bp: BuildProfile = "pkg.foo.bar".parse().unwrap();
-        assert_eq!(BuildProfile::Pkg(("foo".to_owned(), "bar".to_owned())), bp);
+        assert_eq!(BuildProfile::Pkg("foo".to_owned(), "bar".to_owned()), bp);
     }
 
     #[test]
