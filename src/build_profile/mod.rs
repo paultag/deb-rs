@@ -18,8 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-//! The `arch` module contains support for parsing Debian build profile
+//! The `build_profile` module contains support for parsing Debian build profile
 //! strings.
+//!
+//! A [BuildProfile] is used to assist with breaking complex package
+//! relationships, such as is the case with bootstrapping the Debian
+//! distribution, or cross-building.
+//!
+//! You can learn more about Build Profiles on the
+//! Debian [Wiki](https://wiki.debian.org/BuildProfileSpec).
+//!
+//! ```
+//! use deb::build_profile::BuildProfile;
+//!
+//! let bp: BuildProfile = "noudeb".parse().unwrap();
+//!
+//! assert_eq!(BuildProfile::NoUdeb, bp);
+//!
+//! // Prints "noudeb", unsuprisingly.
+//! println!("{}", bp);
+//! ```
 
 #[allow(clippy::module_inception)]
 mod build_profile;
