@@ -22,6 +22,6 @@ such as interacting with [control] files, parsing [dependency]
 relationships between Debian packages, parsing and ordering [version]
 numbers, or understanding Debian [architecture] strings.
 
-Docs can be found on [docs.rs](https://docs.rs/deb/latest/deb/),
+Docs can be found on [docs.rs](https://docs.rs/crate/deb/latest),
 and information about the latest release can be found on
 [crates.io](https://crates.io/crates/deb).
