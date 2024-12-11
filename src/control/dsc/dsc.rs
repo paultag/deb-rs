@@ -128,7 +128,7 @@ pub struct Dsc {
     pub homepage: String,
 
     /// Version Control information.
-    #[serde(flatten)]
+    #[cfg_attr(feature = "serde", serde(flatten))]
     pub vcs: Vcs,
 
     /// Website to view this package in Version Control.
