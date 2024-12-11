@@ -125,11 +125,11 @@ pub struct Dsc {
 
     /// The upstream project home page url.
     #[cfg_attr(feature = "serde", serde(rename = "Homepage"))]
-    pub homepage: String,
+    pub homepage: Option<String>,
 
     /// Version Control information.
     #[cfg_attr(feature = "serde", serde(flatten))]
-    pub vcs: Vcs,
+    pub vcs: Option<Vcs>,
 
     /// Website to view this package in Version Control.
     #[cfg_attr(feature = "serde", serde(rename = "Vcs-Browser"))]
