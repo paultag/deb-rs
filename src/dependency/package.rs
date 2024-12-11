@@ -24,20 +24,20 @@ use super::{
 use crate::architecture::Architecture;
 use pest::iterators::Pair;
 
-/// A [Possibility] is the lowest level of [crate::dependency::Dependency]
+/// A [Package] is the lowest level of [crate::dependency::Dependency]
 /// relationships -- a specific package which may be used to satisfy a
 /// requirement.
 ///
-/// There are a number of constraints which limit how this [Possibility]
+/// There are a number of constraints which limit how this [Package]
 /// may be considered. Those are parsed and exported as members of the
-/// [Possibility]. In order for a [Possibility] to be met, all the constraints
+/// [Package]. In order for a [Package] to be met, all the constraints
 /// which limit the consideration of the package must be met.
 ///
 /// In general, you're unlikely to be parsing these directly, instead
-/// you're likely going to see a [Possibility] by parsing a
+/// you're likely going to see a [Package] by parsing a
 /// [crate::dependency::Dependency].
 #[derive(Clone, Debug, PartialEq, Default)]
-pub struct Possibility {
+pub struct Package {
     /// Name of the package which may satisfy this particular Dependency
     /// relationship. In general, this would require the installation, but
     /// not always.
@@ -58,29 +58,29 @@ pub struct Possibility {
     pub arch: Option<Architecture>,
 
     /// This constraint limits the [crate::version::Version] of the package
-    /// which satisfies this [Possibility].
+    /// which satisfies this [Package].
     ///
-    /// If the version does not match the constraint, this [Possibility] does
-    /// not satisfy the [crate::dependency::Relation], and other [Possibility]
+    /// If the version does not match the constraint, this [Package] does
+    /// not satisfy the [crate::dependency::Relation], and other [Package]
     /// values must be considered.
     pub version_constraint: Option<VersionConstraint>,
 
     /// This constraint limits the host [Architecture] to only consider
-    /// this [Possibility] if the host [Architecture] matches the
+    /// this [Package] if the host [Architecture] matches the
     /// [ArchConstraints].
     ///
-    /// If the [Architecture] does not match the constraint, this [Possibility]
+    /// If the [Architecture] does not match the constraint, this [Package]
     /// does not satisfy the [crate::dependency::Relation], and other
-    /// [Possibility] values must be considered.
+    /// [Package] values must be considered.
     pub arch_constraints: Option<ArchConstraints>,
 
     /// This constraint limits the `build_profile` to only consider
-    /// this [Possibility] if the build build_profile configuration matches all
+    /// this [Package] if the build build_profile configuration matches all
     /// the provided [BuildProfileRestrictionFormula].
     ///
-    /// If the `build_profile` does not match the constraint, this [Possibility]
+    /// If the `build_profile` does not match the constraint, this [Package]
     /// does not satisfy the [crate::dependency::Relation], and other
-    /// [Possibility] values must be considered.
+    /// [Package] values must be considered.
     ///
     /// This is generally seen when bootstrapping Debian, and isn't commonly
     /// used by developers, unless their package is part of a particularly
@@ -89,7 +89,7 @@ pub struct Possibility {
     pub build_profile_restriction_formula: BuildProfileRestrictionFormula,
 }
 
-impl std::fmt::Display for Possibility {
+impl std::fmt::Display for Package {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         write!(f, "{}", self.name)?;
 
@@ -120,11 +120,11 @@ impl std::fmt::Display for Possibility {
     }
 }
 
-impl TryFrom<Pair<'_, Rule>> for Possibility {
+impl TryFrom<Pair<'_, Rule>> for Package {
     type Error = Error;
 
     fn try_from(token: Pair<'_, Rule>) -> Result<Self, Error> {
-        let mut ret = Possibility {
+        let mut ret = Package {
             ..Default::default()
         };
 
@@ -133,7 +133,7 @@ impl TryFrom<Pair<'_, Rule>> for Possibility {
                 Rule::package_name => ret.name = constraint.as_str().to_owned(),
                 Rule::arch_name => {
                     if ret.arch.is_some() {
-                        return Err(Error::InvalidPossibility);
+                        return Err(Error::InvalidPackage);
                     }
 
                     ret.arch = Some(constraint.as_str().to_owned().parse()?)

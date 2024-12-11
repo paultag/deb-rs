@@ -27,7 +27,7 @@ use pest::iterators::Pair;
 use pest::Parser;
 use std::str::FromStr;
 
-/// A [BuildProfileConstraint] limits a [crate::dependency::Possibility] to only be
+/// A [BuildProfileConstraint] limits a [crate::dependency::Package] to only be
 /// considered on a subset of all [BuildProfile] values. This can be expressed
 /// via negation (for instance `!nodoc` for "Everything except
 /// `nodoc`"), or providing the [BuildProfile] name (such as `build_profile1`).
@@ -38,7 +38,7 @@ pub struct BuildProfileConstraint {
     pub negated: bool,
 
     /// [BuildProfile] that is being constrained. Depending on `negated` this
-    /// may indicate the [crate::dependency::Possibility] that this
+    /// may indicate the [crate::dependency::Package] that this
     /// [BuildProfileConstraint] is attached to either has explicit support or lack of
     /// support on the specified [BuildProfile].
     pub build_profile: BuildProfile,
@@ -89,7 +89,7 @@ impl TryFrom<Pair<'_, Rule>> for BuildProfileConstraint {
 }
 
 /// List of [BuildProfileConstraints] between two packages
-/// which limit a [crate::dependency::Possibility] to specific [BuildProfile]
+/// which limit a [crate::dependency::Package] to specific [BuildProfile]
 /// values.
 #[derive(Clone, Debug, PartialEq)]
 pub struct BuildProfileConstraints {
@@ -136,7 +136,7 @@ impl TryFrom<Pair<'_, Rule>> for BuildProfileConstraints {
 /// List of [BuildProfileConstraints] to be satisfied. Like a
 /// [crate::dependency::Dependency], every one of these
 /// [BuildProfileConstraints] must be satisfied in order to consider the
-/// [crate::dependency::Possibility].
+/// [crate::dependency::Package].
 ///
 /// In general you won't be parsing this directly, although it is possible
 /// (for instance in a `Build-Profiles` header), in which case this can be

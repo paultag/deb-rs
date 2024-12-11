@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{pest::Rule, Error, Possibility};
+use super::{pest::Rule, Error, Package};
 use pest::iterators::Pair;
 
-/// A [Relation] is a set of [Possibility] values, any one of which will
+/// A [Relation] is a set of [Package] values, any one of which will
 /// satisfy the [Relation] requirement.
 ///
 /// This is different from a [crate::dependency::Dependency], since in a
 /// Dependency, all [Relation] must be satisfied to meet the requirement
-/// (an AND relationship), whereas in a [Relation], any [Possibility] value
+/// (an AND relationship), whereas in a [Relation], any [Package] value
 /// satisfies the [Relation] (an OR relationship).
 ///
 /// In general, you're unlikely to be parsing these directly, instead
@@ -34,9 +34,9 @@ use pest::iterators::Pair;
 /// [crate::dependency::Dependency].
 #[derive(Clone, Debug, PartialEq, Default)]
 pub struct Relation {
-    /// Set of [Possibility] values, any one of which satisfies the
+    /// Set of [Package] values, any one of which satisfies the
     /// the [Relation].
-    pub possibilities: Vec<Possibility>,
+    pub possibilities: Vec<Package>,
 }
 
 impl std::fmt::Display for Relation {
@@ -60,13 +60,13 @@ impl TryFrom<Pair<'_, Rule>> for Relation {
         let mut ret = Relation {
             possibilities: vec![],
         };
-        for possibility in token.into_inner() {
-            match possibility.as_rule() {
-                Rule::possibility => {}
+        for package in token.into_inner() {
+            match package.as_rule() {
+                Rule::package => {}
                 // TODO: validation here
                 _ => continue,
             };
-            ret.possibilities.push(possibility.try_into()?);
+            ret.possibilities.push(package.try_into()?);
         }
 
         Ok(ret)

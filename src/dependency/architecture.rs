@@ -22,7 +22,7 @@ use super::{pest::Rule, Error};
 use crate::architecture::Architecture;
 use pest::iterators::Pair;
 
-/// An [ArchConstraint] limits a [crate::dependency::Possibility] to only be
+/// An [ArchConstraint] limits a [crate::dependency::Package] to only be
 /// considered on a subset of all [Architecture] values. This can be expressed
 /// via negation (for instance `!amd64` for "Everything except
 /// [Architecture::Amd64]"), or providing the [Architecture] name
@@ -31,7 +31,7 @@ use pest::iterators::Pair;
 /// In general, you're unlikely to be parsing these directly, instead
 /// you're likely going to see an [ArchConstraint] by parsing a
 /// [crate::dependency::Dependency], and getting the [ArchConstraint] off the
-/// [crate::dependency::Possibility].
+/// [crate::dependency::Package].
 #[derive(Clone, Debug, PartialEq)]
 pub struct ArchConstraint {
     /// True if the [ArchConstraint] is inverted -- meaning, this matches
@@ -39,7 +39,7 @@ pub struct ArchConstraint {
     pub negated: bool,
 
     /// [Architecture] that is being constrained. Depending on `negated` this
-    /// may indicate the [crate::dependency::Possibility] that this
+    /// may indicate the [crate::dependency::Package] that this
     /// [ArchConstraint] is attached to either has explicit support or lack of
     /// support on the specified [Architecture].
     pub arch: Architecture,
@@ -85,16 +85,16 @@ impl TryFrom<Pair<'_, Rule>> for ArchConstraint {
 }
 
 /// List of [ArchConstraint] values which limit a
-/// [crate::dependency::Possibility] to specific [Architecture] values.
+/// [crate::dependency::Package] to specific [Architecture] values.
 ///
 /// In general, you're unlikely to be parsing these directly, instead
 /// you're likely going to see an [ArchConstraints] value by parsing a
 /// [crate::dependency::Dependency], and getting the [ArchConstraints] off the
-/// [crate::dependency::Possibility].
+/// [crate::dependency::Package].
 #[derive(Clone, Debug, PartialEq)]
 pub struct ArchConstraints {
     /// List of [ArchConstraint] values. These are treated as an "AND",
-    /// for the [crate::dependency::Possibility] this struct is attached to,
+    /// for the [crate::dependency::Package] this struct is attached to,
     /// all [ArchConstraint] values must be satisfied by an [Architecture]
     /// to be considered valid
     /// for it.

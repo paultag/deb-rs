@@ -51,7 +51,7 @@ version_constraint = {
   ")"
 }
 
-possibility = {
+package = {
   whitespace* ~
   package_name ~ (":" ~ arch_name)? ~
   whitespace* ~
@@ -67,7 +67,7 @@ possibility = {
 
 relation = {
   whitespace* ~
-  possibility ~ (whitespace* ~ "|" ~ whitespace* ~ possibility)*
+  package ~ (whitespace* ~ "|" ~ whitespace* ~ package)*
 }
 
 dependency = {

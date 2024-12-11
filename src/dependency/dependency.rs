@@ -53,9 +53,9 @@ pub enum Error {
     /// TODO: remove this
     Parse((String, pest::error::InputLocation)),
 
-    /// [crate::dependency::Possibility] String is malformed in such a way that
+    /// [crate::dependency::Package] String is malformed in such a way that
     /// can not be correctly parsed.
-    InvalidPossibility,
+    InvalidPackage,
 
     /// [crate::version::Version] String is malformed in some way that can not
     /// be correctly parsed.
@@ -82,12 +82,12 @@ pub enum Error {
     InvalidBuildProfileConstraint,
 
     /// Only one [crate::dependency::VersionConstraint] may be specified for a
-    /// given [crate::dependency::Possibility]. This error will be returned if
+    /// given [crate::dependency::Package]. This error will be returned if
     /// multiple [crate::dependency::VersionConstraint] are provided.
     TooManyVersions,
 
     /// Only one set of [crate::dependency::ArchConstraints] may be specified
-    /// for a given [crate::dependency::Possibility]. This error will be
+    /// for a given [crate::dependency::Package]. This error will be
     /// returned if multiple [crate::dependency::ArchConstraints] are
     /// provided.
     TooManyArches,

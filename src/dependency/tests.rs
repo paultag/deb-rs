@@ -25,7 +25,7 @@ mod test {
         build_profile::BuildProfile,
         dependency::{
             ArchConstraint, ArchConstraints, BuildProfileConstraint, BuildProfileConstraints,
-            Dependency, Possibility, Relation, VersionConstraint, VersionOperator,
+            Dependency, Package, Relation, VersionConstraint, VersionOperator,
         },
         version::Version,
     };
@@ -84,11 +84,11 @@ mod test {
         };
     }
 
-    macro_rules! simple_possibility {
-        ($possibility:expr) => {
+    macro_rules! simple_package {
+        ($package:expr) => {
             Dependency {
                 relations: vec![Relation {
-                    possibilities: vec![$possibility],
+                    possibilities: vec![$package],
                 }],
             }
         };
@@ -98,7 +98,7 @@ mod test {
     check_matches!(
         check_simple,
         "foo",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             ..Default::default()
         })
@@ -106,7 +106,7 @@ mod test {
     check_matches!(
         check_simple_arch,
         "foo:armhf",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             arch: Some(Architecture::Armhf),
             ..Default::default()
@@ -118,18 +118,18 @@ mod test {
         Dependency {
             relations: vec![
                 Relation {
-                    possibilities: vec![Possibility {
+                    possibilities: vec![Package {
                         name: "foo".to_owned(),
                         ..Default::default()
                     },]
                 },
                 Relation {
                     possibilities: vec![
-                        Possibility {
+                        Package {
                             name: "bar".to_owned(),
                             ..Default::default()
                         },
-                        Possibility {
+                        Package {
                             name: "baz".to_owned(),
                             ..Default::default()
                         },
@@ -141,7 +141,7 @@ mod test {
     check_matches!(
         check_versioned_gte,
         "foo (>= 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::GreaterThanOrEqual,
@@ -154,7 +154,7 @@ mod test {
     check_matches!(
         check_versioned_lte,
         "foo (<= 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::LessThanOrEqual,
@@ -167,7 +167,7 @@ mod test {
     check_matches!(
         check_versioned_eq,
         "foo (= 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::Equal,
@@ -180,7 +180,7 @@ mod test {
     check_matches!(
         check_versioned_eq2,
         "foo (== 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::Equal,
@@ -193,7 +193,7 @@ mod test {
     check_matches!(
         check_versioned_gt,
         "foo (>> 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::GreaterThan,
@@ -206,7 +206,7 @@ mod test {
     check_matches!(
         check_versioned_lt,
         "foo (<< 1.0)",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::LessThan,
@@ -219,7 +219,7 @@ mod test {
     check_matches!(
         check_arch_qualified,
         "foo [armhf]",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             arch_constraints: Some(ArchConstraints {
                 arches: vec![ArchConstraint {
@@ -233,7 +233,7 @@ mod test {
     check_matches!(
         check_arch_qualified2,
         "foo [armhf amd64]",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             arch_constraints: Some(ArchConstraints {
                 arches: vec![
@@ -253,7 +253,7 @@ mod test {
     check_matches!(
         check_arch_qualified_not,
         "foo [!armhf !amd64]",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             arch_constraints: Some(ArchConstraints {
                 arches: vec![
@@ -274,7 +274,7 @@ mod test {
     check_matches!(
         check_build_profile,
         "foo <buildprofile1>",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![BuildProfileConstraint {
@@ -290,7 +290,7 @@ mod test {
     check_matches!(
         check_build_profile_multiple,
         "foo <buildprofile1 cross>",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![
@@ -311,7 +311,7 @@ mod test {
     check_matches!(
         build_profile_multiple_not,
         "foo <buildprofile1 !cross>",
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![
@@ -333,7 +333,7 @@ mod test {
     check_matches!(
         check_spaces,
         ("foo", "  foo", "foo   "),
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             ..Default::default()
         })
@@ -347,7 +347,7 @@ mod test {
             "foo    (=1.0)",
             "   foo    (  =   1.0   )"
         ),
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             version_constraint: Some(VersionConstraint {
                 operator: VersionOperator::Equal,
@@ -367,7 +367,7 @@ mod test {
             "foo    <foo >",
             "foo    <   foo   >"
         ),
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![BuildProfileConstraint {
@@ -393,7 +393,7 @@ mod test {
             "   foo    < ! foo >",
             "   foo    <   !     foo >"
         ),
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![BuildProfileConstraint {
@@ -420,7 +420,7 @@ mod test {
             "   foo    < ! foo    bar >",
             "   foo    <   !     foo  bar >"
         ),
-        simple_possibility!(Possibility {
+        simple_package!(Package {
             name: "foo".to_owned(),
             build_profile_restriction_formula: vec![BuildProfileConstraints {
                 build_profiles: vec![

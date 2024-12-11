@@ -66,7 +66,7 @@ impl std::fmt::Display for VersionOperator {
     }
 }
 
-/// A [VersionConstraint] limits a [crate::dependency::Possibility] to only be
+/// A [VersionConstraint] limits a [crate::dependency::Package] to only be
 /// considered on a subset of all [Version] values. The [VersionOperator]
 /// defines how the [Version]s are compared.
 ///
@@ -75,7 +75,7 @@ impl std::fmt::Display for VersionOperator {
 /// [crate::dependency::Dependency].
 #[derive(Clone, Debug, PartialEq)]
 pub struct VersionConstraint {
-    /// Comparison to use when evaluating if a [crate::dependency::Possibility]
+    /// Comparison to use when evaluating if a [crate::dependency::Package]
     /// satisfies this constraint.
     pub operator: VersionOperator,
 

@@ -35,7 +35,7 @@
 //!
 //! For instance `foo, ${bar:Depends}` is commonly seen in control files,
 //! so it may appear to be possible to store the substvar information at
-//! the [Possibility] level, however, it's also common to see something
+//! the [Package] level, however, it's also common to see something
 //! like `baz (= ${my:Version})` in, say, libraries.
 //!
 //! This is a bit of a gotcha, since a lot of development control files
@@ -53,9 +53,9 @@
 //! # Overview of the [Dependency] model
 //!
 //! A [Dependency] is made up of a number of [Relation]s. All [Relation]s
-//! must be satisfied. A [Relation] is made up of a number of [Possibility]
-//! structs. Any [Possibility] being satisfied will satisfy the [Relation].
-//! A [Possibility] has a number of constraints on it (such as a
+//! must be satisfied. A [Relation] is made up of a number of [Package]
+//! structs. Any [Package] being satisfied will satisfy the [Relation].
+//! A [Package] has a number of constraints on it (such as a
 //! [VersionConstraint], [ArchConstraint] or a [BuildProfileRestrictionFormula]), which
 //! dictate when it can be considered.
 //!
@@ -70,8 +70,8 @@ mod architecture;
 mod build_profile;
 #[allow(clippy::module_inception)]
 mod dependency;
+mod package;
 mod pest;
-mod possibility;
 mod relation;
 mod tests;
 mod version;
@@ -81,7 +81,7 @@ pub use build_profile::{
     BuildProfileConstraint, BuildProfileConstraints, BuildProfileRestrictionFormula,
 };
 pub use dependency::{Dependency, Error};
-pub use possibility::Possibility;
+pub use package::Package;
 pub use relation::Relation;
 pub use version::{VersionConstraint, VersionOperator};
 

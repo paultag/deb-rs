@@ -46,13 +46,14 @@
 //! [tokio::io::AsyncRead], via [de::from_reader_async]
 
 mod architectures;
-pub mod changes;
 mod date_time;
 mod paragraph;
 mod pest;
 mod real_control_tests;
 mod space_delimited_strings;
 mod traits;
+
+pub mod changes;
 
 #[cfg(feature = "serde")]
 pub mod de;
