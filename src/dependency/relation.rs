@@ -57,9 +57,7 @@ impl TryFrom<Pair<'_, Rule>> for Relation {
     type Error = Error;
 
     fn try_from(token: Pair<'_, Rule>) -> Result<Self, Error> {
-        let mut ret = Relation {
-            packages: vec![],
-        };
+        let mut ret = Relation { packages: vec![] };
         for package in token.into_inner() {
             match package.as_rule() {
                 Rule::package => {}
