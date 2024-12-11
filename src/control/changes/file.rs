@@ -83,6 +83,28 @@ impl FromStr for File {
     }
 }
 
+#[cfg(feature = "serde")]
+mod serde {
+    use super::File;
+    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+
+    impl Serialize for File {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            String::serialize(&self.to_string(), serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for File {
+        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+            let s = String::deserialize(d)?;
+            s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
+        }
+    }
+}
+
 #[cfg(feature = "hex")]
 mod hex {
     use super::*;

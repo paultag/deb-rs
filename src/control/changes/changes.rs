@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{Closes, File, FileChecksum, Files, HASH_LEN_SHA1, HASH_LEN_SHA256};
+use super::{Closes, File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
 use crate::{
     control::{Architectures, DateTime2822, SpaceDelimitedStrings},
     version::Version,
@@ -180,7 +180,7 @@ pub struct Changes {
     /// to be sufficient for secure verification, but this field cannot be
     /// omitted as it provides metadata not available anywhere else.
     #[cfg_attr(feature = "serde", serde(rename = "Files"))]
-    pub files: Files<File>,
+    pub files: Vec<File>,
 
     /// Each line consists of space-separated entries describing the file:
     /// the checksum, the file size, and the file name.
@@ -192,7 +192,7 @@ pub struct Changes {
     /// Note: The SHA-1 checksum is considered weak, and should never be
     /// assumed to be sufficient for secure verification.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha1"))]
-    pub checksum_sha1: Option<Files<FileChecksum<HASH_LEN_SHA1>>>,
+    pub checksum_sha1: Option<Vec<FileChecksum<HASH_LEN_SHA1>>>,
 
     /// Each line consists of space-separated entries describing the file:
     /// the checksum, the file size, and the file name.
@@ -201,7 +201,7 @@ pub struct Changes {
     /// in these fields must match the list of files in the Files field and
     /// the other related Checksums fields.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha256"))]
-    pub checksum_sha256: Files<FileChecksum<HASH_LEN_SHA256>>,
+    pub checksum_sha256: Vec<FileChecksum<HASH_LEN_SHA256>>,
 }
 
 #[cfg(feature = "serde")]
@@ -212,7 +212,7 @@ mod serde {
             architecture::Architecture,
             control::{
                 self,
-                changes::{Changes, File, Files},
+                changes::{Changes, File},
             },
         };
         use std::io::{BufReader, Cursor};
@@ -286,7 +286,7 @@ Files:
 
             assert_eq!(5, changes.files.len());
             assert_eq!(
-                Files(vec![
+                vec![
                     File {
                         digest: "e7bd195571b19d33bd83d1c379fe6432".to_owned(),
                         size: 1183,
@@ -322,7 +322,7 @@ Files:
                         section: "devel".to_owned(),
                         priority: "optional".to_owned()
                     }
-                ]),
+                ],
                 changes.files,
             );
 

@@ -25,7 +25,6 @@ mod changes;
 mod closes;
 mod file;
 mod file_checksum;
-mod files;
 
 const HASH_LEN_MD5: usize = 16;
 const HASH_LEN_SHA1: usize = 20;
@@ -35,6 +34,5 @@ pub use changes::{Changes, ChangesParseError};
 pub use closes::Closes;
 pub use file::File;
 pub use file_checksum::FileChecksum;
-pub use files::Files;
 
 // vim: foldmethod=marker
