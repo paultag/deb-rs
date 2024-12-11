@@ -53,6 +53,7 @@ pub enum ChangesParseError {
     /// invalid.
     InvalidDate,
 }
+crate::errors::error_enum!(ChangesParseError);
 
 /// When preparing a package upload for Debian, the upload action is done
 /// by sending a `.changes` file to the Debian infrastructure, which

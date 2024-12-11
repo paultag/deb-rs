@@ -112,6 +112,7 @@ pub enum SyscallAbiParseError {
     /// Returned when the string provided to [SyscallAbi] is empty.
     Empty,
 }
+crate::errors::error_enum!(SyscallAbiParseError);
 
 impl FromStr for SyscallAbi {
     type Err = SyscallAbiParseError;
@@ -135,6 +136,7 @@ pub enum InstructionSetParseError {
     /// Returned when the string provided to [InstructionSet] is empty.
     Empty,
 }
+crate::errors::error_enum!(InstructionSetParseError);
 
 macro_rules! instruction_set_table_as_str {
     ( $( ( $id:ident, $name:expr, $isa:path ) ),* ) => {
@@ -385,6 +387,7 @@ pub enum TupleParseError {
     /// routine.
     BadSyscallAbi(SyscallAbiParseError),
 }
+crate::errors::error_enum!(TupleParseError);
 
 impl From<InstructionSetParseError> for TupleParseError {
     fn from(e: InstructionSetParseError) -> Self {

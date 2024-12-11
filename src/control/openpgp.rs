@@ -65,6 +65,7 @@ pub enum OpenPgpValidatorError {
     /// Underlying issue with the [sequoia_openpgp] crate.
     Sequoia(anyhow::Error),
 }
+crate::errors::error_enum!(Error);
 
 impl OpenPgpValidator {
     /// Return a new [OpenPgpValidatorBuilder].

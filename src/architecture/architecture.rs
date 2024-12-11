@@ -198,6 +198,7 @@ pub enum Error {
     /// Returned when the string provided to [Architecture] is empty.
     Empty,
 }
+crate::errors::error_enum!(Error);
 
 macro_rules! simple_multiarch {
     ($isa:ident - $syscall_abi:ident - $userland:expr) => {

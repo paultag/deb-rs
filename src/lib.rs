@@ -101,4 +101,6 @@ pub mod control;
 pub mod dependency;
 pub mod version;
 
+pub(crate) mod errors;
+
 // vim: foldmethod=marker

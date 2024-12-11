@@ -80,18 +80,11 @@ pub enum Error {
     /// Utf-8, and was caught astonishingly late in the process.
     InvalidText(std::str::Utf8Error),
 }
+crate::errors::error_enum!(Error);
 
 impl From<std::io::Error> for Error {
     fn from(ioe: std::io::Error) -> Self {
         Self::Io(ioe)
-    }
-}
-
-impl std::error::Error for Error {}
-
-impl std::fmt::Display for Error {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(f, "{:?}", self)
     }
 }
 

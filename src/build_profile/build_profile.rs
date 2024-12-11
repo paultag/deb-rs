@@ -225,6 +225,7 @@ pub enum Error {
     /// was malformed in some way.
     InvalidPkgFormat,
 }
+crate::errors::error_enum!(Error);
 
 #[cfg(test)]
 mod test {

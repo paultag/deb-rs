@@ -48,6 +48,7 @@ pub enum DateTime2822ParseError {
     /// a date time.
     InvalidDate,
 }
+crate::errors::error_enum!(DateTime2822ParseError);
 
 #[cfg(feature = "chrono")]
 mod chrono {

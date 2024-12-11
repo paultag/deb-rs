@@ -65,6 +65,7 @@ pub enum Error {
     /// Something wasn't properly encoded within the Paragraph.
     Malformed,
 }
+crate::errors::error_enum!(Error);
 
 impl From<PestError<Rule>> for Error {
     fn from(err: PestError<Rule>) -> Self {
