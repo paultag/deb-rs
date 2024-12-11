@@ -95,7 +95,6 @@ where
     forward_to_deserialize_any! {
         char unit
         bytes byte_buf str string
-        seq
         tuple unit_struct tuple_struct enum newtype_struct
         ignored_any
     }
@@ -115,8 +114,6 @@ where
             return visitor.visit_bool(match next.to_lowercase().as_str() {
                 "true" => true,
                 "false" => false,
-                "yes" => true,
-                "no" => false,
                 _ => return Err(Error::InvalidBool),
             });
         }
@@ -193,6 +190,90 @@ where
     {
         let mut uw = MapWrapper { de: self };
         visitor.visit_map(&mut uw)
+    }
+
+    fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        // a seq, otherwise known as a "multiline" must have a specific
+        // syntax.
+
+        if let Some(next) = self.iter.next() {
+            return visitor.visit_seq(&mut new_multiline(next.split("\n"))?);
+        }
+        Err(Error::EndOfFile)
+    }
+}
+
+pub(super) struct Multiline<'a, IteratorT>
+where
+    IteratorT: 'a,
+    IteratorT: Iterator<Item = &'a str>,
+{
+    /// all subsequent folded lines
+    pub(super) iter: Peekable<IteratorT>,
+}
+
+/// This is its own function to avoid the heartache with the generics
+/// above. This'll simplify things a bit to read without going insane
+/// on trait bounds. Sorry for this.
+pub(super) fn new_multiline<'a, IteratorT>(
+    iter: IteratorT,
+) -> Result<Multiline<'a, IteratorT>, Error>
+where
+    IteratorT: 'a,
+    IteratorT: Iterator<Item = &'a str>,
+{
+    Ok(Multiline {
+        iter: iter.peekable(),
+    })
+}
+
+impl<'a, 'b, 'de, IteratorT> de::SeqAccess<'de> for Multiline<'a, IteratorT>
+where
+    IteratorT: 'a,
+    IteratorT: Iterator<Item = &'a str>,
+{
+    type Error = Error;
+
+    fn next_element_seed<T>(&mut self, seed: T) -> Result<Option<T::Value>, Self::Error>
+    where
+        T: DeserializeSeed<'de>,
+    {
+        if self.iter.peek().is_some() {
+            return Ok(Some(seed.deserialize(self)?));
+        };
+
+        Ok(None)
+    }
+}
+
+impl<'a, 'b, 'de, IteratorT> de::Deserializer<'de> for &'b mut Multiline<'a, IteratorT>
+where
+    IteratorT: 'a,
+    IteratorT: Iterator<Item = &'a str>,
+{
+    type Error = Error;
+
+    fn deserialize_any<V: Visitor<'de>>(self, visitor: V) -> Result<V::Value, Error> {
+        if let Some(next) = self.iter.next() {
+            return visitor.visit_str(next);
+        }
+        Err(Error::EndOfFile)
+    }
+
+    forward_to_deserialize_any! {
+        char unit bool
+        bytes byte_buf str string
+        tuple unit_struct tuple_struct enum newtype_struct
+        ignored_any
+
+        i8 i16 i32 i64 i128
+        u8 u16 u32 u64 u128
+        f32 f64
+
+        seq map struct identifier option
     }
 }
 

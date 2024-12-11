@@ -67,6 +67,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::version::Version;
 
     #[derive(Clone, Debug, PartialEq, Serialize)]
     struct TestControlFile {
@@ -146,6 +147,33 @@ Foo:
  .
  bar
 "
+        );
+    }
+
+    #[test]
+    fn test_multiline_custom() {
+        #[derive(Clone, Debug, PartialEq, Serialize)]
+        struct Multiline {
+            #[serde(rename = "Multiline")]
+            multiline: Vec<Version>,
+        }
+
+        assert_eq!(
+            to_string(&Multiline {
+                multiline: vec!["1.0", "1.1", "1.2", "1.3", "1.4",]
+                    .iter()
+                    .map(|v| v.parse().unwrap())
+                    .collect()
+            })
+            .unwrap(),
+            "\
+Multiline:
+ 1.0
+ 1.1
+ 1.2
+ 1.3
+ 1.4
+",
         );
     }
 }

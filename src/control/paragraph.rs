@@ -101,7 +101,7 @@ impl TryFrom<Pair<'_, Rule>> for RawField {
 
         Ok(RawField {
             key,
-            value: value.trim().to_owned(),
+            value: value.trim_start_matches(' ').to_owned(),
         })
     }
 }

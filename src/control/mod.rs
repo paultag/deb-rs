@@ -26,9 +26,30 @@
 //! ⚠️  Support for directly using [ser] and [de] to encode and decode
 //! arbitrary Debian-flavored RFC2822 files is possible but not recommended
 //! yet. The Serializer and Deserializer implementation is very strict on
-//! what it will encode or decode, and I don't particularly want to make
-//! it very clever. It may be worth checking out Jelmer's
-//! [deb822](https://github.com/jelmer/deb822-rs) project for that.
+//! what it will encode or decode, and the only first-class targets at
+//! the moment are the files this crate itself parses. Over time, as this
+//! crate matures, this warning will be removed.
+//!
+//! ## Restrictions / Rules on `serde` support
+//!
+//! There are three types of Debian RFC2822-style key/value types. Those
+//! types are `simple` (the field must be on all one line), `folded` (multiple
+//! lines, but no semantic meaning), and `multiline` (repeated continuation
+//! lines of a specific format following a possible value on the same line
+//! as the key).
+//!
+//! This crate treats `simple` and `folded` fields as the same. This may
+//! break with a strict intepreation of control files, but it is only more
+//! lax in what it produces. This may change in the future, do not rely
+//! on this behavior.
+//!
+//! `multiline` fields will be treated as a `simple` or `folded` field if
+//! they're unpacked into most fields, with the exception of unpacking a
+//! `multiline` into a `Vec<_>`, which will parse each line into the provided
+//! `Deserialize` traited target. *`multiline` files with a leading value on
+//! the same line as the key are not supported as of right now*. If you're
+//! parsing such a file, your best bet is to implement [serde::Deserialize]
+//! yourself until this crate matures.
 //!
 //! This will export two modules from this package - [ser] and [de].
 //! Additionally the crate will add [serde::Serialize] and [serde::Deserialize]

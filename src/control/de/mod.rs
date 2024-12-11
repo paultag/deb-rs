@@ -279,6 +279,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::version::Version;
     use serde::Deserialize;
     use std::io::Cursor;
 
@@ -351,7 +352,7 @@ Package: something
 Foo: Bar
 True-False: true
 X-A-Number: 10
-        ",
+",
         )
         .unwrap();
 
@@ -522,6 +523,57 @@ Testing2: 1
             .unwrap(),
             Error::BadType
         ))
+    }
+
+    #[test]
+    fn test_multiline() {
+        #[derive(Clone, Debug, PartialEq, Deserialize)]
+        struct Multiline {
+            #[serde(rename = "Multiline")]
+            multiline: Vec<String>,
+        }
+
+        let ml: Multiline = from_str(
+            "\
+Multiline:
+ Something
+ Here
+ And
+ Here
+",
+        )
+        .unwrap();
+
+        assert_eq!(4, ml.multiline.len());
+    }
+
+    #[test]
+    fn test_multiline_custom() {
+        #[derive(Clone, Debug, PartialEq, Deserialize)]
+        struct Multiline {
+            #[serde(rename = "Multiline")]
+            multiline: Vec<Version>,
+        }
+
+        let ml: Multiline = from_str(
+            "\
+Multiline:
+ 1.0
+ 1.1
+ 1.2
+ 1.3
+ 1.4
+",
+        )
+        .unwrap();
+
+        assert_eq!(
+            vec!["1.0", "1.1", "1.2", "1.3", "1.4",]
+                .into_iter()
+                .map(|v| v.parse::<Version>().unwrap())
+                .collect::<Vec<_>>(),
+            ml.multiline,
+        )
     }
 }
 

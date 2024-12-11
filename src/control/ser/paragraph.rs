@@ -160,7 +160,7 @@ impl ser::Serializer for &mut Serializer {
     }
 
     fn serialize_seq(self, _len: Option<usize>) -> Result<Self::SerializeSeq> {
-        Err(Error::BadType)
+        Ok(self)
     }
 
     fn serialize_tuple(self, _len: usize) -> Result<Self::SerializeTuple> {
@@ -170,9 +170,9 @@ impl ser::Serializer for &mut Serializer {
     fn serialize_tuple_struct(
         self,
         _name: &'static str,
-        len: usize,
+        _len: usize,
     ) -> Result<Self::SerializeTupleStruct> {
-        self.serialize_seq(Some(len))
+        Err(Error::BadType)
     }
 
     fn serialize_tuple_variant(
@@ -207,22 +207,19 @@ impl ser::Serializer for &mut Serializer {
 }
 
 impl ser::SerializeSeq for &mut Serializer {
-    // Must match the `Ok` type of the serializer.
     type Ok = ();
-    // Must match the `Error` type of the serializer.
     type Error = Error;
 
-    // Serialize a single element of the sequence.
-    fn serialize_element<T>(&mut self, _value: &T) -> Result<()>
+    fn serialize_element<T>(&mut self, value: &T) -> Result<()>
     where
         T: ?Sized + Serialize,
     {
-        Err(Error::BadType)
+        self.output += "\n ";
+        value.serialize(&mut **self)
     }
 
-    // Close the sequence.
     fn end(self) -> Result<()> {
-        Err(Error::BadType)
+        Ok(())
     }
 }
 
