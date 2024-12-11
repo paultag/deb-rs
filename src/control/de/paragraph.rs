@@ -230,7 +230,7 @@ where
     })
 }
 
-impl<'a, 'b, 'de, IteratorT> de::SeqAccess<'de> for Multiline<'a, IteratorT>
+impl<'a, 'de, IteratorT> de::SeqAccess<'de> for Multiline<'a, IteratorT>
 where
     IteratorT: 'a,
     IteratorT: Iterator<Item = &'a str>,

@@ -172,7 +172,7 @@ impl OpenPgpValidatorBuilder {
 /// can make a bit more generic than the concrete [OpenPgpValidator] interface,
 /// so this should be used when possible.
 #[allow(dead_code)]
-pub(crate) fn verify<'de>(
+pub(crate) fn verify(
     keyring: &Path,
     input: &str,
 ) -> Result<(Vec<Fingerprint>, impl Read), OpenPgpValidatorError> {
