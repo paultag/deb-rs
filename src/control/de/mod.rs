@@ -23,10 +23,13 @@
 
 use crate::control::RawParagraph;
 use serde::de;
-use std::io::{BufRead, BufReader, Read};
+use std::{
+    io::{BufRead, BufReader, Read},
+    marker::PhantomData,
+};
 
 #[cfg(feature = "sequoia")]
-use crate::control::openpgp::{OpenPgpValidator, OpenPgpValidatorError};
+use crate::control::openpgp::{self, OpenPgpValidatorError};
 
 #[cfg(feature = "sequoia")]
 use sequoia_openpgp::Fingerprint;
@@ -143,6 +146,42 @@ where
     }
 }
 
+struct ControlIterator<'a, 'de, T, ReadT> {
+    input: &'a mut BufReader<ReadT>,
+    _de: PhantomData<&'de ()>,
+    _t: PhantomData<T>,
+}
+
+impl<'a, 'de, T, ReadT> Iterator for ControlIterator<'a, 'de, T, ReadT>
+where
+    ReadT: Read,
+    T: de::Deserialize<'de>,
+{
+    type Item = Result<T, Error>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match from_reader(self.input) {
+            Err(Error::EndOfFile) => None,
+            v => Some(v),
+        }
+    }
+}
+
+/// Return an iterator
+pub fn from_reader_iter<'a, 'de, T, ReadT>(
+    input: &'a mut BufReader<ReadT>,
+) -> impl Iterator<Item = Result<T, Error>> + use<'a, 'de, T, ReadT>
+where
+    ReadT: Read,
+    T: de::Deserialize<'de>,
+{
+    ControlIterator {
+        input,
+        _de: PhantomData,
+        _t: PhantomData,
+    }
+}
+
 #[cfg(feature = "tokio")]
 mod _tokio {
     use super::*;
@@ -154,12 +193,15 @@ mod _tokio {
     /// ```no_run
     /// use deb::control::{de, changes::Changes};
     ///
-    /// // Read a .changes file from stdin
+    /// async fn read_changes() {
+    ///     // input can be any AsyncRead, as long as it's wrapped in
+    ///     // a tokio BufReader. Here we use a std::io::Cursor which
+    ///     // has an AsyncRead implementation on it.
+    ///     let mut input = tokio::io::BufReader::new(std::io::Cursor::new(""));
     ///
-    /// let mut stdin = std::io::BufReader::new(std::io::stdin());
-    /// let changes: Changes = de::from_reader(&mut stdin).unwrap();
-    ///
-    /// println!("{:?}", changes);
+    ///     let changes: Changes = de::from_reader_async(&mut input).await.unwrap();
+    ///     println!("{:?}", changes);
+    /// }
     /// ```
     pub async fn from_reader_async<'a, 'de, T, ReadT>(
         input: &'a mut BufReader<ReadT>,
@@ -193,6 +235,98 @@ mod _tokio {
         }
     }
 
+    /// Pretend to be an [Iterator], but async.
+    ///
+    /// There's an unpleasantry of traits which are currently in the
+    /// process of exiting the Thunderdome, but none have been declared
+    /// the winner yet. None of the traits in `std` are out of nightly
+    /// yet, `tokio` took a lax stance in the `tokio-streams` crate,
+    /// and all of them are a mess to implement and maintain, since they
+    /// implement the raw promise-like `poll` interface rather than
+    /// using something like `impl Future`.
+    ///
+    /// As a result, I'm going to avoid trying to deal with that ecosystem
+    /// as best as I can until something comes out as the winner, at which
+    /// point I'll sprinkle in some implementations and turn this struct
+    /// into a private type, and use an `impl Stream` return type from
+    /// [from_reader_async_iter].
+    ///
+    /// Until then this struct will behave like you want -- generally, speaking.
+    /// The downside of this decision is that things like `StreamExt` won't
+    /// work on this struct as-is.
+    pub struct AsyncControlIterator<'a, 'de, T, ReadT>
+    where
+        ReadT: AsyncRead,
+        ReadT: Unpin,
+        T: de::Deserialize<'de>,
+    {
+        input: &'a mut BufReader<ReadT>,
+        _de: PhantomData<&'de ()>,
+        _t: PhantomData<T>,
+    }
+
+    impl<'a, 'de, T, ReadT> AsyncControlIterator<'a, 'de, T, ReadT>
+    where
+        ReadT: AsyncRead,
+        ReadT: Unpin,
+        T: de::Deserialize<'de>,
+    {
+        /// Normal [Iterator]-like protocol -- return a None to indicate
+        /// the end of the stream has been reached, otherwise, return
+        /// a `Some` containing the same return type you'd get from
+        /// [from_reader_async].
+        pub async fn next(&mut self) -> Option<Result<T, Error>> {
+            match from_reader_async(self.input).await {
+                Err(Error::EndOfFile) => None,
+                v => Some(v),
+            }
+        }
+    }
+
+    /// Deserialize a repeated sequence of Debian-flavored RFC2822 control
+    /// paragraphs into the desired Rust types from a [tokio::io::AsyncRead].
+    ///
+    /// This can't be an [Iterator], since those are not async. We could
+    /// target a `tokio` stream, but it's fairly low level and not fully
+    /// stable yet. Same for a `std::async_iter::AsyncIterator`.
+    ///
+    /// All of this adds a level of congnitive overhead on using this module
+    /// that's not worth it as of yet, especially since we can implement
+    /// the trait in the future. For now, we're returning the
+    /// [AsyncControlIterator] type, which will behave like an async
+    /// iterator should.
+    ///
+    /// ```no_run
+    /// use deb::control::{de, changes::Changes};
+    ///
+    /// async fn read_changes() {
+    ///     // input can be any AsyncRead, as long as it's wrapped in
+    ///     // a tokio BufReader. Here we use a std::io::Cursor which
+    ///     // has an AsyncRead implementation on it.
+    ///     let mut input = tokio::io::BufReader::new(std::io::Cursor::new(""));
+    ///
+    ///     let mut iter = de::from_reader_async_iter::<Changes, _>(&mut input);
+    ///     while let Some(changes) = iter.next().await {
+    ///         let changes = changes.unwrap();
+    ///         println!("{:?}", changes);
+    ///     }
+    /// }
+    /// ```
+    pub fn from_reader_async_iter<'a, 'de, T, ReadT>(
+        input: &'a mut BufReader<ReadT>,
+    ) -> AsyncControlIterator<'a, 'de, T, ReadT>
+    where
+        ReadT: AsyncRead,
+        ReadT: Unpin,
+        T: de::Deserialize<'de>,
+    {
+        AsyncControlIterator {
+            input,
+            _de: PhantomData,
+            _t: PhantomData,
+        }
+    }
+
     #[cfg(test)]
     mod tests {
         use super::*;
@@ -216,11 +350,35 @@ Hello: World
             let test: TestControl = from_reader_async(&mut reader).await.unwrap();
             assert_eq!(test.hello, "World");
         }
+
+        #[tokio::test]
+        async fn test_from_reader_async_iter() {
+            let mut reader = BufReader::new(Cursor::new(
+                "\
+Hello: World
+
+Hello: Paul
+
+Hello: You
+
+Hello: Me
+",
+            ));
+
+            let mut iter = from_reader_async_iter(&mut reader);
+
+            let mut values = vec![];
+            while let Some(rv) = iter.next().await {
+                let rv: TestControl = rv.unwrap();
+                values.push(rv.hello);
+            }
+            assert_eq!(vec!["World", "Paul", "You", "Me"], values);
+        }
     }
 }
 
 #[cfg(feature = "tokio")]
-pub use _tokio::from_reader_async;
+pub use _tokio::{from_reader_async, from_reader_async_iter, AsyncControlIterator};
 
 /// Check the signature of a clearsigned OpenPGP signature against the provided
 /// keyring, and if the signature is good, parse and return the signed
@@ -237,19 +395,8 @@ pub fn from_clearsigned_str<'a, 'de, T>(
 where
     T: de::Deserialize<'de>,
 {
-    let verifier = OpenPgpValidator::build()
-        .with_keyring(keyring)
-        .build()
-        .map_err(Error::OpenPgp)?;
-
-    let (fingerprints, mut input) = verifier
-        .validate(input.as_bytes())
-        .map_err(Error::OpenPgp)?;
-
-    let mut message = String::new();
-    input.read_to_string(&mut message).map_err(Error::Io)?;
-    let rp = RawParagraph::parse(&message).map_err(Error::ParseError)?;
-    Ok((fingerprints, from_raw_paragraph(&rp)?))
+    let (fingerprints, input) = openpgp::verify(keyring, input).map_err(Error::OpenPgp)?;
+    Ok((fingerprints, from_reader(&mut BufReader::new(input))?))
 }
 
 /// Return the parsed control file from the input string.
@@ -574,6 +721,44 @@ Multiline:
                 .collect::<Vec<_>>(),
             ml.multiline,
         )
+    }
+
+    #[derive(Clone, Debug, PartialEq, Deserialize)]
+    struct TestControl {
+        #[serde(rename = "Hello")]
+        hello: String,
+    }
+
+    #[test]
+    fn test_from_reader() {
+        let mut reader = BufReader::new(Cursor::new(
+            "\
+Hello: World
+",
+        ));
+
+        let test: TestControl = from_reader(&mut reader).unwrap();
+        assert_eq!(test.hello, "World");
+    }
+
+    #[test]
+    fn test_from_reader_iter() {
+        let mut reader = BufReader::new(Cursor::new(
+            "\
+Hello: World
+
+Hello: Paul
+
+Hello: You
+
+Hello: Me
+",
+        ));
+
+        let values = from_reader_iter::<TestControl, _>(&mut reader)
+            .map(|v| v.unwrap().hello)
+            .collect::<Vec<_>>();
+        assert_eq!(vec!["World", "Paul", "You", "Me"], values);
     }
 }
 

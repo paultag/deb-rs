@@ -167,4 +167,16 @@ impl OpenPgpValidatorBuilder {
     }
 }
 
+/// This is a thin wrapper around the [OpenPgpValidator], but with all of the
+/// moving parts possible removed. This is going to be an interface that we
+/// can make a bit more generic than the concrete [OpenPgpValidator] interface,
+/// so this should be used when possible.
+pub(crate) fn verify<'a, 'de>(
+    keyring: &Path,
+    input: &'a str,
+) -> Result<(Vec<Fingerprint>, impl Read), OpenPgpValidatorError> {
+    let verifier = OpenPgpValidator::build().with_keyring(keyring).build()?;
+    verifier.validate(input.as_bytes())
+}
+
 // vim: foldmethod=marker
