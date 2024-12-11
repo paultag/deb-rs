@@ -152,7 +152,7 @@ struct ControlIterator<'a, 'de, T, ReadT> {
     _t: PhantomData<T>,
 }
 
-impl<'a, 'de, T, ReadT> Iterator for ControlIterator<'a, 'de, T, ReadT>
+impl<'de, T, ReadT> Iterator for ControlIterator<'_, 'de, T, ReadT>
 where
     ReadT: Read,
     T: de::Deserialize<'de>,

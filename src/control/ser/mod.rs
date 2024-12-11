@@ -160,7 +160,7 @@ Foo:
 
         assert_eq!(
             to_string(&Multiline {
-                multiline: vec!["1.0", "1.1", "1.2", "1.3", "1.4",]
+                multiline: ["1.0", "1.1", "1.2", "1.3", "1.4"]
                     .iter()
                     .map(|v| v.parse().unwrap())
                     .collect()

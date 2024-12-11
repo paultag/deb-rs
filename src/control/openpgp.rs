@@ -171,9 +171,9 @@ impl OpenPgpValidatorBuilder {
 /// moving parts possible removed. This is going to be an interface that we
 /// can make a bit more generic than the concrete [OpenPgpValidator] interface,
 /// so this should be used when possible.
-pub(crate) fn verify<'a, 'de>(
+pub(crate) fn verify<'de>(
     keyring: &Path,
-    input: &'a str,
+    input: &str,
 ) -> Result<(Vec<Fingerprint>, impl Read), OpenPgpValidatorError> {
     let verifier = OpenPgpValidator::build().with_keyring(keyring).build()?;
     verifier.validate(input.as_bytes())

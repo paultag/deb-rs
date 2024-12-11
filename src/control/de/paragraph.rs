@@ -249,7 +249,7 @@ where
     }
 }
 
-impl<'a, 'b, 'de, IteratorT> de::Deserializer<'de> for &'b mut Multiline<'a, IteratorT>
+impl<'a, 'de, IteratorT> de::Deserializer<'de> for &mut Multiline<'a, IteratorT>
 where
     IteratorT: 'a,
     IteratorT: Iterator<Item = &'a str>,
