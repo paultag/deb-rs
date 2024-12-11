@@ -276,13 +276,15 @@ mod test {
         "foo <buildprofile1>",
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![BuildProfileConstraint {
-                    negated: false,
-                    build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![BuildProfileConstraint {
+                        negated: false,
+                        build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
+                    }]
                 }]
-            }]
-            .into(),
+                .into()
+            ),
             ..Default::default()
         })
     );
@@ -292,19 +294,21 @@ mod test {
         "foo <buildprofile1 cross>",
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![
-                    BuildProfileConstraint {
-                        negated: false,
-                        build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
-                    },
-                    BuildProfileConstraint {
-                        negated: false,
-                        build_profile: BuildProfile::Cross,
-                    },
-                ]
-            }]
-            .into(),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![
+                        BuildProfileConstraint {
+                            negated: false,
+                            build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
+                        },
+                        BuildProfileConstraint {
+                            negated: false,
+                            build_profile: BuildProfile::Cross,
+                        },
+                    ]
+                }]
+                .into()
+            ),
             ..Default::default()
         })
     );
@@ -313,19 +317,21 @@ mod test {
         "foo <buildprofile1 !cross>",
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![
-                    BuildProfileConstraint {
-                        negated: false,
-                        build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
-                    },
-                    BuildProfileConstraint {
-                        negated: true,
-                        build_profile: BuildProfile::Cross,
-                    },
-                ]
-            }]
-            .into(),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![
+                        BuildProfileConstraint {
+                            negated: false,
+                            build_profile: BuildProfile::Unknown("buildprofile1".to_owned()),
+                        },
+                        BuildProfileConstraint {
+                            negated: true,
+                            build_profile: BuildProfile::Cross,
+                        },
+                    ]
+                }]
+                .into()
+            ),
             ..Default::default()
         })
     );
@@ -369,13 +375,15 @@ mod test {
         ),
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![BuildProfileConstraint {
-                    negated: false,
-                    build_profile: BuildProfile::Unknown("foo".to_owned()),
-                }],
-            }]
-            .into(),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![BuildProfileConstraint {
+                        negated: false,
+                        build_profile: BuildProfile::Unknown("foo".to_owned()),
+                    }],
+                }]
+                .into()
+            ),
             ..Default::default()
         })
     );
@@ -395,13 +403,15 @@ mod test {
         ),
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![BuildProfileConstraint {
-                    negated: true,
-                    build_profile: BuildProfile::Unknown("foo".to_owned()),
-                }],
-            }]
-            .into(),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![BuildProfileConstraint {
+                        negated: true,
+                        build_profile: BuildProfile::Unknown("foo".to_owned()),
+                    }],
+                }]
+                .into()
+            ),
             ..Default::default()
         })
     );
@@ -422,19 +432,21 @@ mod test {
         ),
         simple_package!(Package {
             name: "foo".to_owned(),
-            build_profile_restriction_formula: vec![BuildProfileConstraints {
-                build_profiles: vec![
-                    BuildProfileConstraint {
-                        negated: true,
-                        build_profile: BuildProfile::Unknown("foo".to_owned()),
-                    },
-                    BuildProfileConstraint {
-                        negated: false,
-                        build_profile: BuildProfile::Unknown("bar".to_owned())
-                    }
-                ],
-            }]
-            .into(),
+            build_profile_restriction_formula: Some(
+                vec![BuildProfileConstraints {
+                    build_profiles: vec![
+                        BuildProfileConstraint {
+                            negated: true,
+                            build_profile: BuildProfile::Unknown("foo".to_owned()),
+                        },
+                        BuildProfileConstraint {
+                            negated: false,
+                            build_profile: BuildProfile::Unknown("bar".to_owned())
+                        }
+                    ],
+                }]
+                .into()
+            ),
             ..Default::default()
         })
     );

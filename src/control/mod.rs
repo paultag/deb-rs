@@ -68,13 +68,14 @@
 
 mod architectures;
 mod date_time;
+mod delimited_strings;
 mod paragraph;
 mod pest;
 mod real_control_tests;
-mod space_delimited_strings;
 mod traits;
 
 pub mod changes;
+pub mod dsc;
 
 #[cfg(feature = "serde")]
 pub mod de;
@@ -87,8 +88,8 @@ mod openpgp;
 
 pub use architectures::Architectures;
 pub use date_time::{DateTime2822, DateTime2822ParseError};
+pub use delimited_strings::{CommaDelimitedStrings, SpaceDelimitedStrings};
 pub use paragraph::{Error, RawField, RawParagraph};
-pub use space_delimited_strings::SpaceDelimitedStrings;
 pub use traits::FileEntry;
 
 #[cfg(feature = "sequoia")]

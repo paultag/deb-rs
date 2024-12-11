@@ -86,7 +86,7 @@ pub struct Package {
     /// used by developers, unless their package is part of a particularly
     /// gnarly build loop, in order to make a cyclic
     /// [crate::dependency::Dependency] package relationship acyclic.
-    pub build_profile_restriction_formula: BuildProfileRestrictionFormula,
+    pub build_profile_restriction_formula: Option<BuildProfileRestrictionFormula>,
 }
 
 impl std::fmt::Display for Package {
@@ -109,11 +109,10 @@ impl std::fmt::Display for Package {
             write!(f, " [{}]", arch_constraints)?;
         }
 
-        for build_profile_constraints in &self
-            .build_profile_restriction_formula
-            .build_profile_constraints
-        {
-            write!(f, " <{}>", build_profile_constraints)?;
+        if let Some(bprf) = &self.build_profile_restriction_formula {
+            for build_profile_constraints in &bprf.build_profile_constraints {
+                write!(f, " <{}>", build_profile_constraints)?;
+            }
         }
 
         Ok(())
@@ -151,9 +150,15 @@ impl TryFrom<Pair<'_, Rule>> for Package {
                     ret.arch_constraints = Some(constraint.try_into()?);
                 }
                 Rule::build_profile_constraints => {
-                    ret.build_profile_restriction_formula
-                        .build_profile_constraints
-                        .push(constraint.try_into()?);
+                    if ret.build_profile_restriction_formula.is_none() {
+                        ret.build_profile_restriction_formula = Some(Default::default());
+                    }
+
+                    let Some(ref mut bprf) = &mut ret.build_profile_restriction_formula else {
+                        unreachable!();
+                    };
+
+                    bprf.build_profile_constraints.push(constraint.try_into()?);
                 }
                 _ => continue,
             };

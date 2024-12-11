@@ -34,9 +34,23 @@ impl Deref for SpaceDelimitedStrings {
     }
 }
 
+/// Wrapper type around a `Vec<String>` which handles encoding and decoding
+/// a list of comma separated String values to and from a single String
+/// as seen throughout the `control` module.
+#[derive(Clone, Debug, PartialEq)]
+#[repr(transparent)]
+pub struct CommaDelimitedStrings(pub Vec<String>);
+
+impl Deref for CommaDelimitedStrings {
+    type Target = [String];
+    fn deref(&self) -> &[String] {
+        &self.0
+    }
+}
+
 #[cfg(feature = "serde")]
 mod serde {
-    use super::SpaceDelimitedStrings;
+    use super::{CommaDelimitedStrings, SpaceDelimitedStrings};
     use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
     impl Serialize for SpaceDelimitedStrings {
@@ -52,6 +66,26 @@ mod serde {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
             Ok(Self(s.split(' ').map(|v| v.to_owned()).collect::<Vec<_>>()))
+        }
+    }
+
+    impl Serialize for CommaDelimitedStrings {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            String::serialize(&self.0.to_vec().join(", "), serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for CommaDelimitedStrings {
+        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+            let s = String::deserialize(d)?;
+            Ok(Self(
+                s.split(',')
+                    .map(|v| v.trim().to_owned())
+                    .collect::<Vec<_>>(),
+            ))
         }
     }
 }
