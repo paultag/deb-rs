@@ -88,7 +88,7 @@ mod test {
         ($package:expr) => {
             Dependency {
                 relations: vec![Relation {
-                    possibilities: vec![$package],
+                    packages: vec![$package],
                 }],
             }
         };
@@ -113,18 +113,18 @@ mod test {
         })
     );
     check_matches!(
-        check_simple_possibilities,
+        check_simple_packages,
         "foo, bar | baz",
         Dependency {
             relations: vec![
                 Relation {
-                    possibilities: vec![Package {
+                    packages: vec![Package {
                         name: "foo".to_owned(),
                         ..Default::default()
                     },]
                 },
                 Relation {
-                    possibilities: vec![
+                    packages: vec![
                         Package {
                             name: "bar".to_owned(),
                             ..Default::default()

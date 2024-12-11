@@ -17,7 +17,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
         benchmark_dependency!(group, single, "foo");
         benchmark_dependency!(group, multiple_relations, "foo, bar");
-        benchmark_dependency!(group, multiple_possibilities, "foo | bar");
+        benchmark_dependency!(group, multiple_packages, "foo | bar");
         benchmark_dependency!(group, single_constraint_version, "foo (== 1.0)");
         benchmark_dependency!(group, single_constraint_arch, "foo [amd64]");
         benchmark_dependency!(group, single_constraint_arch_unknown, "foo [poopie]");

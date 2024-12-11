@@ -36,7 +36,7 @@ use pest::iterators::Pair;
 pub struct Relation {
     /// Set of [Package] values, any one of which satisfies the
     /// the [Relation].
-    pub possibilities: Vec<Package>,
+    pub packages: Vec<Package>,
 }
 
 impl std::fmt::Display for Relation {
@@ -44,7 +44,7 @@ impl std::fmt::Display for Relation {
         write!(
             f,
             "{}",
-            self.possibilities
+            self.packages
                 .iter()
                 .map(|v| v.to_string())
                 .collect::<Vec<_>>()
@@ -58,7 +58,7 @@ impl TryFrom<Pair<'_, Rule>> for Relation {
 
     fn try_from(token: Pair<'_, Rule>) -> Result<Self, Error> {
         let mut ret = Relation {
-            possibilities: vec![],
+            packages: vec![],
         };
         for package in token.into_inner() {
             match package.as_rule() {
@@ -66,7 +66,7 @@ impl TryFrom<Pair<'_, Rule>> for Relation {
                 // TODO: validation here
                 _ => continue,
             };
-            ret.possibilities.push(package.try_into()?);
+            ret.packages.push(package.try_into()?);
         }
 
         Ok(ret)
