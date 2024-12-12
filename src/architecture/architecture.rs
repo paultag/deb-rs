@@ -290,6 +290,7 @@ macro_rules! match_arch_to_tuple {
             ["solaris", cpu] => ["base", "sysv", "solaris", cpu],
             ["musl", "linux", cpu] => ["base", "musl", "linux", cpu],
             ["uclibc", "linux", cpu] => ["base", "uclibc", "linux", cpu],
+            ["linux", cpu] => ["base", "gnu", "linux", cpu],
             [cpu] => ["base", "gnu", "linux", cpu],
             [abi, libc, os, cpu] => [abi, libc, os, cpu],
             _ => return Err(Error::Malformed),
@@ -824,6 +825,8 @@ mod test {
     round_trip!(rt_linux_any, "linux-any", "linux-any");
     round_trip!(rt_any_linux_any, "any-linux-any", "linux-any");
     round_trip!(rt_any_any_linux_any, "any-any-linux-any", "linux-any");
+
+    round_trip!(rt_linux_amd64, "linux-amd64", "amd64");
 
     round_trip!(rt_unknown, "dorkus", "dorkus");
     fails!(fails_unknown_pattern, "dorkus-thewise");
