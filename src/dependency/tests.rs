@@ -108,7 +108,7 @@ mod test {
         "foo:armhf",
         simple_package!(Package {
             name: "foo".to_owned(),
-            arch: Some(Architecture::Armhf),
+            arch: Some(Architecture::ARMHF),
             ..Default::default()
         })
     );
@@ -224,7 +224,7 @@ mod test {
             arch_constraints: Some(ArchConstraints {
                 arches: vec![ArchConstraint {
                     negated: false,
-                    arch: Architecture::Armhf,
+                    arch: Architecture::ARMHF,
                 }]
             }),
             ..Default::default()
@@ -239,11 +239,11 @@ mod test {
                 arches: vec![
                     ArchConstraint {
                         negated: false,
-                        arch: Architecture::Armhf,
+                        arch: Architecture::ARMHF,
                     },
                     ArchConstraint {
                         negated: false,
-                        arch: Architecture::Amd64,
+                        arch: Architecture::AMD64,
                     },
                 ]
             }),
@@ -259,11 +259,11 @@ mod test {
                 arches: vec![
                     ArchConstraint {
                         negated: true,
-                        arch: Architecture::Armhf,
+                        arch: Architecture::ARMHF,
                     },
                     ArchConstraint {
                         negated: true,
-                        arch: Architecture::Amd64,
+                        arch: Architecture::AMD64,
                     },
                 ]
             }),
@@ -494,6 +494,21 @@ mod test {
             "foo <buildprofile1 !buildprofile2> [arch1 !arch2] (= 1.0)"
         ),
         "foo (= 1.0) [arch1 !arch2] <buildprofile1 !buildprofile2>"
+    );
+
+    check_matches!(
+        check_arch_tuple_match,
+        "foo [linux-any]",
+        simple_package!(Package {
+            name: "foo".to_owned(),
+            arch_constraints: Some(ArchConstraints {
+                arches: vec![ArchConstraint {
+                    negated: false,
+                    arch: Architecture::from_parts("any", "any", "linux", "any").unwrap(),
+                },]
+            }),
+            ..Default::default()
+        })
     );
 }
 

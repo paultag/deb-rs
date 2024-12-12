@@ -25,7 +25,7 @@ use pest::iterators::Pair;
 /// An [ArchConstraint] limits a [crate::dependency::Package] to only be
 /// considered on a subset of all [Architecture] values. This can be expressed
 /// via negation (for instance `!amd64` for "Everything except
-/// [Architecture::Amd64]"), or providing the [Architecture] name
+/// [Architecture::AMD64]"), or providing the [Architecture] name
 /// (such as `arm64`).
 ///
 /// In general, you're unlikely to be parsing these directly, instead

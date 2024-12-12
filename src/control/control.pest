@@ -3,7 +3,12 @@ field_name = {
 }
 
 field_value = {
-    (' '..'~')*
+    // this is technically wrong, but it's the only way I can deal with the
+    // de-facto standard. We need to remove the non-printables and stuff,
+    // but we see adoption of unicode (rightly!) in fields like Maintainer,
+    // or Uploaders. Using a glob like above is going to cause us a headache.
+
+    ( !("\n") ~ ANY )*
 }
 
 comment = {

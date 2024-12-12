@@ -99,8 +99,8 @@ pub struct Changes {
 
     /// Lists the [crate::architecture::Architecture] of the files currently
     /// being uploaded. Common architectures are `amd64`, `armel`, `i386`,
-    /// ([crate::architecture::Architecture::Amd64],
-    /// [crate::architecture::Architecture::Armel],
+    /// ([crate::architecture::Architecture::AMD64],
+    /// [crate::architecture::Architecture::ARMEL],
     /// [crate::architecture::Architecture::I386]), etc. Note that the all value
     /// is meant for packages that are architecture independent. If the source
     /// for the package is also being uploaded, the special entry source is also
@@ -274,7 +274,7 @@ Files:
             assert_eq!(2, changes.binary.unwrap().len());
             assert_eq!(2, changes.architecture.len());
             assert_eq!(
-                &[Architecture::Source, Architecture::Amd64,],
+                &[Architecture::SOURCE, Architecture::AMD64],
                 changes.architecture.as_ref(),
             );
 

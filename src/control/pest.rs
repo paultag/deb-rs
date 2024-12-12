@@ -24,7 +24,7 @@ use pest_derive::Parser;
 
 /// Internal PEG based parser to parse a Debian flavored RFC 2822 file
 #[derive(Parser)]
-#[grammar = "src/control/debian_rfc_2822.pest"]
+#[grammar = "src/control/control.pest"]
 pub(super) struct Deb822Parser;
 
 // vim: foldmethod=marker

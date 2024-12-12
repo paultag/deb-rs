@@ -49,12 +49,12 @@ pub struct Package {
     ///
     /// For instance, the package `example:arm64` means that the `example`
     /// package's `.deb` files to be downloaded and installed are from the
-    /// [Architecture::Arm64] Architecture, not the host's.
+    /// [Architecture::ARM64] Architecture, not the host's.
     ///
     /// This is seen most commonly in places where the two [Architecture]
-    /// values can be run on the same ISA, such as [Architecture::Amd64] and
-    /// [Architecture::I386], or [Architecture::Armhf] and
-    /// [Architecture::Amd64], but it can be present in other cases too.
+    /// values can be run on the same ISA, such as [Architecture::AMD64] and
+    /// [Architecture::I386], or [Architecture::ARMHF] and
+    /// [Architecture::AMD64], but it can be present in other cases too.
     pub arch: Option<Architecture>,
 
     /// This constraint limits the [crate::version::Version] of the package

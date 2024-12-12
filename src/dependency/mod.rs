@@ -24,8 +24,24 @@
 //! This will parse fully populated Dependency relationships, as seen in
 //! `.deb` control files.
 //!
+//! ```
+//! use deb::dependency::Dependency;
 //!
-//! # Note on `dpkg-substvars`
+//! let dep: Dependency = "package-1 <stage1>, option (= 1.0) | option-2 [arm64]".parse().unwrap();
+//! ```
+//!
+//! # Overview of the [Dependency] model
+//!
+//! A [Dependency] is made up of a number of [Relation]s. All [Relation]s
+//! must be satisfied. A [Relation] is made up of a number of [Package]
+//! structs. Any [Package] being satisfied will satisfy the [Relation].
+//! A [Package] has a number of constraints on it (such as a
+//! [VersionConstraint], [ArchConstraint] or a [BuildProfileRestrictionFormula]), which
+//! dictate when it can be considered.
+//!
+//! These terms are unique to this crate.
+//!
+//! ## Note ♫ on `substvars`
 //!
 //! This module will *not* parse [Dependency] values that contain dpkg
 //! substvars. While it may, at first, seem fairly straight forward,
@@ -44,22 +60,6 @@
 //! can be parsed and understood, but for the initial version of this module,
 //! the [Dependency] must be free of `dpkg-substvar`s.
 //!
-//! ```
-//! use deb::dependency::Dependency;
-//!
-//! let dep: Dependency = "package-1 <stage1>, option (= 1.0) | option-2 [arm64]".parse().unwrap();
-//! ```
-//!
-//! # Overview of the [Dependency] model
-//!
-//! A [Dependency] is made up of a number of [Relation]s. All [Relation]s
-//! must be satisfied. A [Relation] is made up of a number of [Package]
-//! structs. Any [Package] being satisfied will satisfy the [Relation].
-//! A [Package] has a number of constraints on it (such as a
-//! [VersionConstraint], [ArchConstraint] or a [BuildProfileRestrictionFormula]), which
-//! dictate when it can be considered.
-//!
-//! These terms are unique to this crate.
 //!
 //! # Feature `serde`
 //!
