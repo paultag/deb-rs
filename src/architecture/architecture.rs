@@ -214,20 +214,17 @@ macro_rules! match_tuple_to_parts {
             ["spe", "gnu", "linux", "powerpc"] => vec!["powerpcspe"],
             ["x32", "gnu", "linux", "amd64"] => vec!["x32"],
             ["base", "tos", "mint", "m68k"] => vec!["mint", "m68k"],
-            ["base", "gnu", "hurd", cpu] => vec!["hurd", cpu],
             ["base", "bsd", "freebsd", cpu] => vec!["freebsd", cpu],
-            ["base", "gnu", "kfreebsd", cpu] => vec!["kfreebsd", cpu],
-            ["base", "gnu", "knetbsd", cpu] => vec!["knetbsd", cpu],
             ["base", "bsd", "openbsd", cpu] => vec!["openbsd", cpu],
             ["base", "bsd", "netbsd", cpu] => vec!["netbsd", cpu],
             ["base", "bsd", "darwin", cpu] => vec!["darwin", cpu],
-            ["base", "gnu", "kopensolaris", cpu] => vec!["kopensolaris", cpu],
             ["base", "bsd", "dragonflybsd", cpu] => vec!["dragonflybsd", cpu],
             ["base", "sysv", "aix", cpu] => vec!["aix", cpu],
             ["base", "sysv", "solaris", cpu] => vec!["solaris", cpu],
             ["base", "musl", "linux", cpu] => vec!["musl", "linux", cpu],
             ["base", "uclibc", "linux", cpu] => vec!["uclibc", "linux", cpu],
             ["base", "gnu", "linux", cpu] => vec![cpu],
+            ["base", "gnu", os, cpu] => vec![os, cpu],
             ["source", "", "", ""] => vec!["source"],
             ["all", "", "", ""] => vec!["all"],
             [abi, libc, os, cpu] => vec![abi, libc, os, cpu],
@@ -279,14 +276,10 @@ macro_rules! match_arch_to_tuple {
             ["powerpcspe"] => ["spe", "gnu", "linux", "powerpc"],
             ["x32"] => ["x32", "gnu", "linux", "amd64"],
             ["mint", "m68k"] => ["base", "tos", "mint", "m68k"],
-            ["hurd", cpu] => ["base", "gnu", "hurd", cpu],
             ["freebsd", cpu] => ["base", "bsd", "freebsd", cpu],
-            ["kfreebsd", cpu] => ["base", "gnu", "kfreebsd", cpu],
-            ["knetbsd", cpu] => ["base", "gnu", "knetbsd", cpu],
             ["openbsd", cpu] => ["base", "bsd", "openbsd", cpu],
             ["netbsd", cpu] => ["base", "bsd", "netbsd", cpu],
             ["darwin", cpu] => ["base", "bsd", "darwin", cpu],
-            ["kopensolaris", cpu] => ["base", "gnu", "kopensolaris", cpu],
             ["dragonflybsd", cpu] => ["base", "bsd", "dragonflybsd", cpu],
             ["aix", cpu] => ["base", "sysv", "aix", cpu],
             ["solaris", cpu] => ["base", "sysv", "solaris", cpu],
@@ -294,6 +287,7 @@ macro_rules! match_arch_to_tuple {
             ["uclibc", "linux", cpu] => ["base", "uclibc", "linux", cpu],
             ["linux", cpu] => ["base", "gnu", "linux", cpu],
             [cpu] => ["base", "gnu", "linux", cpu],
+            [os, cpu] => ["base", "gnu", os, cpu],
             [abi, libc, os, cpu] => [abi, libc, os, cpu],
             _ => return Err(Error::Malformed),
         }
@@ -832,7 +826,6 @@ mod test {
     round_trip!(rt_knetbsd_i386, "knetbsd-i386", "knetbsd-i386");
 
     round_trip!(rt_unknown, "dorkus", "dorkus");
-    fails!(fails_unknown_pattern, "dorkus-thewise");
     fails!(fails_unknown_pattern_2, "hi-dorkus-thewise");
     round_trip!(
         rt_unknown_all,
