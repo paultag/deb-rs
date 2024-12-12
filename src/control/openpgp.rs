@@ -41,12 +41,14 @@ use std::{
 #[derive(Clone, Default)]
 pub struct OpenPgpValidatorBuilder {
     keyrings: Vec<PathBuf>,
+    insecure_skip_verify: bool,
 }
 
 /// Struct to decode signed Debian control files.
 #[derive(Clone)]
 pub struct OpenPgpValidator {
     keys: HashMap<Fingerprint, Cert>,
+    insecure_skip_verify: bool,
 }
 
 /// Error conditions which may be encountered when working with OpenPGP
@@ -133,7 +135,7 @@ impl OpenPgpValidator {
 
         let Helper { results, .. } = helper;
 
-        if results.is_empty() {
+        if results.is_empty() && !self.insecure_skip_verify {
             return Err(OpenPgpValidatorError::NoValidSignatures);
         }
 
@@ -146,6 +148,12 @@ impl OpenPgpValidatorBuilder {
     /// to the set of authorized keys, rather than replacing.
     pub fn with_keyring(mut self, path: &Path) -> Self {
         self.keyrings.push(path.to_owned());
+        self
+    }
+
+    /// DO NOT USE THIS OUTSIDE TESTING
+    pub fn with_insecure_skip_verify_this_is_a_bad_idea(mut self) -> Self {
+        self.insecure_skip_verify = true;
         self
     }
 
@@ -164,7 +172,10 @@ impl OpenPgpValidatorBuilder {
             keys
         };
 
-        Ok(OpenPgpValidator { keys })
+        Ok(OpenPgpValidator {
+            keys,
+            insecure_skip_verify: self.insecure_skip_verify,
+        })
     }
 }
 
