@@ -217,6 +217,7 @@ macro_rules! match_tuple_to_parts {
             ["base", "gnu", "hurd", cpu] => vec!["hurd", cpu],
             ["base", "bsd", "freebsd", cpu] => vec!["freebsd", cpu],
             ["base", "gnu", "kfreebsd", cpu] => vec!["kfreebsd", cpu],
+            ["base", "gnu", "knetbsd", cpu] => vec!["knetbsd", cpu],
             ["base", "bsd", "openbsd", cpu] => vec!["openbsd", cpu],
             ["base", "bsd", "netbsd", cpu] => vec!["netbsd", cpu],
             ["base", "bsd", "darwin", cpu] => vec!["darwin", cpu],
@@ -281,6 +282,7 @@ macro_rules! match_arch_to_tuple {
             ["hurd", cpu] => ["base", "gnu", "hurd", cpu],
             ["freebsd", cpu] => ["base", "bsd", "freebsd", cpu],
             ["kfreebsd", cpu] => ["base", "gnu", "kfreebsd", cpu],
+            ["knetbsd", cpu] => ["base", "gnu", "knetbsd", cpu],
             ["openbsd", cpu] => ["base", "bsd", "openbsd", cpu],
             ["netbsd", cpu] => ["base", "bsd", "netbsd", cpu],
             ["darwin", cpu] => ["base", "bsd", "darwin", cpu],
@@ -827,6 +829,7 @@ mod test {
     round_trip!(rt_any_any_linux_any, "any-any-linux-any", "linux-any");
 
     round_trip!(rt_linux_amd64, "linux-amd64", "amd64");
+    round_trip!(rt_knetbsd_i386, "knetbsd-i386", "knetbsd-i386");
 
     round_trip!(rt_unknown, "dorkus", "dorkus");
     fails!(fails_unknown_pattern, "dorkus-thewise");
