@@ -27,6 +27,10 @@ use std::{borrow::Cow, str::FromStr};
 /// They can be found in Debian packages, archive directories, `apt` output,
 /// or even in `dpkg` cmdline invocations.
 ///
+/// You can find an up-to-date list of what [Architecture]s are supported
+/// on the [ports](https://www.debian.org/ports/) page on the Debian
+/// website.
+///
 /// ```
 /// use deb::architecture::Architecture;
 ///
@@ -441,11 +445,10 @@ macro_rules! simple_multiarch {
 }
 
 arch_table!(
-    // Debian well known arches
     (
         "alpha",
         alpha,
-        "Debian's `alpha` arch",
+        "Debian's `alpha` arch. Last supported in Debian 6.0",
         ALPHA,
         simple_architecture_tuple!("alpha"),
         simple_multiarch!(Alpha)
@@ -453,7 +456,7 @@ arch_table!(
     (
         "amd64",
         amd64,
-        "Debian's `amd64` arch",
+        "Debian's `amd64` arch. First supported in Debian 4.0",
         AMD64,
         simple_architecture_tuple!("amd64"),
         simple_multiarch!(X86_64)
@@ -469,7 +472,7 @@ arch_table!(
     (
         "arm",
         arm,
-        "Debian's `arm` arch",
+        "Debian's `arm` arch. Last supported in Debian 6.0",
         ARM,
         simple_architecture_tuple!("arm"),
         simple_multiarch!(Arm)
@@ -477,7 +480,7 @@ arch_table!(
     (
         "arm64",
         arm64,
-        "Debian's `arm64` arch",
+        "Debian's `arm64` arch. First supported in Debian 8",
         ARM64,
         simple_architecture_tuple!("arm64"),
         simple_multiarch!(Aarch64)
@@ -485,7 +488,7 @@ arch_table!(
     (
         "armel",
         armel,
-        "Debian's `armel` arch",
+        "Debian's `armel` arch. First supported in Debian 5.0",
         ARMEL,
         simple_architecture_tuple!("eabi", "gnu", "linux", "arm"),
         simple_multiarch!(Arm - Linux - "gnueabi")
@@ -493,7 +496,7 @@ arch_table!(
     (
         "armhf",
         armhf,
-        "Debian's `armhf` arch",
+        "Debian's `armhf` arch. First supported in Debian 7.0",
         ARMHF,
         simple_architecture_tuple!("eabihf", "gnu", "linux", "arm"),
         simple_multiarch!(Arm - Linux - "gnueabihf")
@@ -501,7 +504,7 @@ arch_table!(
     (
         "hppa",
         hppa,
-        "Debian's `hppa` arch",
+        "Debian's `hppa` arch. Last supported in Debian 6.0",
         HPPA,
         simple_architecture_tuple!("hppa"),
         simple_multiarch!(Hppa)
@@ -525,7 +528,7 @@ arch_table!(
     (
         "i386",
         i386,
-        "Debian's `i386` arch",
+        "Debian's `i386` arch. First supported in Debian 1.1",
         I386,
         simple_architecture_tuple!("i386"),
         simple_multiarch!(I386)
@@ -533,7 +536,7 @@ arch_table!(
     (
         "ia64",
         ia64,
-        "Debian's `ia64` arch",
+        "Debian's `ia64` arch. Last supported in Debian 8",
         IA64,
         simple_architecture_tuple!("ia64"),
         simple_multiarch!(Ia64)
@@ -541,7 +544,7 @@ arch_table!(
     (
         "kfreebsd-amd64",
         kfreebsd_amd64,
-        "Debian's `kfreebsd-amd64` arch",
+        "Debian's `kfreebsd-amd64` arch. Last supported in Debian 8",
         KFREEBSD_AMD64,
         simple_architecture_tuple!("base", "gnu", "kfreebsd", "amd64"),
         simple_multiarch!(X86_64 - FreeBSD - "gnu")
@@ -549,7 +552,7 @@ arch_table!(
     (
         "kfreebsd-i386",
         kfreebsd_i386,
-        "Debian's `kfreebsd-i386` arch",
+        "Debian's `kfreebsd-i386` arch. Last supported in Debian 8",
         KFREEBSD_I386,
         simple_architecture_tuple!("base", "gnu", "kfreebsd", "i386"),
         simple_multiarch!(I386 - FreeBSD - "gnu")
@@ -565,7 +568,7 @@ arch_table!(
     (
         "m68k",
         m68k,
-        "Debian's `m86k` arch",
+        "Debian's `m86k` arch. Last supported in Debian 4.0",
         M68K,
         simple_architecture_tuple!("m68k"),
         simple_multiarch!(M68k)
@@ -573,7 +576,7 @@ arch_table!(
     (
         "mips",
         mips,
-        "Debian's `mips` arch",
+        "Debian's `mips` arch. Last supported in Debian 11",
         MIPS,
         simple_architecture_tuple!("mips"),
         simple_multiarch!(Mips)
@@ -581,7 +584,7 @@ arch_table!(
     (
         "mipsel",
         mipsel,
-        "Debian's `mipsel` arch",
+        "Debian's `mipsel` arch. Last supported in Debian 13",
         MIPSEL,
         simple_architecture_tuple!("mipsel"),
         simple_multiarch!(Mipsel)
@@ -597,7 +600,7 @@ arch_table!(
     (
         "mips64el",
         mips64el,
-        "Debian's `mips64el` arch",
+        "Debian's `mips64el` arch. First supported in Debian 9",
         MIPS64EL,
         simple_architecture_tuple!("abi64", "gnu", "linux", "mips64el"),
         simple_multiarch!(Mips64el - Linux - "gnuabi64")
@@ -653,7 +656,7 @@ arch_table!(
     (
         "powerpc",
         powerpc,
-        "Debian's `powerpc` arch",
+        "Debian's `powerpc` arch. Last supported in Debian 9",
         POWERPC,
         simple_architecture_tuple!("powerpc"),
         simple_multiarch!(PowerPc)
@@ -677,7 +680,7 @@ arch_table!(
     (
         "ppc64el",
         ppc64el,
-        "Debian's `ppc64el` arch",
+        "Debian's `ppc64el` arch. First supported in Debian 8",
         PPC64EL,
         simple_architecture_tuple!("ppc64el"),
         simple_multiarch!(PowerPc64le)
@@ -685,7 +688,7 @@ arch_table!(
     (
         "riscv64",
         riscv64,
-        "Debian's `riscv64` arch",
+        "Debian's `riscv64` arch. First supported in Debian 13",
         RISCV64,
         simple_architecture_tuple!("riscv64"),
         simple_multiarch!(RiscV64)
@@ -693,7 +696,7 @@ arch_table!(
     (
         "s390",
         s390,
-        "Debian's `s390` arch",
+        "Debian's `s390` arch. Last supported in Debian 8",
         S390,
         simple_architecture_tuple!("s390"),
         simple_multiarch!(S390)
@@ -701,7 +704,7 @@ arch_table!(
     (
         "s390x",
         s390x,
-        "Debian's `s390x` arch",
+        "Debian's `s390x` arch. First supported in Debian 7.0",
         S390X,
         simple_architecture_tuple!("s390x"),
         simple_multiarch!(S390X)
@@ -717,7 +720,7 @@ arch_table!(
     (
         "sparc",
         sparc,
-        "Debian's `sparc` arch",
+        "Debian's `sparc` arch. Last supported in Debian 8",
         SPARC,
         simple_architecture_tuple!("sparc"),
         simple_multiarch!(Sparc)
