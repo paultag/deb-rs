@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.rs"
+      - Cargo.toml
+      - Cargo.lock
+      - .github/workflows/cargo-doc.yml
+  pull_request:
+    paths:
+      - "**.rs"
+      - Cargo.toml
+      - Cargo.lock
+      - .github/workflows/cargo-doc.yml
+permissions:
+  packages: read
+  contents: read
+name: cargo doc
+jobs:
+  cargodoc:
+    name: cargo doc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Run cargo doc
+        run: |
+          cargo doc --all-features --no-deps
+        shell: bash
