@@ -185,6 +185,7 @@ impl OpenPgpValidatorBuilder {
 /// moving parts possible removed. This is going to be an interface that we
 /// can make a bit more generic than the concrete [OpenPgpValidator] interface,
 /// so this should be used when possible.
+#[cfg_attr(not(feature = "serde"), allow(dead_code))]
 pub(crate) fn verify(
     keyring: &Path,
     input: &str,

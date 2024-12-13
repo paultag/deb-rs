@@ -102,6 +102,7 @@ pub mod architecture;
 pub mod build_profile;
 pub mod control;
 pub mod dependency;
+pub mod releases;
 pub mod version;
 
 pub(crate) mod errors;

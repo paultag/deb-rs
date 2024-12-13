@@ -108,7 +108,7 @@ impl Architecture {
         // We only check if we're a source or all special arch here; since
         // we want to escape the any glob; but we'll let any glob against
         // any why not.
-        if *self == Self::SOURCE || *self == Self::ALL {
+        if *self == Self::SOURCE || *self == Self::ALL || *self == Self::NATIVE {
             return self == other;
         }
 
@@ -245,6 +245,9 @@ impl std::fmt::Display for Architecture {
             if *self == Self::SOURCE {
                 return write!(f, "source");
             }
+            if *self == Self::NATIVE {
+                return write!(f, "native");
+            }
         }
 
         write!(
@@ -325,6 +328,7 @@ impl FromStr for Architecture {
 
         match tuple {
             "source" => return Ok(Self::SOURCE),
+            "native" => return Ok(Self::NATIVE),
             "all" => return Ok(Self::ALL),
             _ => {}
         };
@@ -768,9 +772,21 @@ impl Architecture {
         abi: Cow::Borrowed("any"),
     };
 
+    /// Debian "native" special "architecture".
+    pub const NATIVE: Architecture = Self {
+        cpu: Cow::Borrowed("native"),
+        libc: Cow::Borrowed(""),
+        os: Cow::Borrowed(""),
+        abi: Cow::Borrowed(""),
+    };
+
     /// Return true if the Architecture has a specific special meaning.
     pub fn is_special(&self) -> bool {
-        *self == Self::SOURCE || *self == Self::ALL || *self == Self::ANY
+        *self == Self::SOURCE
+            || *self == Self::ALL
+            || *self == Self::ANY
+            || *self == Self::NATIVE
+            || self.is_wildcard()
     }
 }
 
@@ -929,19 +945,24 @@ mod test {
 
         assert_eq!("any", Architecture::ANY.to_string());
         assert_eq!("all", Architecture::ALL.to_string());
+        assert_eq!("native", Architecture::NATIVE.to_string());
         assert_eq!("source", Architecture::SOURCE.to_string());
 
+        assert!(!Architecture::AMD64.is_special());
+        assert!(Architecture::NATIVE.is_special());
         assert!(Architecture::ANY.is_special());
         assert!(Architecture::ALL.is_special());
         assert!(Architecture::SOURCE.is_special());
 
         let linux_any: Architecture = "linux-any".parse().unwrap();
 
-        // `any` meets the critera of `linux-any`
+        assert!(linux_any.is_wildcard());
+        assert!(linux_any.is_special());
+
+        // "any" is not matched by "linux-any"
         assert!(!Architecture::ANY.is(&linux_any));
 
-        // `linux-any` does not meet the critera of `any`, since it may
-        // include things other than linux.
+        // but, "linux-any" is matched by "any"
         assert!(linux_any.is(&Architecture::ANY));
     }
 }
