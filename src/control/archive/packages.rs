@@ -86,7 +86,7 @@ pub struct Package {
 
     /// Size of the binary `.deb` file.
     #[cfg_attr(feature = "serde", serde(rename = "Size"))]
-    pub size: String,
+    pub size: usize,
 
     /// MD5 hash of the `.deb` file.
     ///
