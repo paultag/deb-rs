@@ -637,7 +637,7 @@ mod chrono {
 
         #[test]
         fn test_supported_on() {
-            let supported_releases = supported_on(&NaiveDate::from_ymd_opt(2023, 07, 01).unwrap());
+            let supported_releases = supported_on(&NaiveDate::from_ymd_opt(2023, 7, 1).unwrap());
             assert_eq!(2, supported_releases.len());
             assert_eq!(
                 vec![releases::BOOKWORM, releases::BULLSEYE],
@@ -648,7 +648,7 @@ mod chrono {
         #[test]
         fn test_supported_architectures_on() {
             let supported_architectures =
-                supported_architectures_on(&NaiveDate::from_ymd_opt(2023, 07, 01).unwrap());
+                supported_architectures_on(&NaiveDate::from_ymd_opt(2023, 7, 1).unwrap());
 
             let mut supported_architectures = supported_architectures
                 .into_iter()
