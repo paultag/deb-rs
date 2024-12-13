@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
+use crate::control::Priority;
 use crate::{architecture::Architecture, dependency::Dependency, version::Version};
 
 #[cfg(feature = "serde")]
@@ -27,41 +28,35 @@ use ::serde::{Deserialize, Serialize};
 /// `dists/unstable/main/binary-amd64/Packages.xz` and friends.
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "PascalCase"))]
 pub struct Package {
     /// Binary package name
-    #[cfg_attr(feature = "serde", serde(rename = "Package"))]
     pub package: String,
 
     /// The value of this field determines the package name, and is used to
     /// generate file names by most installation tools.
-    #[cfg_attr(feature = "serde", serde(rename = "Source"))]
     pub source: Option<String>,
 
     /// Typically, this is the original package's [Version] number in whatever
     /// form the program's author uses. It may also include a Debian revision
     /// number (for non-native packages).
-    #[cfg_attr(feature = "serde", serde(rename = "Version"))]
     pub version: Version,
 
     /// Archive Section that this package belongs to.
-    #[cfg_attr(feature = "serde", serde(rename = "Section"))]
     pub section: String,
 
     /// Priority of the binary package.
-    #[cfg_attr(feature = "serde", serde(rename = "Priority"))]
-    pub priority: String,
+    pub priority: Priority,
 
     /// Lists the [crate::architecture::Architecture] of the files contained
     /// in this package. Common architectures are `amd64`, `armel`, `i386`,
     /// ([crate::architecture::Architecture::AMD64],
     /// [crate::architecture::Architecture::ARMEL],
     /// [crate::architecture::Architecture::I386]), etc.
-    #[cfg_attr(feature = "serde", serde(rename = "Architecture"))]
     pub architecture: Option<Architecture>,
 
     /// If set, and set to "`yes`", this package is an essential package,
     /// which has special-cased handling in `dpkg` and `apt`.
-    #[cfg_attr(feature = "serde", serde(rename = "Essential"))]
     pub essential: Option<String>,
 
     /// Size of the package's contents on-disk.
@@ -69,23 +64,18 @@ pub struct Package {
     pub installed_size: Option<usize>,
 
     /// Name and email of the package's maintainer.
-    #[cfg_attr(feature = "serde", serde(rename = "Maintainer"))]
     pub maintainer: String,
 
     /// Description of this binary package's purpose.
-    #[cfg_attr(feature = "serde", serde(rename = "Description"))]
     pub description: String,
 
     /// The upstream project home page url.
-    #[cfg_attr(feature = "serde", serde(rename = "Homepage"))]
     pub homepage: Option<String>,
 
     /// Path within the Debian archive to the specific `.deb` file.
-    #[cfg_attr(feature = "serde", serde(rename = "Filename"))]
     pub filename: String,
 
     /// Size of the binary `.deb` file.
-    #[cfg_attr(feature = "serde", serde(rename = "Size"))]
     pub size: usize,
 
     /// MD5 hash of the `.deb` file.
@@ -106,13 +96,11 @@ pub struct Package {
 
     /// Packages that this binary package requires be installed in order to
     /// be fully installed.
-    #[cfg_attr(feature = "serde", serde(rename = "Depends"))]
     pub depends: Option<Dependency>,
 
     /// Packages which this binary package needs to be installed in all but
     /// the most unusual installs. Removing one may cause breakage if their
     /// purpose is not understood.
-    #[cfg_attr(feature = "serde", serde(rename = "Recommends"))]
     pub recommends: Option<Dependency>,
 
     /// Packages which this binary package must not be installed at the same
@@ -143,6 +131,62 @@ pub struct Package {
     /// unpack.
     #[cfg_attr(feature = "serde", serde(rename = "Pre-Depends"))]
     pub pre_depends: Option<Dependency>,
+}
+
+#[cfg(test)]
+mod tests {
+    #[cfg(feature = "serde")]
+    use super::*;
+
+    #[cfg(feature = "serde")]
+    mod serde {
+        use super::*;
+        use crate::control::de;
+
+        macro_rules! test_package {
+            ($name:ident, $data:expr, |$parsed:ident| $block:tt) => {
+                #[test]
+                fn $name() {
+                    let $parsed = de::from_str::<Package>($data).unwrap();
+                    $block
+                }
+            };
+        }
+
+        test_package!(parse_simple, "\
+Package: fluxbox
+Source: fluxbox (1.3.7-1)
+Version: 1.3.7-1+b1
+Installed-Size: 4128
+Maintainer: Dmitry E. Oboukhov <unera@debian.org>
+Architecture: amd64
+Provides: x-window-manager
+Depends: menu (>= 2.1.19), libc6 (>= 2.34), libfontconfig1 (>= 2.12.6), libfribidi0 (>= 0.19.2), libgcc-s1 (>= 3.0), libimlib2t64 (>= 1.4.5), libstdc++6 (>= 13.1), libx11-6, libxext6, libxft2 (>> 2.1.1), libxinerama1 (>= 2:1.1.4), libxpm4, libxrandr2, libxrender1
+Recommends: xfonts-terminus, feh | eterm | hsetroot | xloadimage
+Suggests: fbpager, fbdesk, fbautostart
+Description: Highly configurable and low resource X11 Window manager
+Homepage: https://fluxbox.org
+Description-md5: 13990cdf4dc1b2dc117250b7023f2e58
+Tag: implemented-in::c, interface::graphical, interface::x11, role::program,
+ scope::application, uitoolkit::gtk, x11::window-manager
+Section: x11
+Priority: optional
+Filename: pool/main/f/fluxbox/fluxbox_1.3.7-1+b1_amd64.deb
+Size: 1226140
+MD5sum: e9ae48ab62d609faaafdd034353a28d7
+SHA256: 7eaf5da83ab47fce0937b348640aec52c96ae5193b809d01168c5c81bd7f4645
+", |package| {
+            assert_eq!("fluxbox", package.package);
+            assert_eq!(Architecture::AMD64, package.architecture.unwrap());
+            assert_eq!(4128, package.installed_size.unwrap());
+            assert!(package.depends.is_some());
+            assert!(package.recommends.is_some());
+            assert!(package.suggests.is_some());
+            assert!(package.conflicts.is_none());
+            assert_eq!("pool/main/f/fluxbox/fluxbox_1.3.7-1+b1_amd64.deb", package.filename);
+            assert_eq!(1226140, package.size);
+        });
+    }
 }
 
 // vim: foldmethod=marker

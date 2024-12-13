@@ -41,6 +41,7 @@ pub struct File {
     /// Section of the archive the file is targeted for.
     pub section: String,
 
+    // todo: fix this to use Priority
     /// Priority of the file.
     pub priority: String,
 }

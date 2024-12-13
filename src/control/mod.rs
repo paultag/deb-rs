@@ -71,6 +71,7 @@ mod date_time;
 mod delimited_strings;
 mod paragraph;
 mod pest;
+mod priority;
 mod real_control_tests;
 mod traits;
 
@@ -91,6 +92,7 @@ pub use architectures::Architectures;
 pub use date_time::{DateTime2822, DateTime2822ParseError};
 pub use delimited_strings::{CommaDelimitedStrings, SpaceDelimitedStrings};
 pub use paragraph::{Error, RawField, RawParagraph};
+pub use priority::Priority;
 pub use traits::FileEntry;
 
 #[cfg(feature = "sequoia")]

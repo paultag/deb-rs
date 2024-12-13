@@ -20,7 +20,7 @@
 
 use super::Error;
 use serde::{
-    de::{self, DeserializeSeed, Visitor},
+    de::{self, DeserializeSeed, IntoDeserializer, Visitor},
     forward_to_deserialize_any,
 };
 use std::iter::Peekable;
@@ -95,7 +95,7 @@ where
     forward_to_deserialize_any! {
         char unit
         bytes byte_buf str string
-        tuple unit_struct tuple_struct enum newtype_struct
+        tuple unit_struct tuple_struct newtype_struct
         ignored_any
     }
 
@@ -201,6 +201,21 @@ where
 
         if let Some(next) = self.iter.next() {
             return visitor.visit_seq(&mut new_multiline(next.split("\n"))?);
+        }
+        Err(Error::EndOfFile)
+    }
+
+    fn deserialize_enum<V>(
+        self,
+        _: &'static str,
+        _: &'static [&'static str],
+        visitor: V,
+    ) -> Result<V::Value, Self::Error>
+    where
+        V: Visitor<'de>,
+    {
+        if let Some(next) = self.iter.next() {
+            return visitor.visit_enum(next.into_deserializer());
         }
         Err(Error::EndOfFile)
     }

@@ -54,6 +54,7 @@ crate::errors::error_enum!(DscParseError);
 /// fields in this struct contain text written in that manpage.
 #[derive(Clone, Debug, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "PascalCase"))]
 pub struct Dsc {
     /// The value of this field declares the format version of the source
     /// package.  The field value is used by programs acting on a source
@@ -68,12 +69,10 @@ pub struct Dsc {
     /// The source formats currently supported by `dpkg` are `1.0`, `2.0`,
     /// `3.0 (native)`, `3.0 (quilt)`, `3.0 (git)`, `3.0 (bzr)` and
     /// `3.0 (custom)`. See dpkg-source(1) for their description.
-    #[cfg_attr(feature = "serde", serde(rename = "Format"))]
     pub format: String,
 
     /// The value of this field determines the package name, and is used to
     /// generate file names by most installation tools.
-    #[cfg_attr(feature = "serde", serde(rename = "Source"))]
     pub source: String,
 
     /// This folded field lists binary packages which this source package can
@@ -82,7 +81,6 @@ pub struct Dsc {
     /// This field has now been superseded by the `Package-List` field, which
     /// gives enough information about what binary packages are produced on
     /// which architecture, build-profile and other involved restrictions.
-    #[cfg_attr(feature = "serde", serde(rename = "Binary"))]
     pub binary: Option<CommaDelimitedStrings>,
 
     /// Lists the [crate::architecture::Architecture] of the files currently
@@ -93,25 +91,21 @@ pub struct Dsc {
     /// is meant for packages that are architecture independent. If the source
     /// for the package is also being uploaded, the special entry source is also
     /// present. Architecture wildcards must never be present in the list.
-    #[cfg_attr(feature = "serde", serde(rename = "Architecture"))]
     pub architecture: Option<Architectures>,
 
     /// Typically, this is the original package's [Version] number in whatever
     /// form the program's author uses. It may also include a Debian revision
     /// number (for non-native packages).
-    #[cfg_attr(feature = "serde", serde(rename = "Version"))]
     pub version: Version,
 
     /// Should be in the format `Joe Bloggs <jbloggs@foo.com>`, and is
     /// typically the person who created the package, as opposed to the
     /// author of the software that was packaged.
-    #[cfg_attr(feature = "serde", serde(rename = "Maintainer"))]
     pub maintainer: String,
 
     /// Lists all the names and email addresses of co-maintainers of the
     /// package, in the same format as the Maintainer field. Multiple
     /// co-maintainers should be separated by a comma.
-    #[cfg_attr(feature = "serde", serde(rename = "Uploaders"))]
     pub uploaders: Option<CommaDelimitedStrings>,
 
     /// The format for the source package description is a short brief summary
@@ -120,11 +114,9 @@ pub struct Dsc {
     /// the long description must be preceded by a space, and blank lines in
     /// the long description must contain a single `.` following the preceding
     /// space.
-    #[cfg_attr(feature = "serde", serde(rename = "Description"))]
     pub description: Option<String>,
 
     /// The upstream project home page url.
-    #[cfg_attr(feature = "serde", serde(rename = "Homepage"))]
     pub homepage: Option<String>,
 
     /// Version Control information.
@@ -140,7 +132,6 @@ pub struct Dsc {
     /// autopkgtest value is present, a `debian/tests/control` is expected to
     /// be present, if the file is present but not the value, then
     /// `dpkg-source` will automatically add it, preserving previous values.
-    #[cfg_attr(feature = "serde", serde(rename = "Testsuite"))]
     pub testsuite: Option<CommaDelimitedStrings>,
 
     /// This field declares the comma-separated union of all test dependencies
@@ -157,7 +148,6 @@ pub struct Dsc {
     /// Folded field containing a single git commit hash, presented in full,
     /// followed optionally by whitespace and other data to be defined in
     /// future extensions.
-    #[cfg_attr(feature = "serde", serde(rename = "Dgit"))]
     pub dgit: Option<String>,
 
     /// This documents the most recent version of the distribution policy
@@ -221,7 +211,6 @@ pub struct Dsc {
     /// Note: The MD5 checksum is considered weak, and should never be assumed
     /// to be sufficient for secure verification, but this field cannot be
     /// omitted as it provides metadata not available anywhere else.
-    #[cfg_attr(feature = "serde", serde(rename = "Files"))]
     pub files: Vec<FileChecksum<HASH_LEN_MD5>>,
 
     /// Each line consists of space-separated entries describing the file:

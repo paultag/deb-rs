@@ -46,6 +46,7 @@ pub struct PackageList {
     /// Section of the archive to target.
     pub section: String,
 
+    // todo: fix this to use Priority
     /// Priority of the package.
     pub priority: String,
 }
