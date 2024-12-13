@@ -61,16 +61,23 @@
 use crate::architecture::Architecture;
 use std::borrow::Cow;
 
+/// Metadata about a Debian stable release.
 ///
+/// This contains information on when the release was promoted to
+/// `stable` as well as when it fell out of official project support.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Release {
-    ///
+    /// Name of the Debian release - something like "`forky"` or
+    /// "`sarge`".
     pub name: Cow<'static, str>,
 
-    /// Debian release's Version number
+    /// Debian release number. These are a bit all over the place and don't
+    /// really encode any specific semantic meaning until [JESSIE] and later.
     pub version: Cow<'static, str>,
 
-    ///
+    /// Officially supported [Architecture] ports. Beyond official archive
+    /// support, there's a handful of unoffical ports, which may have varying
+    /// degrees of functionality and porters.
     pub architectures: Cow<'static, [Architecture]>,
 
     released_on: Option<NaiveDate>,
@@ -116,7 +123,7 @@ macro_rules! date {
 pub const BUZZ: Release = Release {
     name: cow!("buzz"),
     version: cow!("1.1"),
-    released_on: date!(1996 / 06 / 16),
+    released_on: date!(1996 / 6 / 16),
     eol_on: date!(1996 / 12 / 12),
     architectures: cow!(&[Architecture::I386]),
 };
@@ -126,7 +133,7 @@ pub const REX: Release = Release {
     name: cow!("rex"),
     version: cow!("1.2"),
     released_on: date!(1996 / 12 / 12),
-    eol_on: date!(1997 / 07 / 02),
+    eol_on: date!(1997 / 7 / 2),
     architectures: cow!(&[Architecture::I386]),
 };
 
@@ -139,8 +146,8 @@ pub const REX: Release = Release {
 pub const BO: Release = Release {
     name: cow!("bo"),
     version: cow!("1.3"),
-    released_on: date!(1997 / 07 / 02),
-    eol_on: date!(1998 / 07 / 24),
+    released_on: date!(1997 / 7 / 2),
+    eol_on: date!(1998 / 7 / 24),
     architectures: cow!(&[
         Architecture::I386,
         Architecture::M68K,
@@ -160,8 +167,8 @@ pub const BO: Release = Release {
 pub const HAMM: Release = Release {
     name: cow!("hamm"),
     version: cow!("2.0"),
-    released_on: date!(1998 / 06 / 24),
-    eol_on: date!(1999 / 03 / 09),
+    released_on: date!(1998 / 6 / 24),
+    eol_on: date!(1999 / 3 / 9),
 
     // Alpha, Sparc, and PowerPC were in unstable.
     architectures: cow!(&[Architecture::I386, Architecture::M68K]),
@@ -174,8 +181,8 @@ pub const HAMM: Release = Release {
 pub const SLINK: Release = Release {
     name: cow!("slink"),
     version: cow!("2.1"),
-    released_on: date!(1999 / 03 / 09),
-    eol_on: date!(2000 / 09 / 30),
+    released_on: date!(1999 / 3 / 9),
+    eol_on: date!(2000 / 9 / 30),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::I386,
@@ -193,8 +200,8 @@ pub const SLINK: Release = Release {
 pub const POTATO: Release = Release {
     name: cow!("potato"),
     version: cow!("2.2"),
-    released_on: date!(2000 / 08 / 15),
-    eol_on: date!(2003 / 06 / 30),
+    released_on: date!(2000 / 8 / 15),
+    eol_on: date!(2003 / 6 / 30),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::ARM,
@@ -216,8 +223,8 @@ pub const POTATO: Release = Release {
 pub const WOODY: Release = Release {
     name: cow!("woody"),
     version: cow!("3.0"),
-    released_on: date!(2002 / 07 / 19),
-    eol_on: date!(2006 / 06 / 30),
+    released_on: date!(2002 / 7 / 19),
+    eol_on: date!(2006 / 6 / 30),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::ARM,
@@ -238,8 +245,8 @@ pub const SARGE: Release = Release {
     // paultag's first Debian install!
     name: cow!("sarge"),
     version: cow!("3.1"),
-    released_on: date!(2005 / 06 / 06),
-    eol_on: date!(2008 / 03 / 31),
+    released_on: date!(2005 / 6 / 6),
+    eol_on: date!(2008 / 3 / 31),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::ARM,
@@ -264,8 +271,8 @@ pub const SARGE: Release = Release {
 pub const ETCH: Release = Release {
     name: cow!("etch"),
     version: cow!("4.0"),
-    released_on: date!(2007 / 04 / 08),
-    eol_on: date!(2012 / 02 / 06),
+    released_on: date!(2007 / 4 / 8),
+    eol_on: date!(2012 / 2 / 6),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::AMD64,
@@ -288,8 +295,8 @@ pub const ETCH: Release = Release {
 pub const LENNY: Release = Release {
     name: cow!("lenny"),
     version: cow!("5.0"),
-    released_on: date!(2009 / 02 / 14),
-    eol_on: date!(2012 / 02 / 06),
+    released_on: date!(2009 / 2 / 14),
+    eol_on: date!(2012 / 2 / 6),
     architectures: cow!(&[
         Architecture::ALPHA,
         Architecture::AMD64,
@@ -316,8 +323,8 @@ pub const LENNY: Release = Release {
 pub const SQUEEZE: Release = Release {
     name: cow!("squeeze"),
     version: cow!("6.0"),
-    released_on: date!(2011 / 02 / 06),
-    eol_on: date!(2014 / 05 / 31),
+    released_on: date!(2011 / 2 / 6),
+    eol_on: date!(2014 / 5 / 31),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARMEL,
@@ -339,8 +346,8 @@ pub const WHEEZY: Release = Release {
     // paultag's first Debian release as a DD
     name: cow!("wheezy"),
     version: cow!("7"),
-    released_on: date!(2013 / 05 / 04),
-    eol_on: date!(2016 / 04 / 25),
+    released_on: date!(2013 / 5 / 4),
+    eol_on: date!(2016 / 4 / 25),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARMEL,
@@ -364,8 +371,8 @@ pub const WHEEZY: Release = Release {
 pub const JESSIE: Release = Release {
     name: cow!("jessie"),
     version: cow!("8"),
-    released_on: date!(2015 / 04 / 25),
-    eol_on: date!(2018 / 06 / 17),
+    released_on: date!(2015 / 4 / 25),
+    eol_on: date!(2018 / 6 / 17),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARM64,
@@ -386,8 +393,8 @@ pub const JESSIE: Release = Release {
 pub const STRETCH: Release = Release {
     name: cow!("stretch"),
     version: cow!("9"),
-    released_on: date!(2017 / 06 / 17),
-    eol_on: date!(2020 / 07 / 18),
+    released_on: date!(2017 / 6 / 17),
+    eol_on: date!(2020 / 7 / 18),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARM64,
@@ -408,8 +415,8 @@ pub const STRETCH: Release = Release {
 pub const BUSTER: Release = Release {
     name: cow!("buster"),
     version: cow!("10"),
-    released_on: date!(2019 / 07 / 06),
-    eol_on: date!(2022 / 09 / 10),
+    released_on: date!(2019 / 7 / 6),
+    eol_on: date!(2022 / 9 / 10),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARM64,
@@ -428,8 +435,8 @@ pub const BUSTER: Release = Release {
 pub const BULLSEYE: Release = Release {
     name: cow!("bullseye"),
     version: cow!("11"),
-    released_on: date!(2021 / 08 / 14),
-    eol_on: date!(2024 / 08 / 14),
+    released_on: date!(2021 / 8 / 14),
+    eol_on: date!(2024 / 8 / 14),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARM64,
@@ -453,8 +460,8 @@ pub const BULLSEYE: Release = Release {
 pub const BOOKWORM: Release = Release {
     name: cow!("bookworm"),
     version: cow!("12"),
-    released_on: date!(2023 / 06 / 10),
-    eol_on: date!(2026 / 06 / 10),
+    released_on: date!(2023 / 6 / 10),
+    eol_on: date!(2026 / 6 / 10),
     architectures: cow!(&[
         Architecture::AMD64,
         Architecture::ARM64,
@@ -593,10 +600,9 @@ mod chrono {
     /// releases at the provided time.
     pub fn supported_architectures_on(today: &NaiveDate) -> Vec<Architecture> {
         let mut ret = vec![];
-        for arch in supported_on(&today)
+        for arch in supported_on(today)
             .iter()
-            .map(|rel| &rel.architectures[..])
-            .flatten()
+            .flat_map(|rel| &rel.architectures[..])
         {
             if ret.contains(arch) {
                 continue;
