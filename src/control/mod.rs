@@ -74,6 +74,7 @@ mod pest;
 mod real_control_tests;
 mod traits;
 
+pub mod archive;
 pub mod changes;
 pub mod dsc;
 
