@@ -551,14 +551,14 @@ pub const RELEASES: [Release; 19] = [
 
 #[cfg(feature = "chrono")]
 mod chrono {
-    // #![cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
+    #![cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
 
     use super::{Architecture, Release, RELEASES};
     use ::chrono::NaiveDate;
 
     impl Release {
         /// Date on which this release was promoted from Debian
-        /// `testing to Debian `stable`. This may be `None` if the release
+        /// `testing` to Debian `stable`. This may be `None` if the release
         /// has not happened yet.
         pub fn released_on(&self) -> Option<&NaiveDate> {
             self.released_on.as_ref()
