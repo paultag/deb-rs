@@ -21,6 +21,8 @@
 //! Module to use the [serde] deserialization framework to decode data in
 //! Debian's RFC2822-like format to Rust types.
 
+#![cfg_attr(docsrs, doc(cfg(feature = "serde")))]
+
 use crate::control::RawParagraph;
 use serde::de;
 use std::{
@@ -177,6 +179,8 @@ where
 
 #[cfg(feature = "tokio")]
 mod _tokio {
+    #![cfg_attr(docsrs, doc(cfg(feature = "tokio")))]
+
     use super::*;
     use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
 
@@ -380,6 +384,7 @@ pub use _tokio::{from_reader_async, from_reader_async_iter, AsyncControlIterator
 /// # Note ♫
 ///
 /// This requires the `sequoia` feature.
+#[cfg_attr(docsrs, doc(cfg(feature = "seqoia")))]
 #[cfg(feature = "sequoia")]
 pub fn from_clearsigned_str<'a, 'de, T>(
     keyring: &Path,

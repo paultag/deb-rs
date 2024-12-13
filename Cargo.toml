@@ -9,6 +9,7 @@ description = "Utilities for working with files and formats commonly found when 
 
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 full = [

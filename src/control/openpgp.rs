@@ -21,6 +21,8 @@
 //! Helpers using the [sequoia_openpgp] crate to handle OpenPGP file signature
 //! verification without using the really error prone API directly.
 
+#![cfg_attr(docsrs, doc(cfg(feature = "sequoia")))]
+
 use sequoia_openpgp::{
     cert::CertParser,
     parse::{
@@ -183,7 +185,6 @@ impl OpenPgpValidatorBuilder {
 /// moving parts possible removed. This is going to be an interface that we
 /// can make a bit more generic than the concrete [OpenPgpValidator] interface,
 /// so this should be used when possible.
-#[allow(dead_code)]
 pub(crate) fn verify(
     keyring: &Path,
     input: &str,

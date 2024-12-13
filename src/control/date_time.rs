@@ -44,6 +44,7 @@ impl Deref for DateTime2822 {
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum DateTime2822ParseError {
     #[cfg(feature = "chrono")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
     /// The provided [DateTime2822] had an invalid string representation of
     /// a date time.
     InvalidDate,
@@ -52,6 +53,8 @@ crate::errors::error_enum!(DateTime2822ParseError);
 
 #[cfg(feature = "chrono")]
 mod chrono {
+    #![cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
+
     use super::*;
     use ::chrono::{DateTime, FixedOffset};
 

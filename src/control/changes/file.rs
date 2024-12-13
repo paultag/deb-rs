@@ -107,6 +107,8 @@ mod serde {
 
 #[cfg(feature = "hex")]
 mod hex {
+    #![cfg_attr(docsrs, doc(cfg(feature = "hex")))]
+
     use super::*;
     use ::hex;
 

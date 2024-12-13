@@ -21,6 +21,8 @@
 //! Module to use the [serde] serialization framework to encode data to
 //! Debian's RFC2822-like format from Rust types.
 
+#![cfg_attr(docsrs, doc(cfg(feature = "serde")))]
+
 use serde::Serialize;
 
 mod paragraph;

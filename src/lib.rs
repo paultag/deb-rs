@@ -26,13 +26,16 @@
 #![deny(unused_qualifications)]
 #![deny(rustdoc::broken_intra_doc_links)]
 #![deny(rustdoc::private_intra_doc_links)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 //! 🎉 You found the `deb` crate! 🎉
 //!
-//! This crate is under active development, and "soft launched". *Please do
-//! not post widely directing to this crate yet* -- the API shipped today is
-//! unstable, and is likely to change -- fairly significantly -- without much
-//! regard to very precisely following semver until it stabilizes.
+//! <div class="warning">
+//! This crate is under active development, and "soft launched". <b>Please do
+//! not post widely directing users to this crate yet</b> -- the API shipped
+//! today is unstable, and <i>will</i> change -- fairly significantly -- without
+//! regard to following semver until it stabilizes.
+//! </div>
 //!
 //! You're more than welcome to play with this and use it, but it's not
 //! something I would encourage load bearing infrastructure to be written
