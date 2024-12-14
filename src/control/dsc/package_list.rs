@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::DscParseError;
-use crate::control::Priority;
+use crate::control::{def_serde_traits_for, Priority};
 use std::str::FromStr;
 
 /// [PackageList] describes one binary package, by listing its name, type,
@@ -82,27 +82,7 @@ impl FromStr for PackageList {
     }
 }
 
-#[cfg(feature = "serde")]
-mod serde {
-    use super::PackageList;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
-
-    impl Serialize for PackageList {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            String::serialize(&self.to_string(), serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for PackageList {
-        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
-            let s = String::deserialize(d)?;
-            s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
-        }
-    }
-}
+def_serde_traits_for!(PackageList);
 
 #[cfg(test)]
 mod tests {

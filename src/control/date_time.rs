@@ -110,27 +110,6 @@ mod chrono {
     }
 }
 
-#[cfg(feature = "serde")]
-mod serde {
-    use super::DateTime2822;
-    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
-
-    impl Serialize for DateTime2822 {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            String::serialize(&self.0.to_string(), serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for DateTime2822 {
-        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
-            let s = String::deserialize(d)?;
-            s.parse::<DateTime2822>()
-                .map_err(|e| D::Error::custom(format!("{:?}", e)))
-        }
-    }
-}
+super::def_serde_traits_for!(DateTime2822);
 
 // vim: foldmethod=marker

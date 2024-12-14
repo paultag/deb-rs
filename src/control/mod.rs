@@ -76,6 +76,7 @@ mod architectures;
 mod checksum;
 mod date_time;
 mod delimited_strings;
+mod macros;
 mod paragraph;
 mod pest;
 mod priority;
@@ -102,6 +103,8 @@ pub use delimited_strings::{CommaDelimitedStrings, SpaceDelimitedStrings};
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};
 pub use traits::FileEntry;
+
+use macros::def_serde_traits_for;
 
 #[cfg(feature = "sequoia")]
 pub use openpgp::{OpenPgpValidator, OpenPgpValidatorBuilder, OpenPgpValidatorError};
