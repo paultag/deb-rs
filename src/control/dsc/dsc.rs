@@ -42,7 +42,8 @@ pub enum DscParseError {
     /// in the future.
     Malformed,
 
-    ///
+    /// The provided `Priority` value was invalid in some delightful hard
+    /// to understand way.
     InvalidPriority(PriorityParseError),
 }
 crate::errors::error_enum!(DscParseError);

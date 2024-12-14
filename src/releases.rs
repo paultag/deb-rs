@@ -615,7 +615,7 @@ mod chrono {
         }
 
         let releases = supported_on(date);
-        let stable = releases.iter().next()?;
+        let stable = releases.first()?;
 
         // if this fails something very bad has happened.
         let stable_idx = RELEASES.iter().position(|e| e == stable).unwrap();

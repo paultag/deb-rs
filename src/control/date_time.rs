@@ -74,7 +74,7 @@ mod chrono {
         fn from_str(when: &str) -> Result<Self, Self::Err> {
             Ok(Self(
                 DateTime::parse_from_rfc2822(when)
-                    .map_err(|e| DateTime2822ParseError::InvalidDate(e))?,
+                    .map_err(DateTime2822ParseError::InvalidDate)?,
             ))
         }
     }
