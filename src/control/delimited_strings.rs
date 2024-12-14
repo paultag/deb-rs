@@ -18,99 +18,77 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::control::def_serde_traits_for;
 use std::{convert::Infallible, ops::Deref, str::FromStr};
+
+#[derive(Clone, Debug, PartialEq)]
+#[repr(transparent)]
+pub struct DelimitedStrings<const DELIM: char>(pub Vec<String>);
 
 /// Wrapper type around a `Vec<String>` which handles encoding and decoding
 /// a list of space separated String values to and from a single String
 /// as seen throughout the `control` module.
-#[derive(Clone, Debug, PartialEq)]
-#[repr(transparent)]
-pub struct SpaceDelimitedStrings(pub Vec<String>);
-
-impl Deref for SpaceDelimitedStrings {
-    type Target = [String];
-    fn deref(&self) -> &[String] {
-        &self.0
-    }
-}
+pub type SpaceDelimitedStrings = DelimitedStrings<' '>;
 
 /// Wrapper type around a `Vec<String>` which handles encoding and decoding
 /// a list of comma separated String values to and from a single String
 /// as seen throughout the `control` module.
-#[derive(Clone, Debug, PartialEq)]
-#[repr(transparent)]
-pub struct CommaDelimitedStrings(pub Vec<String>);
+pub type CommaDelimitedStrings = DelimitedStrings<','>;
 
-impl Deref for CommaDelimitedStrings {
+impl<const DELIM: char> Deref for DelimitedStrings<DELIM> {
     type Target = [String];
     fn deref(&self) -> &[String] {
         &self.0
     }
 }
 
-mod space {
-    use super::*;
-    impl std::fmt::Display for SpaceDelimitedStrings {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-            write!(
-                f,
-                "{}",
-                &self
-                    .0
-                    .iter()
-                    .map(|v| v.to_string())
-                    .collect::<Vec<_>>()
-                    .join(" ")
-            )
-        }
+impl<const DELIM: char> std::fmt::Display for DelimitedStrings<DELIM> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{}",
+            &self
+                .0
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>()
+                .join(&DELIM.to_string())
+        )
     }
-
-    impl FromStr for SpaceDelimitedStrings {
-        type Err = Infallible;
-
-        fn from_str(closes: &str) -> Result<Self, Self::Err> {
-            Ok(Self(
-                closes
-                    .split(' ')
-                    .map(|closes| closes.to_owned())
-                    .collect::<Vec<_>>(),
-            ))
-        }
-    }
-    def_serde_traits_for!(SpaceDelimitedStrings);
 }
 
-mod comma {
-    use super::*;
-    impl std::fmt::Display for CommaDelimitedStrings {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-            write!(
-                f,
-                "{}",
-                &self
-                    .0
-                    .iter()
-                    .map(|v| v.to_string())
-                    .collect::<Vec<_>>()
-                    .join(" ")
-            )
+impl<const DELIM: char> FromStr for DelimitedStrings<DELIM> {
+    type Err = Infallible;
+
+    fn from_str(closes: &str) -> Result<Self, Self::Err> {
+        Ok(Self(
+            closes
+                .split(DELIM)
+                .map(|closes| closes.to_owned())
+                .collect::<Vec<_>>(),
+        ))
+    }
+}
+
+#[cfg(feature = "serde")]
+mod serde {
+    use super::DelimitedStrings;
+    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+
+    impl<const DELIM: char> Serialize for DelimitedStrings<DELIM> {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            String::serialize(&self.to_string(), serializer)
         }
     }
 
-    impl FromStr for CommaDelimitedStrings {
-        type Err = Infallible;
-
-        fn from_str(closes: &str) -> Result<Self, Self::Err> {
-            Ok(Self(
-                closes
-                    .split(' ')
-                    .map(|closes| closes.to_owned())
-                    .collect::<Vec<_>>(),
-            ))
+    impl<'de, const DELIM: char> Deserialize<'de> for DelimitedStrings<DELIM> {
+        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+            let s = String::deserialize(d)?;
+            s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
         }
     }
-    def_serde_traits_for!(CommaDelimitedStrings);
 }
 
 // vim: foldmethod=marker

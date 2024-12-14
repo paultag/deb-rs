@@ -18,11 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{Closes, File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
+use super::{File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
 use crate::{
     control::{Architectures, DateTime2822, PriorityParseError, SpaceDelimitedStrings},
     version::Version,
 };
+
+/// Wrapper type around a `Vec<String>` which handles encoding and decoding
+/// a list of String values indicating bugs to be closed after the package
+/// has been accepted.
+pub type Closes = SpaceDelimitedStrings;
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};

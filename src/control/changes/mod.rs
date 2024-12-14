@@ -22,7 +22,6 @@
 
 #[allow(clippy::module_inception)]
 mod changes;
-mod closes;
 mod file;
 mod file_checksum;
 
@@ -30,7 +29,6 @@ const HASH_LEN_SHA1: usize = 20;
 const HASH_LEN_SHA256: usize = 32;
 
 pub use changes::{Changes, ChangesParseError};
-pub use closes::Closes;
 pub use file::File;
 pub use file_checksum::FileChecksum;
 
