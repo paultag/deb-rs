@@ -99,7 +99,9 @@ mod openpgp;
 pub use architectures::Architectures;
 pub use checksum::{Checksum, ChecksumMd5, ChecksumSha1, ChecksumSha256};
 pub use date_time::{DateTime2822, DateTime2822ParseError};
-pub use delimited_strings::{CommaDelimitedStrings, SpaceDelimitedStrings};
+pub use delimited_strings::{
+    CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings,
+};
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};
 pub use traits::FileEntry;

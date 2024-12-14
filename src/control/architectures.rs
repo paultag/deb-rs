@@ -18,54 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::{
-    architecture::{self, Architecture},
-    control::def_serde_traits_for,
-};
-use std::{ops::Deref, str::FromStr};
+use crate::{architecture::Architecture, control::Delimited};
 
-/// Wrapper type around a `Vec<Architecture>` which handles encoding and decoding
-/// [Architecture] values to and from a String as seen throughout the `control`
-/// module.
-#[derive(Clone, Debug, PartialEq)]
-#[repr(transparent)]
-pub struct Architectures(pub Vec<Architecture>);
-
-impl Deref for Architectures {
-    type Target = [Architecture];
-    fn deref(&self) -> &[Architecture] {
-        self.0.as_ref()
-    }
-}
-
-impl std::fmt::Display for Architectures {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(
-            f,
-            "{}",
-            &self
-                .0
-                .iter()
-                .map(|v| v.to_string())
-                .collect::<Vec<_>>()
-                .join(" ")
-        )
-    }
-}
-
-impl FromStr for Architectures {
-    type Err = architecture::Error;
-
-    fn from_str(architectures: &str) -> Result<Self, Self::Err> {
-        Ok(Self(
-            architectures
-                .split(' ')
-                .map(|arch| arch.parse())
-                .collect::<Result<Vec<_>, _>>()?,
-        ))
-    }
-}
-
-def_serde_traits_for!(Architectures);
+/// List of [Architecture] values, seperated with a space.
+pub type Architectures = Delimited<' ', Architecture>;
 
 // vim: foldmethod=marker
