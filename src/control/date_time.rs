@@ -127,8 +127,8 @@ mod serde {
     impl<'de> Deserialize<'de> for DateTime2822 {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
-            Ok(s.parse::<DateTime2822>()
-                .map_err(|e| D::Error::custom(format!("{:?}", e)))?)
+            s.parse::<DateTime2822>()
+                .map_err(|e| D::Error::custom(format!("{:?}", e)))
         }
     }
 }

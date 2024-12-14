@@ -143,8 +143,8 @@ mod serde {
     impl<'de, const HASH_LEN: usize> Deserialize<'de> for Checksum<HASH_LEN> {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
-            Ok(s.parse::<Checksum<HASH_LEN>>()
-                .map_err(|e| D::Error::custom(format!("{:?}", e)))?)
+            s.parse::<Checksum<HASH_LEN>>()
+                .map_err(|e| D::Error::custom(format!("{:?}", e)))
         }
     }
 }
