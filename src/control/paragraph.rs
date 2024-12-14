@@ -86,11 +86,7 @@ impl TryFrom<Pair<'_, Rule>> for RawField {
                     key = Some(part.as_str().to_owned());
                 }
                 Rule::field_value => {
-                    if value.is_empty() {
-                        value.push_str(part.as_str());
-                    } else {
-                        value.push_str(&format!("\n{}", part.as_str()));
-                    }
+                    value.push_str(&format!("{}\n", part.as_str()));
                 }
                 _ => continue,
             };
@@ -102,7 +98,7 @@ impl TryFrom<Pair<'_, Rule>> for RawField {
 
         Ok(RawField {
             key,
-            value: value.trim_start_matches(' ').to_owned(),
+            value: value.trim_start_matches(' ').trim_end().to_owned(),
         })
     }
 }

@@ -693,6 +693,28 @@ Multiline:
     }
 
     #[test]
+    fn test_multiline_with_initial_line() {
+        #[derive(Clone, Debug, PartialEq, Deserialize)]
+        struct Multiline {
+            #[serde(rename = "Multiline")]
+            multiline: Vec<String>,
+        }
+
+        let ml: Multiline = from_str(
+            "\
+Multiline: Oh hello there!
+ Something
+ Here
+ And
+ Here
+",
+        )
+        .unwrap();
+
+        assert_eq!(4, ml.multiline.len());
+    }
+
+    #[test]
     fn test_multiline_custom() {
         #[derive(Clone, Debug, PartialEq, Deserialize)]
         struct Multiline {

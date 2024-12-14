@@ -226,6 +226,9 @@ where
     IteratorT: 'a,
     IteratorT: Iterator<Item = &'a str>,
 {
+    /// Leading token from the same line as the Key, if one exists.
+    pub(super) _leading_token: String,
+
     /// all subsequent folded lines
     pub(super) iter: Peekable<IteratorT>,
 }
@@ -234,13 +237,19 @@ where
 /// above. This'll simplify things a bit to read without going insane
 /// on trait bounds. Sorry for this.
 pub(super) fn new_multiline<'a, IteratorT>(
-    iter: IteratorT,
+    mut iter: IteratorT,
 ) -> Result<Multiline<'a, IteratorT>, Error>
 where
     IteratorT: 'a,
     IteratorT: Iterator<Item = &'a str>,
 {
+    let leading_token = iter.next().unwrap_or("");
+
+    // TODO: what to do if the `leading_token` here is set? Warn? I mean
+    // we did document it, soooo?
+
     Ok(Multiline {
+        _leading_token: leading_token.to_string(),
         iter: iter.peekable(),
     })
 }
