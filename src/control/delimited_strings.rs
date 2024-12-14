@@ -18,11 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use std::{convert::Infallible, ops::Deref, str::FromStr};
+use std::{ops::Deref, str::FromStr};
 
+/// Generic type to hold a bunch of some parseable type delimited with
+/// some char `DELIM`.
 #[derive(Clone, Debug, PartialEq)]
 #[repr(transparent)]
-pub struct DelimitedStrings<const DELIM: char>(pub Vec<String>);
+pub struct Delimited<const DELIM: char, InnerT>(pub Vec<InnerT>);
+
+/// Repeated [String] values, seperated by `DELIM`.
+pub type DelimitedStrings<const DELIM: char> = Delimited<DELIM, String>;
 
 /// Wrapper type around a `Vec<String>` which handles encoding and decoding
 /// a list of space separated String values to and from a single String
@@ -34,14 +39,17 @@ pub type SpaceDelimitedStrings = DelimitedStrings<' '>;
 /// as seen throughout the `control` module.
 pub type CommaDelimitedStrings = DelimitedStrings<','>;
 
-impl<const DELIM: char> Deref for DelimitedStrings<DELIM> {
-    type Target = [String];
-    fn deref(&self) -> &[String] {
+impl<const DELIM: char, InnerT> Deref for Delimited<DELIM, InnerT> {
+    type Target = [InnerT];
+    fn deref(&self) -> &[InnerT] {
         &self.0
     }
 }
 
-impl<const DELIM: char> std::fmt::Display for DelimitedStrings<DELIM> {
+impl<const DELIM: char, InnerT> std::fmt::Display for Delimited<DELIM, InnerT>
+where
+    InnerT: std::fmt::Display,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         write!(
             f,
@@ -56,25 +64,32 @@ impl<const DELIM: char> std::fmt::Display for DelimitedStrings<DELIM> {
     }
 }
 
-impl<const DELIM: char> FromStr for DelimitedStrings<DELIM> {
-    type Err = Infallible;
+impl<const DELIM: char, InnerT> FromStr for Delimited<DELIM, InnerT>
+where
+    InnerT: FromStr,
+    InnerT::Err: std::fmt::Debug,
+{
+    type Err = InnerT::Err;
 
-    fn from_str(closes: &str) -> Result<Self, Self::Err> {
+    fn from_str(input: &str) -> Result<Self, Self::Err> {
         Ok(Self(
-            closes
+            input
                 .split(DELIM)
-                .map(|closes| closes.to_owned())
-                .collect::<Vec<_>>(),
+                .map(|closes| closes.parse::<InnerT>())
+                .collect::<Result<Vec<InnerT>, _>>()?,
         ))
     }
 }
 
 #[cfg(feature = "serde")]
 mod serde {
-    use super::DelimitedStrings;
+    use super::Delimited;
     use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
 
-    impl<const DELIM: char> Serialize for DelimitedStrings<DELIM> {
+    impl<const DELIM: char, InnerT> Serialize for Delimited<DELIM, InnerT>
+    where
+        InnerT: std::fmt::Display,
+    {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
@@ -83,7 +98,11 @@ mod serde {
         }
     }
 
-    impl<'de, const DELIM: char> Deserialize<'de> for DelimitedStrings<DELIM> {
+    impl<'de, const DELIM: char, InnerT> Deserialize<'de> for Delimited<DELIM, InnerT>
+    where
+        InnerT: std::str::FromStr,
+        InnerT::Err: std::fmt::Debug,
+    {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
             s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
