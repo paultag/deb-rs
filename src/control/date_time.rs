@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
+use super::def_serde_traits_for;
 use std::str::FromStr;
 
 #[cfg(not(feature = "chrono"))]
@@ -110,6 +111,6 @@ mod chrono {
     }
 }
 
-super::def_serde_traits_for!(DateTime2822);
+def_serde_traits_for!(DateTime2822);
 
 // vim: foldmethod=marker

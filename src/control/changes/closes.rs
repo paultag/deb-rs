@@ -18,7 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use std::ops::Deref;
+use crate::control::def_serde_traits_for;
+use std::{convert::Infallible, ops::Deref, str::FromStr};
 
 /// Wrapper type around a `Vec<String>` which handles encoding and decoding
 /// a list of String values indicating bugs to be closed after the package
@@ -34,28 +35,34 @@ impl Deref for Closes {
     }
 }
 
-#[cfg(feature = "serde")]
-mod serde {
-    use super::Closes;
-    use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-    impl Serialize for Closes {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            String::serialize(&self.0.to_vec().join(" "), serializer)
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Closes {
-        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
-            let s = String::deserialize(d)?;
-            Ok(Self(
-                s.split(' ').map(|arch| arch.to_owned()).collect::<Vec<_>>(),
-            ))
-        }
+impl std::fmt::Display for Closes {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{}",
+            &self
+                .0
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>()
+                .join(" ")
+        )
     }
 }
+
+impl FromStr for Closes {
+    type Err = Infallible;
+
+    fn from_str(closes: &str) -> Result<Self, Self::Err> {
+        Ok(Self(
+            closes
+                .split(' ')
+                .map(|closes| closes.to_owned())
+                .collect::<Vec<_>>(),
+        ))
+    }
+}
+
+def_serde_traits_for!(Closes);
 
 // vim: foldmethod=marker

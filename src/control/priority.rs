@@ -18,10 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
+use super::def_serde_traits_for;
 use std::str::FromStr;
-
-#[cfg(feature = "serde")]
-use ::serde::{Deserialize, Serialize};
 
 /// Each package must have a priority value, which is set in the metadata for
 /// the Debian archive and is also included in the package’s control files
@@ -32,8 +30,6 @@ use ::serde::{Deserialize, Serialize};
 /// other than optional are only used for packages that should be included by
 /// default in a standard installation of Debian.
 #[derive(Copy, Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
 pub enum Priority {
     /// Packages which are necessary for the proper functioning of the system
     /// (usually, this means that dpkg functionality depends on these
@@ -121,6 +117,8 @@ impl std::fmt::Display for Priority {
         )
     }
 }
+
+def_serde_traits_for!(Priority);
 
 #[cfg(test)]
 mod tests {

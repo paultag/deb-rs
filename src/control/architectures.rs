@@ -18,8 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::architecture::Architecture;
-use std::ops::Deref;
+use crate::{
+    architecture::{self, Architecture},
+    control::def_serde_traits_for,
+};
+use std::{ops::Deref, str::FromStr};
 
 /// Wrapper type around a `Vec<Architecture>` which handles encoding and decoding
 /// [Architecture] values to and from a String as seen throughout the `control`
@@ -35,41 +38,34 @@ impl Deref for Architectures {
     }
 }
 
-#[cfg(feature = "serde")]
-mod serde {
-    use super::Architectures;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
-
-    impl Serialize for Architectures {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
-        {
-            String::serialize(
-                &self
-                    .0
-                    .iter()
-                    .map(|v| v.to_string())
-                    .collect::<Vec<_>>()
-                    .join(" "),
-                serializer,
-            )
-        }
-    }
-
-    impl<'de> Deserialize<'de> for Architectures {
-        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
-            let s = String::deserialize(d)?;
-            Ok(Self(
-                s.split(' ')
-                    .map(|arch| {
-                        arch.parse()
-                            .map_err(|e| D::Error::custom(format!("{:?}", e)))
-                    })
-                    .collect::<Result<Vec<_>, D::Error>>()?,
-            ))
-        }
+impl std::fmt::Display for Architectures {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{}",
+            &self
+                .0
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>()
+                .join(" ")
+        )
     }
 }
+
+impl FromStr for Architectures {
+    type Err = architecture::Error;
+
+    fn from_str(architectures: &str) -> Result<Self, Self::Err> {
+        Ok(Self(
+            architectures
+                .split(' ')
+                .map(|arch| arch.parse())
+                .collect::<Result<Vec<_>, _>>()?,
+        ))
+    }
+}
+
+def_serde_traits_for!(Architectures);
 
 // vim: foldmethod=marker
