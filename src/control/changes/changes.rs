@@ -20,7 +20,8 @@
 
 use super::{File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
 use crate::{
-    control::{Architectures, DateTime2822, PriorityParseError, SpaceDelimitedStrings},
+    build_profile::BuildProfile,
+    control::{Architectures, DateTime2822, Delimited, PriorityParseError, SpaceDelimitedStrings},
     version::Version,
 };
 
@@ -165,7 +166,7 @@ pub struct Changes {
     /// This field specifies a whitespace separated list of build profiles that
     /// this upload was built with.
     #[cfg_attr(feature = "serde", serde(rename = "Built-For-Profiles"))]
-    pub built_for_profiles: Option<SpaceDelimitedStrings>,
+    pub built_for_profiles: Option<Delimited<' ', BuildProfile>>,
 
     /// This multiline field contains the concatenated text of all changelog
     /// entries that are part of the upload. The exact content depends on the
