@@ -18,26 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use std::ops::Deref;
+use std::str::FromStr;
 
-#[cfg(feature = "serde")]
-use ::serde::{Deserialize, Serialize};
+#[cfg(not(feature = "chrono"))]
+type InnerDateTime = String;
+
+#[cfg(feature = "chrono")]
+type InnerDateTime = ::chrono::DateTime<::chrono::FixedOffset>;
 
 /// Wrapper type around a `String` which optionally contains a helper to
 /// convert to a [::chrono::DateTime] object if the `chrono` feature flag
 /// is enabled.
+#[allow(missing_copy_implementations)]
 #[derive(Clone, Debug, PartialEq)]
-#[repr(transparent)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[cfg_attr(feature = "serde", serde(transparent))]
-pub struct DateTime2822(pub String);
-
-impl Deref for DateTime2822 {
-    type Target = String;
-    fn deref(&self) -> &String {
-        &self.0
-    }
-}
+pub struct DateTime2822(InnerDateTime);
 
 /// Error conditions which may be encountered when working with a
 /// [DateTime2822].
@@ -47,25 +41,55 @@ pub enum DateTime2822ParseError {
     #[cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
     /// The provided [DateTime2822] had an invalid string representation of
     /// a date time.
-    InvalidDate,
+    InvalidDate(::chrono::ParseError),
 }
 crate::errors::error_enum!(DateTime2822ParseError);
 
+#[cfg(not(feature = "chrono"))]
+mod not_chrono {
+    use super::*;
+
+    impl FromStr for DateTime2822 {
+        type Err = DateTime2822ParseError;
+        fn from_str(when: &str) -> Result<Self, Self::Err> {
+            Ok(Self(when.to_owned()))
+        }
+    }
+
+    impl std::fmt::Display for DateTime2822 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+            write!(f, "{}", self.0)
+        }
+    }
+}
+
 #[cfg(feature = "chrono")]
 mod chrono {
-    #![cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
 
     use super::*;
     use ::chrono::{DateTime, FixedOffset};
 
+    impl FromStr for DateTime2822 {
+        type Err = DateTime2822ParseError;
+        fn from_str(when: &str) -> Result<Self, Self::Err> {
+            Ok(Self(
+                DateTime::parse_from_rfc2822(when)
+                    .map_err(|e| DateTime2822ParseError::InvalidDate(e))?,
+            ))
+        }
+    }
+
+    impl std::fmt::Display for DateTime2822 {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+            write!(f, "{}", self.0)
+        }
+    }
+
     impl DateTime2822 {
-        /// Return the date as a parsed [DateTime].
-        ///
-        /// # Note ♫
-        ///
-        /// This requires the `chrono` feature.
-        pub fn as_chrono(&self) -> Result<DateTime<FixedOffset>, DateTime2822ParseError> {
-            DateTime::parse_from_rfc2822(&self.0).map_err(|_| DateTime2822ParseError::InvalidDate)
+        /// Returned the parsed [DateTime] for use.
+        #[cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
+        pub fn to_datetime(&self) -> &DateTime<FixedOffset> {
+            &self.0
         }
     }
 
@@ -75,8 +99,37 @@ mod chrono {
 
         #[test]
         fn test_date_time_chrono_parse() {
-            let dt = DateTime2822("Mon, 26 Dec 2022 16:30:00 +0100".to_owned());
-            assert!(dt.as_chrono().is_ok());
+            let _: DateTime2822 = "Mon, 26 Dec 2022 16:30:00 +0100".parse().unwrap();
+        }
+
+        #[test]
+        fn test_date_time_chrono_wont_parse() {
+            assert!("Tue, 26 Dec 2022 16:30:00 +0100"
+                .parse::<DateTime2822>()
+                .is_err());
+        }
+    }
+}
+
+#[cfg(feature = "serde")]
+mod serde {
+    use super::DateTime2822;
+    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+
+    impl Serialize for DateTime2822 {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer,
+        {
+            String::serialize(&self.0.to_string(), serializer)
+        }
+    }
+
+    impl<'de> Deserialize<'de> for DateTime2822 {
+        fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+            let s = String::deserialize(d)?;
+            Ok(s.parse::<DateTime2822>()
+                .map_err(|e| D::Error::custom(format!("{:?}", e)))?)
         }
     }
 }

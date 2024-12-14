@@ -32,13 +32,13 @@ use std::{borrow::Cow, str::FromStr};
 /// website.
 ///
 /// ```
-/// use deb::architecture::Architecture;
+/// use deb::architecture::{self, Architecture};
 ///
 /// // Prints `arm64`
-/// println!("{}", Architecture::ARM64);
+/// println!("{}", architecture::ARM64);
 ///
 /// let arch: Architecture = "amd64".parse().unwrap();
-/// assert_eq!(Architecture::AMD64, arch);
+/// assert_eq!(architecture::AMD64, arch);
 /// ```
 ///
 /// # Note ♫
@@ -108,7 +108,7 @@ impl Architecture {
         // We only check if we're a source or all special arch here; since
         // we want to escape the any glob; but we'll let any glob against
         // any why not.
-        if *self == Self::SOURCE || *self == Self::ALL || *self == Self::NATIVE {
+        if *self == SOURCE || *self == ALL || *self == NATIVE {
             return self == other;
         }
 
@@ -155,8 +155,8 @@ impl Architecture {
 
 #[cfg(feature = "serde")]
 mod serde {
-    use super::Architecture;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use super::*;
+    use ::serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
 
     impl Serialize for Architecture {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -195,7 +195,7 @@ Arch: amd64
             )))
             .unwrap();
 
-            assert_eq!(Architecture::AMD64, test.arch);
+            assert_eq!(AMD64, test.arch);
         }
     }
 }
@@ -239,13 +239,13 @@ macro_rules! match_tuple_to_parts {
 impl std::fmt::Display for Architecture {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         if self.is_special() {
-            if *self == Self::ALL {
+            if *self == ALL {
                 return write!(f, "all");
             }
-            if *self == Self::SOURCE {
+            if *self == SOURCE {
                 return write!(f, "source");
             }
-            if *self == Self::NATIVE {
+            if *self == NATIVE {
                 return write!(f, "native");
             }
         }
@@ -327,9 +327,9 @@ impl FromStr for Architecture {
         }
 
         match tuple {
-            "source" => return Ok(Self::SOURCE),
-            "native" => return Ok(Self::NATIVE),
-            "all" => return Ok(Self::ALL),
+            "source" => return Ok(SOURCE),
+            "native" => return Ok(NATIVE),
+            "all" => return Ok(ALL),
             _ => {}
         };
 
@@ -355,15 +355,13 @@ macro_rules! simple_architecture_tuple {
 
 macro_rules! arch_table_impl_consts {
     ( $( ( $const_name:ident, $doc:expr, $arch:expr ) ),* ) => {
-impl Architecture {
 $(
 
-    #[doc = $doc]
-    pub const $const_name: Architecture = $arch;
+#[doc = $doc]
+pub const $const_name: Architecture = $arch;
 
 )*
 }
-    }
 }
 
 macro_rules! arch_table_multiarch_tuple {
@@ -747,46 +745,42 @@ arch_table!(
     )
 );
 
+/// Debian "source" special "architecture".
+pub const SOURCE: Architecture = Architecture {
+    cpu: Cow::Borrowed("source"),
+    libc: Cow::Borrowed(""),
+    os: Cow::Borrowed(""),
+    abi: Cow::Borrowed(""),
+};
+
+/// Debian "all" special "architecture".
+pub const ALL: Architecture = Architecture {
+    cpu: Cow::Borrowed("all"),
+    libc: Cow::Borrowed(""),
+    os: Cow::Borrowed(""),
+    abi: Cow::Borrowed(""),
+};
+
+/// Default "any" glob -- this will match any concrete [Architecture].
+pub const ANY: Architecture = Architecture {
+    cpu: Cow::Borrowed("any"),
+    libc: Cow::Borrowed("any"),
+    os: Cow::Borrowed("any"),
+    abi: Cow::Borrowed("any"),
+};
+
+/// Debian "native" special "architecture".
+pub const NATIVE: Architecture = Architecture {
+    cpu: Cow::Borrowed("native"),
+    libc: Cow::Borrowed(""),
+    os: Cow::Borrowed(""),
+    abi: Cow::Borrowed(""),
+};
+
 impl Architecture {
-    /// Debian "source" special "architecture".
-    pub const SOURCE: Architecture = Self {
-        cpu: Cow::Borrowed("source"),
-        libc: Cow::Borrowed(""),
-        os: Cow::Borrowed(""),
-        abi: Cow::Borrowed(""),
-    };
-
-    /// Debian "all" special "architecture".
-    pub const ALL: Architecture = Self {
-        cpu: Cow::Borrowed("all"),
-        libc: Cow::Borrowed(""),
-        os: Cow::Borrowed(""),
-        abi: Cow::Borrowed(""),
-    };
-
-    /// Default "any" glob -- this will match any concrete [Architecture].
-    pub const ANY: Architecture = Self {
-        cpu: Cow::Borrowed("any"),
-        libc: Cow::Borrowed("any"),
-        os: Cow::Borrowed("any"),
-        abi: Cow::Borrowed("any"),
-    };
-
-    /// Debian "native" special "architecture".
-    pub const NATIVE: Architecture = Self {
-        cpu: Cow::Borrowed("native"),
-        libc: Cow::Borrowed(""),
-        os: Cow::Borrowed(""),
-        abi: Cow::Borrowed(""),
-    };
-
     /// Return true if the Architecture has a specific special meaning.
     pub fn is_special(&self) -> bool {
-        *self == Self::SOURCE
-            || *self == Self::ALL
-            || *self == Self::ANY
-            || *self == Self::NATIVE
-            || self.is_wildcard()
+        *self == SOURCE || *self == ALL || *self == ANY || *self == NATIVE || self.is_wildcard()
     }
 }
 
@@ -905,7 +899,7 @@ mod test {
         ($name:ident, $left:ident is $right:ident == $val:expr) => {
             #[test]
             fn $name() {
-                assert!($val == Architecture::$left.is(&Architecture::$right));
+                assert!($val == $left.is(&$right));
             }
         };
     }
@@ -936,23 +930,20 @@ mod test {
 
     #[test]
     fn parse_special() {
-        assert_eq!(Architecture::ANY, "any".parse::<Architecture>().unwrap());
-        assert_eq!(Architecture::ALL, "all".parse::<Architecture>().unwrap());
-        assert_eq!(
-            Architecture::SOURCE,
-            "source".parse::<Architecture>().unwrap()
-        );
+        assert_eq!(ANY, "any".parse::<Architecture>().unwrap());
+        assert_eq!(ALL, "all".parse::<Architecture>().unwrap());
+        assert_eq!(SOURCE, "source".parse::<Architecture>().unwrap());
 
-        assert_eq!("any", Architecture::ANY.to_string());
-        assert_eq!("all", Architecture::ALL.to_string());
-        assert_eq!("native", Architecture::NATIVE.to_string());
-        assert_eq!("source", Architecture::SOURCE.to_string());
+        assert_eq!("any", ANY.to_string());
+        assert_eq!("all", ALL.to_string());
+        assert_eq!("native", NATIVE.to_string());
+        assert_eq!("source", SOURCE.to_string());
 
-        assert!(!Architecture::AMD64.is_special());
-        assert!(Architecture::NATIVE.is_special());
-        assert!(Architecture::ANY.is_special());
-        assert!(Architecture::ALL.is_special());
-        assert!(Architecture::SOURCE.is_special());
+        assert!(!AMD64.is_special());
+        assert!(NATIVE.is_special());
+        assert!(ANY.is_special());
+        assert!(ALL.is_special());
+        assert!(SOURCE.is_special());
 
         let linux_any: Architecture = "linux-any".parse().unwrap();
 
@@ -960,10 +951,10 @@ mod test {
         assert!(linux_any.is_special());
 
         // "any" is not matched by "linux-any"
-        assert!(!Architecture::ANY.is(&linux_any));
+        assert!(!ANY.is(&linux_any));
 
         // but, "linux-any" is matched by "any"
-        assert!(linux_any.is(&Architecture::ANY));
+        assert!(linux_any.is(&ANY));
     }
 }
 

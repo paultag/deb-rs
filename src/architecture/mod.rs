@@ -28,15 +28,15 @@
 //! They are similar to, but different from GNU Triplets.
 //!
 //! ```
-//! use deb::architecture::Architecture;
+//! use deb::architecture;
 //!
 //! // Print the architecture name for the Debian `amd64` distro, which
 //! // outputs, unsuprisingly, `amd64`.
-//! println!("{}", Architecture::AMD64);
+//! println!("{}", architecture::AMD64);
 //!
 //! // Get the multiarch tuple for the `amd64` arch, this prints
 //! // "x86_64-linux-gnu", which is of type [deb::arch::multiarch::Tuple].
-//! println!("{}", Architecture::AMD64.multiarch_tuple().unwrap());
+//! println!("{}", architecture::AMD64.multiarch_tuple().unwrap());
 //! ```
 //!
 //! ## Note ♫
@@ -56,6 +56,6 @@
 mod architecture;
 pub mod multiarch;
 
-pub use architecture::{Architecture, Error};
+pub use architecture::*;
 
 // vim: foldmethod=marker

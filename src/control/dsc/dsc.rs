@@ -20,7 +20,7 @@
 
 use super::{PackageList, HASH_LEN_MD5, HASH_LEN_SHA1, HASH_LEN_SHA256};
 use crate::{
-    control::{changes::FileChecksum, Architectures, CommaDelimitedStrings},
+    control::{changes::FileChecksum, Architectures, CommaDelimitedStrings, PriorityParseError},
     dependency::Dependency,
     version::Version,
 };
@@ -41,6 +41,9 @@ pub enum DscParseError {
     /// that return a `Malformed` today are likely to change error cases
     /// in the future.
     Malformed,
+
+    ///
+    InvalidPriority(PriorityParseError),
 }
 crate::errors::error_enum!(DscParseError);
 
@@ -85,9 +88,9 @@ pub struct Dsc {
 
     /// Lists the [crate::architecture::Architecture] of the files currently
     /// being uploaded. Common architectures are `amd64`, `armel`, `i386`,
-    /// ([crate::architecture::Architecture::AMD64],
-    /// [crate::architecture::Architecture::ARMEL],
-    /// [crate::architecture::Architecture::I386]), etc. Note that the all value
+    /// ([crate::architecture::AMD64],
+    /// [crate::architecture::ARMEL],
+    /// [crate::architecture::I386]), etc. Note that the all value
     /// is meant for packages that are architecture independent. If the source
     /// for the package is also being uploaded, the special entry source is also
     /// present. Architecture wildcards must never be present in the list.

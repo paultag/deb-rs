@@ -36,7 +36,7 @@ pub trait FileEntry {
 
     /// Some digest of the File referenced by this [FileEntry], as ascii
     /// encoded hex.
-    fn ascii_digest(&self) -> Option<&str>;
+    fn ascii_digest(&self) -> Option<String>;
 }
 
 // vim: foldmethod=marker

@@ -26,7 +26,6 @@ mod closes;
 mod file;
 mod file_checksum;
 
-const HASH_LEN_MD5: usize = 16;
 const HASH_LEN_SHA1: usize = 20;
 const HASH_LEN_SHA256: usize = 32;
 

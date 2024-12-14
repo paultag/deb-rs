@@ -20,7 +20,7 @@
 
 use super::{Closes, File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
 use crate::{
-    control::{Architectures, DateTime2822, SpaceDelimitedStrings},
+    control::{Architectures, DateTime2822, PriorityParseError, SpaceDelimitedStrings},
     version::Version,
 };
 
@@ -52,6 +52,9 @@ pub enum ChangesParseError {
     /// A date wasn't able to be parsed from text or was otherwise
     /// invalid.
     InvalidDate,
+
+    /// The "`Priority`" field was an unknown or unsupported value.
+    InvalidPriority(PriorityParseError),
 }
 crate::errors::error_enum!(ChangesParseError);
 
@@ -99,9 +102,9 @@ pub struct Changes {
 
     /// Lists the [crate::architecture::Architecture] of the files currently
     /// being uploaded. Common architectures are `amd64`, `armel`, `i386`,
-    /// ([crate::architecture::Architecture::AMD64],
-    /// [crate::architecture::Architecture::ARMEL],
-    /// [crate::architecture::Architecture::I386]), etc. Note that the all value
+    /// ([crate::architecture::AMD64],
+    /// [crate::architecture::ARMEL],
+    /// [crate::architecture::I386]), etc. Note that the all value
     /// is meant for packages that are architecture independent. If the source
     /// for the package is also being uploaded, the special entry source is also
     /// present. Architecture wildcards must never be present in the list.
@@ -201,7 +204,7 @@ pub struct Changes {
     /// in these fields must match the list of files in the Files field and
     /// the other related Checksums fields.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha256"))]
-    pub checksum_sha256: Vec<FileChecksum<HASH_LEN_SHA256>>,
+    pub checksum_sha256: Option<Vec<FileChecksum<HASH_LEN_SHA256>>>,
 }
 
 #[cfg(feature = "serde")]
@@ -209,7 +212,7 @@ mod serde {
     #[cfg(test)]
     mod tests {
         use crate::{
-            architecture::Architecture,
+            architecture,
             control::{
                 self,
                 changes::{Changes, File},
@@ -274,7 +277,7 @@ Files:
             assert_eq!(2, changes.binary.unwrap().len());
             assert_eq!(2, changes.architecture.len());
             assert_eq!(
-                &[Architecture::SOURCE, Architecture::AMD64],
+                &[architecture::SOURCE, architecture::AMD64],
                 changes.architecture.as_ref(),
             );
 
@@ -288,46 +291,46 @@ Files:
             assert_eq!(
                 vec![
                     File {
-                        digest: "e7bd195571b19d33bd83d1c379fe6432".to_owned(),
+                        digest: "e7bd195571b19d33bd83d1c379fe6432".parse().unwrap(),
                         size: 1183,
                         path: "hello_2.10-3.dsc".to_owned(),
                         section: "devel".to_owned(),
-                        priority: "optional".to_owned(),
+                        priority: Some("optional".parse().unwrap()),
                     },
                     File {
-                        digest: "16678389ba7fddcdfa05e0707d61f043".to_owned(),
+                        digest: "16678389ba7fddcdfa05e0707d61f043".parse().unwrap(),
                         size: 12688,
                         path: "hello_2.10-3.debian.tar.xz".to_owned(),
                         section: "devel".to_owned(),
-                        priority: "optional".to_owned()
+                        priority: Some("optional".parse().unwrap()),
                     },
                     File {
-                        digest: "5b2bcd51a3ad0d0e611aafd9276b938e".to_owned(),
+                        digest: "5b2bcd51a3ad0d0e611aafd9276b938e".parse().unwrap(),
                         size: 36084,
                         path: "hello-dbgsym_2.10-3_amd64.deb".to_owned(),
                         section: "debug".to_owned(),
-                        priority: "optional".to_owned()
+                        priority: Some("optional".parse().unwrap()),
                     },
                     File {
-                        digest: "57144f2c9158564350da3371b5b9a542".to_owned(),
+                        digest: "57144f2c9158564350da3371b5b9a542".parse().unwrap(),
                         size: 7657,
                         path: "hello_2.10-3_amd64.buildinfo".to_owned(),
                         section: "devel".to_owned(),
-                        priority: "optional".to_owned()
+                        priority: Some("optional".parse().unwrap()),
                     },
                     File {
-                        digest: "d36abefbc87d8dfb7704238f0aee0e90".to_owned(),
+                        digest: "d36abefbc87d8dfb7704238f0aee0e90".parse().unwrap(),
                         size: 53324,
                         path: "hello_2.10-3_amd64.deb".to_owned(),
                         section: "devel".to_owned(),
-                        priority: "optional".to_owned()
+                        priority: Some("optional".parse().unwrap()),
                     }
                 ],
                 changes.files,
             );
 
             assert_eq!(changes.files.len(), changes.checksum_sha1.unwrap().len());
-            assert_eq!(changes.files.len(), changes.checksum_sha256.len());
+            assert_eq!(changes.files.len(), changes.checksum_sha256.unwrap().len());
         }
     }
 }

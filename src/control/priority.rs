@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
+use std::str::FromStr;
+
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};
 
@@ -72,6 +74,101 @@ pub enum Priority {
     /// This priority is deprecated. Use the optional priority instead.
     /// This priority should be treated as equivalent to optional.
     Extra,
+}
+
+/// Error conditions which may be encountered when working with a [Priority]
+/// field.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum PriorityParseError {
+    /// Priority was empty! Can't turn that into a [Priority], now can we.
+    Empty,
+
+    /// We found an unknown string (not that the error itself is of an
+    /// unknown origin -- we know very well what happened here) -- the only
+    /// valid values are fairly tightly defined by Debian policy. Please be
+    /// sure that the [Priority] is spelled right.
+    Unknown,
+}
+
+impl FromStr for Priority {
+    type Err = PriorityParseError;
+
+    fn from_str(priority: &str) -> Result<Self, PriorityParseError> {
+        Ok(match priority {
+            "required" => Priority::Required,
+            "important" => Priority::Important,
+            "standard" => Priority::Standard,
+            "optional" => Priority::Optional,
+            "extra" => Priority::Extra,
+            "" => return Err(PriorityParseError::Empty),
+            _ => return Err(PriorityParseError::Unknown),
+        })
+    }
+}
+
+impl std::fmt::Display for Priority {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(
+            f,
+            "{}",
+            match self {
+                Priority::Required => "required",
+                Priority::Important => "important",
+                Priority::Standard => "standard",
+                Priority::Optional => "optional",
+                Priority::Extra => "extra",
+            }
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    macro_rules! check_loops {
+        ( $name:ident, from priority $priority:expr ) => {
+            #[test]
+            fn $name() {
+                let prio_str = $priority.to_string();
+                let prio: Priority = prio_str.parse().unwrap();
+                assert_eq!($priority, prio);
+            }
+        };
+
+        ( $name:ident, from str $priority_str:expr ) => {
+            #[test]
+            fn $name() {
+                let prio: Priority = $priority_str.parse().unwrap();
+                let prio_str = prio.to_string();
+                assert_eq!($priority_str, prio_str);
+            }
+        };
+    }
+
+    macro_rules! check_fails {
+        ( $name:ident, $priority:expr ) => {
+            #[test]
+            fn $name() {
+                assert!($priority.parse::<Priority>().is_err());
+            }
+        };
+    }
+
+    check_loops!(enum_required,  from priority Priority::Required);
+    check_loops!(enum_important, from priority Priority::Important);
+    check_loops!(enum_standard,  from priority Priority::Standard);
+    check_loops!(enum_optional,  from priority Priority::Optional);
+    check_loops!(enum_extra,     from priority Priority::Extra);
+
+    check_loops!(str_required,   from str      "required");
+    check_loops!(str_important,  from str      "important");
+    check_loops!(str_standard,   from str      "standard");
+    check_loops!(str_optional,   from str      "optional");
+    check_loops!(str_extra,      from str      "extra");
+
+    check_fails!(fails_empty, "");
+    check_fails!(fails_bogus, "bogus");
 }
 
 // vim: foldmethod=marker

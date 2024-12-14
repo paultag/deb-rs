@@ -21,7 +21,7 @@
 #[cfg(test)]
 mod test {
     use crate::{
-        architecture::Architecture,
+        architecture::{self, Architecture},
         build_profile::BuildProfile,
         dependency::{
             ArchConstraint, ArchConstraints, BuildProfileConstraint, BuildProfileConstraints,
@@ -108,7 +108,7 @@ mod test {
         "foo:armhf",
         simple_package!(Package {
             name: "foo".to_owned(),
-            arch: Some(Architecture::ARMHF),
+            arch: Some(architecture::ARMHF),
             ..Default::default()
         })
     );
@@ -224,7 +224,7 @@ mod test {
             arch_constraints: Some(ArchConstraints {
                 arches: vec![ArchConstraint {
                     negated: false,
-                    arch: Architecture::ARMHF,
+                    arch: architecture::ARMHF,
                 }]
             }),
             ..Default::default()
@@ -239,11 +239,11 @@ mod test {
                 arches: vec![
                     ArchConstraint {
                         negated: false,
-                        arch: Architecture::ARMHF,
+                        arch: architecture::ARMHF,
                     },
                     ArchConstraint {
                         negated: false,
-                        arch: Architecture::AMD64,
+                        arch: architecture::AMD64,
                     },
                 ]
             }),
@@ -259,11 +259,11 @@ mod test {
                 arches: vec![
                     ArchConstraint {
                         negated: true,
-                        arch: Architecture::ARMHF,
+                        arch: architecture::ARMHF,
                     },
                     ArchConstraint {
                         negated: true,
-                        arch: Architecture::AMD64,
+                        arch: architecture::AMD64,
                     },
                 ]
             }),

@@ -65,7 +65,7 @@ pub enum Error {
     /// that can not be correctly parsed.
     InvalidVersionConstraint,
 
-    /// [crate::architecture::Architecture] String is malformed in some way
+    /// [architecture::Architecture] String is malformed in some way
     /// that can not be correctly parsed.
     InvalidArch(architecture::Error),
 

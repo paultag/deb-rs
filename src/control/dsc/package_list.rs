@@ -19,6 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::DscParseError;
+use crate::control::Priority;
 use std::str::FromStr;
 
 /// [PackageList] describes one binary package, by listing its name, type,
@@ -46,9 +47,8 @@ pub struct PackageList {
     /// Section of the archive to target.
     pub section: String,
 
-    // todo: fix this to use Priority
     /// Priority of the package.
-    pub priority: String,
+    pub priority: Priority,
 }
 
 impl std::fmt::Display for PackageList {
@@ -77,7 +77,7 @@ impl FromStr for PackageList {
             name,
             binary_type,
             section,
-            priority,
+            priority: priority.parse().map_err(DscParseError::InvalidPriority)?,
         })
     }
 }
@@ -102,6 +102,26 @@ mod serde {
             s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    macro_rules! check_parses {
+        ($name:ident, $checksum:expr ) => {
+            #[test]
+            fn $name() {
+                assert!($checksum.parse::<PackageList>().is_ok());
+            }
+        };
+    }
+
+    check_parses!(check_short, "ocaml-doc deb non-free/doc optional");
+    check_parses!(
+        check_with_arch,
+        "ocaml-doc deb non-free/doc optional arch=all"
+    );
 }
 
 // vim: foldmethod=marker

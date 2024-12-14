@@ -58,7 +58,7 @@
 //! This feature will enable the loading of dates related to release
 //! information via [Release::released_on] and [Release::eol_on].
 
-use crate::architecture::Architecture;
+use crate::architecture::{self, Architecture};
 use std::borrow::Cow;
 
 /// Metadata about a Debian stable release.
@@ -125,7 +125,7 @@ pub const BUZZ: Release = Release {
     version: cow!("1.1"),
     released_on: date!(1996 / 6 / 16),
     eol_on: date!(1996 / 12 / 12),
-    architectures: cow!(&[Architecture::I386]),
+    architectures: cow!(&[architecture::I386]),
 };
 
 /// Debian 1.2, Rex
@@ -134,25 +134,25 @@ pub const REX: Release = Release {
     version: cow!("1.2"),
     released_on: date!(1996 / 12 / 12),
     eol_on: date!(1997 / 7 / 2),
-    architectures: cow!(&[Architecture::I386]),
+    architectures: cow!(&[architecture::I386]),
 };
 
 /// Debian 1.3, Bo
 ///
-/// This was the first release to support non-[Architecture::I386]
+/// This was the first release to support non-[architecture::I386]
 /// architectures in the stable release -- and a lot of them, too! This
-/// version saw the inclusion of [Architecture::M68K], [Architecture::ALPHA],
-/// and [Architecture::SPARC].
+/// version saw the inclusion of [architecture::M68K], [architecture::ALPHA],
+/// and [architecture::SPARC].
 pub const BO: Release = Release {
     name: cow!("bo"),
     version: cow!("1.3"),
     released_on: date!(1997 / 7 / 2),
     eol_on: date!(1998 / 7 / 24),
     architectures: cow!(&[
-        Architecture::I386,
-        Architecture::M68K,
-        Architecture::ALPHA,
-        Architecture::SPARC
+        architecture::I386,
+        architecture::M68K,
+        architecture::ALPHA,
+        architecture::SPARC
     ]),
 };
 
@@ -160,7 +160,7 @@ pub const BO: Release = Release {
 ///
 /// This release trimmed back on architecture support (a good thing, in
 /// retrospect! Maintaining ports is hard!), only supporting
-/// [Architecture::I386] and [Architecture::M68K]; with the rest of the
+/// [architecture::I386] and [architecture::M68K]; with the rest of the
 /// architectures from [BO] being only supported in `unstable`.
 ///
 /// This also saw a huge `libc` transition (libc5 to libc6).
@@ -171,30 +171,30 @@ pub const HAMM: Release = Release {
     eol_on: date!(1999 / 3 / 9),
 
     // Alpha, Sparc, and PowerPC were in unstable.
-    architectures: cow!(&[Architecture::I386, Architecture::M68K]),
+    architectures: cow!(&[architecture::I386, architecture::M68K]),
 };
 
 /// Debian 2.1, Slink
 ///
-/// `slink` saw the reintroduction of [Architecture::ALPHA] and
-/// [Architecture::SPARC] as supported in the `stable` suite.
+/// `slink` saw the reintroduction of [architecture::ALPHA] and
+/// [architecture::SPARC] as supported in the `stable` suite.
 pub const SLINK: Release = Release {
     name: cow!("slink"),
     version: cow!("2.1"),
     released_on: date!(1999 / 3 / 9),
     eol_on: date!(2000 / 9 / 30),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::I386,
-        Architecture::M68K,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::I386,
+        architecture::M68K,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 2.2, Potato
 ///
-/// `potato` grew two new supported [Architecture]s, [Architecture::ARM]
-/// and [Architecture::POWERPC].
+/// `potato` grew two new supported [Architecture]s, [architecture::ARM]
+/// and [architecture::POWERPC].
 ///
 /// This is also the first release featuring `apt`!
 pub const POTATO: Release = Release {
@@ -203,12 +203,12 @@ pub const POTATO: Release = Release {
     released_on: date!(2000 / 8 / 15),
     eol_on: date!(2003 / 6 / 30),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::ARM,
-        Architecture::I386,
-        Architecture::M68K,
-        Architecture::POWERPC,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::ARM,
+        architecture::I386,
+        architecture::M68K,
+        architecture::POWERPC,
+        architecture::SPARC,
     ]),
 };
 
@@ -217,26 +217,26 @@ pub const POTATO: Release = Release {
 /// This was a big one! "Yee-haw! Giddy-up partner! We've got to get this wagon
 /// train a-movin'!"
 ///
-/// `woody` grew a bunch of new supported [Architecture]s, [Architecture::HPPA],
-/// [Architecture::IA64], [Architecture::MIPS], [Architecture::MIPSEL] and
-/// [Architecture::S390].
+/// `woody` grew a bunch of new supported [Architecture]s, [architecture::HPPA],
+/// [architecture::IA64], [architecture::MIPS], [architecture::MIPSEL] and
+/// [architecture::S390].
 pub const WOODY: Release = Release {
     name: cow!("woody"),
     version: cow!("3.0"),
     released_on: date!(2002 / 7 / 19),
     eol_on: date!(2006 / 6 / 30),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::ARM,
-        Architecture::HPPA,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::M68K,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::ARM,
+        architecture::HPPA,
+        architecture::I386,
+        architecture::IA64,
+        architecture::M68K,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::SPARC,
     ]),
 };
 
@@ -248,25 +248,25 @@ pub const SARGE: Release = Release {
     released_on: date!(2005 / 6 / 6),
     eol_on: date!(2008 / 3 / 31),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::ARM,
-        Architecture::HPPA,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::M68K,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::ARM,
+        architecture::HPPA,
+        architecture::I386,
+        architecture::IA64,
+        architecture::M68K,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 4.0, Etch
 ///
 /// This was the first `stable` release with full official support for the
-/// brand new [Architecture::AMD64] [Architecture]! It was also the last
-/// release with official [Architecture::M68K] support, being dropped before
+/// brand new [architecture::AMD64] [Architecture]! It was also the last
+/// release with official [architecture::M68K] support, being dropped before
 /// release.
 pub const ETCH: Release = Release {
     name: cow!("etch"),
@@ -274,50 +274,50 @@ pub const ETCH: Release = Release {
     released_on: date!(2007 / 4 / 8),
     eol_on: date!(2012 / 2 / 6),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::AMD64,
-        Architecture::ARM,
-        Architecture::HPPA,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::AMD64,
+        architecture::ARM,
+        architecture::HPPA,
+        architecture::I386,
+        architecture::IA64,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 5.0, Lenny
 ///
-/// The new arm architecture [Architecture::ARMEL] was officially supported
-/// as of this release. This also deprecated the [Architecture::ARM] support.
+/// The new arm architecture [architecture::ARMEL] was officially supported
+/// as of this release. This also deprecated the [architecture::ARM] support.
 pub const LENNY: Release = Release {
     name: cow!("lenny"),
     version: cow!("5.0"),
     released_on: date!(2009 / 2 / 14),
     eol_on: date!(2012 / 2 / 6),
     architectures: cow!(&[
-        Architecture::ALPHA,
-        Architecture::AMD64,
-        Architecture::ARMEL,
-        Architecture::HPPA,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::SPARC,
+        architecture::ALPHA,
+        architecture::AMD64,
+        architecture::ARMEL,
+        architecture::HPPA,
+        architecture::I386,
+        architecture::IA64,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 6.0, Squeeze
 ///
-/// The [Architecture::HPPA] [Architecture] was dropped in this release.
+/// The [architecture::HPPA] [Architecture] was dropped in this release.
 ///
 /// This release grew two new technical previews --
-/// [Architecture::KFREEBSD_AMD64] and [Architecture::KFREEBSD_I386] --
+/// [architecture::KFREEBSD_AMD64] and [architecture::KFREEBSD_I386] --
 /// a port of the GNU userland, libc and Debian software ecosystem to run under
 /// the FreeBSD kernel. These were not officially supported, however.
 pub const SQUEEZE: Release = Release {
@@ -326,22 +326,22 @@ pub const SQUEEZE: Release = Release {
     released_on: date!(2011 / 2 / 6),
     eol_on: date!(2014 / 5 / 31),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARMEL,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::SPARC,
+        architecture::AMD64,
+        architecture::ARMEL,
+        architecture::I386,
+        architecture::IA64,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 7, Wheezy
 ///
 /// Two new [Architecture]s here! `wheezy` was ported and offically supported
-/// on [Architecture::ARMHF] and [Architecture::S390X].
+/// on [architecture::ARMHF] and [architecture::S390X].
 pub const WHEEZY: Release = Release {
     // paultag's first Debian release as a DD
     name: cow!("wheezy"),
@@ -349,41 +349,41 @@ pub const WHEEZY: Release = Release {
     released_on: date!(2013 / 5 / 4),
     eol_on: date!(2016 / 4 / 25),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::IA64,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::S390,
-        Architecture::S390X,
-        Architecture::SPARC,
+        architecture::AMD64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::IA64,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::S390,
+        architecture::S390X,
+        architecture::SPARC,
     ]),
 };
 
 /// Debian 8, Jessie
 ///
-/// Yeee haw! [Architecture::ARM64] and [Architecture::PPC64EL] were added
-/// as supported, and [Architecture::S390], [Architecture::SPARC] and
-/// [Architecture::IA64] were dropped.
+/// Yeee haw! [architecture::ARM64] and [architecture::PPC64EL] were added
+/// as supported, and [architecture::S390], [architecture::SPARC] and
+/// [architecture::IA64] were dropped.
 pub const JESSIE: Release = Release {
     name: cow!("jessie"),
     version: cow!("8"),
     released_on: date!(2015 / 4 / 25),
     eol_on: date!(2018 / 6 / 17),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARM64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::MIPS,
-        Architecture::MIPSEL,
-        Architecture::POWERPC,
-        Architecture::PPC64EL,
-        Architecture::S390X,
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPS,
+        architecture::MIPSEL,
+        architecture::POWERPC,
+        architecture::PPC64EL,
+        architecture::S390X,
     ]),
 };
 
@@ -396,16 +396,16 @@ pub const STRETCH: Release = Release {
     released_on: date!(2017 / 6 / 17),
     eol_on: date!(2020 / 7 / 18),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARM64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::MIPS,
-        Architecture::MIPS64EL,
-        Architecture::MIPSEL,
-        Architecture::PPC64EL,
-        Architecture::S390X,
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPS,
+        architecture::MIPS64EL,
+        architecture::MIPSEL,
+        architecture::PPC64EL,
+        architecture::S390X,
     ]),
 };
 
@@ -418,16 +418,16 @@ pub const BUSTER: Release = Release {
     released_on: date!(2019 / 7 / 6),
     eol_on: date!(2022 / 9 / 10),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARM64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::MIPS,
-        Architecture::MIPS64EL,
-        Architecture::MIPSEL,
-        Architecture::PPC64EL,
-        Architecture::S390X,
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPS,
+        architecture::MIPS64EL,
+        architecture::MIPSEL,
+        architecture::PPC64EL,
+        architecture::S390X,
     ]),
 };
 
@@ -438,15 +438,15 @@ pub const BULLSEYE: Release = Release {
     released_on: date!(2021 / 8 / 14),
     eol_on: date!(2024 / 8 / 14),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARM64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::MIPS64EL,
-        Architecture::MIPSEL,
-        Architecture::PPC64EL,
-        Architecture::S390X,
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPS64EL,
+        architecture::MIPSEL,
+        architecture::PPC64EL,
+        architecture::S390X,
     ]),
 };
 
@@ -463,15 +463,15 @@ pub const BOOKWORM: Release = Release {
     released_on: date!(2023 / 6 / 10),
     eol_on: date!(2026 / 6 / 10),
     architectures: cow!(&[
-        Architecture::AMD64,
-        Architecture::ARM64,
-        Architecture::ARMEL,
-        Architecture::ARMHF,
-        Architecture::I386,
-        Architecture::MIPS64EL,
-        Architecture::MIPSEL,
-        Architecture::PPC64EL,
-        Architecture::S390X,
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPS64EL,
+        architecture::MIPSEL,
+        architecture::PPC64EL,
+        architecture::S390X,
     ]),
 };
 
@@ -492,7 +492,7 @@ pub const BOOKWORM: Release = Release {
 /// Debian 13, Trixie
 ///
 /// `trixie` is the first Debian release to support the
-/// [Architecture::RISCV64] [Architecture]. The [Architecture::I386] port
+/// [architecture::RISCV64] [Architecture]. The [architecture::I386] port
 /// is also in a bit of a limbo but not officially dropped, although it
 /// no longer has an installer or kernel.
 pub const TRIXIE: Release = Release {
@@ -526,6 +526,8 @@ pub const FORKY: Release = Release {
 //
 //  - [ ] confirm the `name` with the release team's announcement.
 //  - [ ] confirm the `version` with the release team's announcement.
+//  - [ ] update the `RELEASE_HORIZON` to your best guess for just before
+//        the next stable release.
 //
 // Add something that looks like this, but with real values:
 //
@@ -553,8 +555,11 @@ pub const RELEASES: [Release; 19] = [
 mod chrono {
     #![cfg_attr(docsrs, doc(cfg(feature = "chrono")))]
 
-    use super::{Architecture, Release, RELEASES};
-    use ::chrono::NaiveDate;
+    /// Date past which all the time-related queries will begin to return None.
+    const RELEASE_HORIZON: NaiveDate = date!(2025 / 6 / 1).unwrap();
+
+    use super::*;
+    use ::chrono::{NaiveDate, Utc};
 
     impl Release {
         /// Date on which this release was promoted from Debian
@@ -577,30 +582,70 @@ mod chrono {
 
     /// Filter the set of all [RELEASES] to just the [Release]s which are or
     /// were supported at the provided time.
-    pub fn supported_on(today: &NaiveDate) -> Vec<Release> {
+    pub fn supported_on(date: &NaiveDate) -> Vec<Release> {
         RELEASES
             .iter()
             .filter(|rel| rel.released_on.is_some())
+            .filter(|rel| match &rel.released_on {
+                Some(release_date) => release_date < date,
+                None => true,
+            })
             .filter(|rel| match &rel.eol_on {
-                Some(eol_date) => today < eol_date,
+                Some(eol_date) => date < eol_date,
                 None => true,
             })
             .cloned()
             .collect()
     }
 
+    /// This is only really semi-reliable in the *PAST*. Giving this a date
+    /// in the future may or may not result in EXTREME PAIN depending on
+    /// what you're doing and how much you know about Debian's release process.
+    ///
+    /// There is no `guess_release_suites` function for this very reason. The
+    /// older this library is the greater a chance this function returns
+    /// absoluetly bogus information. Use it wisely.
+    ///
+    /// As a result, there's a hardcoded date (internally we call this the
+    /// "`RELEASE_HORIZON`"), past which this function will begin to return
+    /// a `None`, requiring an update and recompile.
+    pub fn guess_release_suites_on(date: &NaiveDate) -> Option<[Release; 2]> {
+        if *date > RELEASE_HORIZON {
+            return None;
+        }
+
+        let releases = supported_on(date);
+        let stable = releases.iter().next()?;
+
+        // if this fails something very bad has happened.
+        let stable_idx = RELEASES.iter().position(|e| e == stable).unwrap();
+
+        if stable_idx <= 1 {
+            return None;
+        }
+
+        let [testing, stable] = RELEASES
+            .into_iter()
+            .skip(stable_idx - 1)
+            .take(2)
+            .collect::<Vec<_>>()
+            .try_into()
+            .ok()?;
+        Some([testing, stable])
+    }
+
     /// Filter the set of all [RELEASES] to just the [Release]s which are or
     /// were supported at the time of this function call.
     pub fn supported() -> Vec<Release> {
-        let today = chrono::Utc::now().naive_utc().date();
+        let today = Utc::now().naive_utc().date();
         supported_on(&today)
     }
 
     /// Return the list of [Architecture]s supported by all supported stable
     /// releases at the provided time.
-    pub fn supported_architectures_on(today: &NaiveDate) -> Vec<Architecture> {
+    pub fn supported_architectures_on(date: &NaiveDate) -> Vec<Architecture> {
         let mut ret = vec![];
-        for arch in supported_on(today)
+        for arch in supported_on(date)
             .iter()
             .flat_map(|rel| &rel.architectures[..])
         {
@@ -616,33 +661,33 @@ mod chrono {
     /// releases at the time of this function call.
     ///
     /// ```
-    /// use deb::releases;
+    /// use deb::releases::supported_architectures;
     ///
     /// // Print all supported release multiarch tuples.
-    /// println!("{}", releases::supported_architectures()
+    /// println!("{}", supported_architectures()
     ///     .into_iter()
     ///     .map(|arch| arch.multiarch_tuple().unwrap().to_string())
     ///     .collect::<Vec<_>>()
     ///     .join(", "));
     /// ```
     pub fn supported_architectures() -> Vec<Architecture> {
-        let today = chrono::Utc::now().naive_utc().date();
+        let today = Utc::now().naive_utc().date();
         supported_architectures_on(&today)
     }
 
     #[cfg(test)]
     mod test {
         use super::*;
-        use crate::releases;
 
         #[test]
         fn test_supported_on() {
             let supported_releases = supported_on(&NaiveDate::from_ymd_opt(2023, 7, 1).unwrap());
             assert_eq!(2, supported_releases.len());
-            assert_eq!(
-                vec![releases::BOOKWORM, releases::BULLSEYE],
-                supported_releases
-            );
+            assert_eq!(vec![BOOKWORM, BULLSEYE], supported_releases);
+
+            let supported_releases = supported_on(&NaiveDate::from_ymd_opt(2012, 6, 26).unwrap());
+            assert_eq!(1, supported_releases.len());
+            assert_eq!(vec![SQUEEZE], supported_releases);
         }
 
         #[test]
@@ -665,10 +710,39 @@ mod chrono {
                 supported_architectures
             );
         }
+
+        #[test]
+        fn test_releases_on() {
+            assert_eq!(
+                Some([TRIXIE, BOOKWORM]),
+                guess_release_suites_on(&NaiveDate::from_ymd_opt(2023, 7, 1).unwrap())
+            );
+
+            assert_eq!(
+                Some([WHEEZY, SQUEEZE]),
+                guess_release_suites_on(&NaiveDate::from_ymd_opt(2012, 6, 26).unwrap())
+            );
+
+            assert_eq!(
+                None,
+                guess_release_suites_on(&NaiveDate::from_ymd_opt(1980, 6, 26).unwrap())
+            );
+
+            let date_past_horizon = NaiveDate::from_ymd_opt(2025, 6, 2).unwrap();
+            assert!(
+                date_past_horizon > RELEASE_HORIZON,
+                "update this test case after updating RELEASE_HORIZON"
+            );
+
+            assert!(guess_release_suites_on(&date_past_horizon).is_none());
+        }
     }
 }
 
 #[cfg(feature = "chrono")]
-pub use chrono::{supported, supported_architectures, supported_architectures_on, supported_on};
+pub use chrono::{
+    guess_release_suites_on, supported, supported_architectures, supported_architectures_on,
+    supported_on,
+};
 
 // vim: foldmethod=marker

@@ -50,9 +50,9 @@ pub struct Package {
 
     /// Lists the [crate::architecture::Architecture] of the files contained
     /// in this package. Common architectures are `amd64`, `armel`, `i386`,
-    /// ([crate::architecture::Architecture::AMD64],
-    /// [crate::architecture::Architecture::ARMEL],
-    /// [crate::architecture::Architecture::I386]), etc.
+    /// ([crate::architecture::AMD64],
+    /// [crate::architecture::ARMEL],
+    /// [crate::architecture::I386]), etc.
     pub architecture: Option<Architecture>,
 
     /// If set, and set to "`yes`", this package is an essential package,
@@ -141,7 +141,7 @@ mod tests {
     #[cfg(feature = "serde")]
     mod serde {
         use super::*;
-        use crate::control::de;
+        use crate::{architecture, control::de};
 
         macro_rules! test_package {
             ($name:ident, $data:expr, |$parsed:ident| $block:tt) => {
@@ -177,7 +177,7 @@ MD5sum: e9ae48ab62d609faaafdd034353a28d7
 SHA256: 7eaf5da83ab47fce0937b348640aec52c96ae5193b809d01168c5c81bd7f4645
 ", |package| {
             assert_eq!("fluxbox", package.package);
-            assert_eq!(Architecture::AMD64, package.architecture.unwrap());
+            assert_eq!(architecture::AMD64, package.architecture.unwrap());
             assert_eq!(4128, package.installed_size.unwrap());
             assert!(package.depends.is_some());
             assert!(package.recommends.is_some());

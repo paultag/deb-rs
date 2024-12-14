@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{ChangesParseError, HASH_LEN_MD5};
-use crate::control::FileEntry;
+use super::ChangesParseError;
+use crate::control::{ChecksumMd5, FileEntry, Priority};
 use std::{path::PathBuf, str::FromStr};
 
 /// [File] is a specific File  referenced by the
@@ -30,7 +30,7 @@ use std::{path::PathBuf, str::FromStr};
 #[derive(Clone, Debug, PartialEq)]
 pub struct File {
     /// MD5 hash digest of a File contained in this upload.
-    pub digest: String,
+    pub digest: ChecksumMd5,
 
     /// File size, in bytes, of the File contained in this upload.
     pub size: usize,
@@ -41,9 +41,8 @@ pub struct File {
     /// Section of the archive the file is targeted for.
     pub section: String,
 
-    // todo: fix this to use Priority
     /// Priority of the file.
-    pub priority: String,
+    pub priority: Option<Priority>,
 }
 
 impl std::fmt::Display for File {
@@ -51,7 +50,13 @@ impl std::fmt::Display for File {
         write!(
             f,
             "{} {} {} {} {}",
-            self.digest, self.size, self.path, self.section, self.priority
+            self.digest,
+            self.size,
+            self.section,
+            self.priority
+                .map(|v| v.to_string())
+                .unwrap_or("-".to_string()),
+            self.path,
         )
     }
 }
@@ -66,19 +71,21 @@ impl FromStr for File {
             .try_into()
             .map_err(|_| ChangesParseError::Malformed)?;
 
-        // It's ASCII encoded, which means every byte is two bytes. We're
-        // going to handle conversion elsewhere since it's going to require
-        // an external crate, which should be optional. For now we're going
-        // to make sure the string *looks* passable.
-        if digest.len() != (HASH_LEN_MD5 * 2) {
-            return Err(ChangesParseError::InvalidHashLength);
-        }
+        let priority: Option<Priority> = if priority != "-" {
+            Some(
+                priority
+                    .parse()
+                    .map_err(ChangesParseError::InvalidPriority)?,
+            )
+        } else {
+            None
+        };
 
         Ok(File {
-            digest: digest.to_owned(),
+            digest: digest.parse().map_err(|_| ChangesParseError::InvalidHash)?,
             size: size.parse().map_err(|_| ChangesParseError::Malformed)?,
             section: section.to_owned(),
-            priority: priority.to_owned(),
+            priority,
             path: path.to_owned(),
         })
     }
@@ -110,32 +117,23 @@ mod serde {
 mod hex {
     #![cfg_attr(docsrs, doc(cfg(feature = "hex")))]
 
-    use super::*;
-    use ::hex;
-
-    impl File {
-        /// Return the parsed digest for this File.
-        pub fn digest(&self) -> Result<[u8; HASH_LEN_MD5], ChangesParseError> {
-            hex::decode(self.ascii_digest().ok_or(ChangesParseError::InvalidHash)?)
-                .map_err(|_| ChangesParseError::InvalidHash)?
-                .try_into()
-                .map_err(|_| ChangesParseError::InvalidHashLength)
-        }
-    }
-
     #[test]
     fn hex_digest_file() {
+        use super::super::*;
+        use crate::control::Priority;
+        use ::hex;
+
         let file = File {
-            digest: "e7bd195571b19d33bd83d1c379fe6432".to_owned(),
+            digest: "e7bd195571b19d33bd83d1c379fe6432".parse().unwrap(),
             size: 1183,
             path: "hello_2.10-3.dsc".to_owned(),
             section: "devel".to_owned(),
-            priority: "optional".to_owned(),
+            priority: Some(Priority::Optional),
         };
 
         assert_eq!(
             hex::decode("e7bd195571b19d33bd83d1c379fe6432").unwrap(),
-            file.digest().unwrap()
+            file.digest.digest(),
         );
     }
 }
@@ -149,8 +147,8 @@ impl FileEntry for File {
     fn size(&self) -> Option<usize> {
         Some(self.size)
     }
-    fn ascii_digest(&self) -> Option<&str> {
-        Some(&self.digest)
+    fn ascii_digest(&self) -> Option<String> {
+        Some(self.digest.to_string())
     }
 }
 
@@ -165,7 +163,7 @@ mod test {
                 .parse()
                 .unwrap();
 
-        assert_eq!("optional", file.priority);
+        assert_eq!(Priority::Optional, file.priority.unwrap());
         assert_eq!(12688, file.size);
     }
 }

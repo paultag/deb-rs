@@ -3,7 +3,13 @@ SUPPORTED_FEATURES = \
 	chrono \
 	hex \
 	tokio \
-	sequoia
+	sequoia \
+	serde,hex \
+	serde,tokio \
+	serde,chrono \
+	serde,chrono,hex \
+	serde,chrono,tokio \
+	serde,hex,tokio \
 
 all: build test check TODO
 
@@ -25,7 +31,7 @@ check-lint:
 	cd fuzz     && cargo clippy
 
 docs:
-	cargo doc --all-features --no-deps
+	RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features --no-deps
 
 clean:
 	rm -rvf \
