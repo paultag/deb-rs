@@ -121,7 +121,7 @@ mod hex {
         /// Return the raw digest as bytes.
         #[cfg_attr(docsrs, doc(cfg(feature = "hex")))]
         pub fn digest(&self) -> [u8; HASH_LEN] {
-            self.0.clone()
+            self.0
         }
     }
 }
