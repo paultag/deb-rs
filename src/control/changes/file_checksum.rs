@@ -19,8 +19,8 @@
 // THE SOFTWARE. }}}
 
 use super::ChangesParseError;
-use crate::control::{Checksum, FileEntry};
-use std::{path::PathBuf, str::FromStr};
+use crate::control::Checksum;
+use std::str::FromStr;
 
 /// [FileChecksum] is a specific File's hash digest and filesize referenced
 /// by the [crate::control::changes::Changes] file.
@@ -58,20 +58,6 @@ impl<const HASH_LEN: usize> FromStr for FileChecksum<HASH_LEN> {
             size: size.parse().map_err(|_| ChangesParseError::Malformed)?,
             path: path.to_owned(),
         })
-    }
-}
-
-impl<const HASH_LEN: usize> FileEntry for FileChecksum<HASH_LEN> {
-    type Error = ChangesParseError;
-
-    fn path(&self) -> Result<PathBuf, Self::Error> {
-        Ok(self.path.parse().unwrap())
-    }
-    fn size(&self) -> Option<usize> {
-        Some(self.size)
-    }
-    fn ascii_digest(&self) -> Option<String> {
-        Some(self.digest.to_string())
     }
 }
 

@@ -81,7 +81,6 @@ mod paragraph;
 mod pest;
 mod priority;
 mod real_control_tests;
-mod traits;
 
 pub mod archive;
 pub mod changes;
@@ -102,7 +101,6 @@ pub use date_time::{DateTime2822, DateTime2822ParseError};
 pub use delimited::{CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings};
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};
-pub use traits::FileEntry;
 
 use macros::def_serde_traits_for;
 

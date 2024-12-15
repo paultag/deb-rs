@@ -19,8 +19,8 @@
 // THE SOFTWARE. }}}
 
 use super::ChangesParseError;
-use crate::control::{def_serde_traits_for, ChecksumMd5, FileEntry, Priority};
-use std::{path::PathBuf, str::FromStr};
+use crate::control::{def_serde_traits_for, ChecksumMd5, Priority};
+use std::str::FromStr;
 
 /// [File] is a specific File  referenced by the
 /// [crate::control::changes::Changes] file.
@@ -115,20 +115,6 @@ mod hex {
             hex::decode("e7bd195571b19d33bd83d1c379fe6432").unwrap(),
             file.digest.digest(),
         );
-    }
-}
-
-impl FileEntry for File {
-    type Error = ChangesParseError;
-
-    fn path(&self) -> Result<PathBuf, Self::Error> {
-        Ok(self.path.parse().unwrap())
-    }
-    fn size(&self) -> Option<usize> {
-        Some(self.size)
-    }
-    fn ascii_digest(&self) -> Option<String> {
-        Some(self.digest.to_string())
     }
 }
 
