@@ -43,10 +43,10 @@ pub struct Package {
     pub version: Version,
 
     /// Archive Section that this package belongs to.
-    pub section: String,
+    pub section: Option<String>,
 
     /// Priority of the binary package.
-    pub priority: Priority,
+    pub priority: Option<Priority>,
 
     /// Lists the [crate::architecture::Architecture] of the files contained
     /// in this package. Common architectures are `amd64`, `armel`, `i386`,
@@ -105,12 +105,10 @@ pub struct Package {
 
     /// Packages which this binary package must not be installed at the same
     /// time as.
-    #[cfg_attr(feature = "serde", serde(rename = "Conflicts"))]
     pub conflicts: Option<Dependency>,
 
     /// Packages which could be interesting to be installed along with this
     /// package.
-    #[cfg_attr(feature = "serde", serde(rename = "Suggests"))]
     pub suggests: Option<Dependency>,
 
     /// Packages that were used to produce this binary file.
@@ -124,12 +122,13 @@ pub struct Package {
 
     /// Packages which will become broken by the installation of this binary
     /// package.
-    #[cfg_attr(feature = "serde", serde(rename = "Breaks"))]
     pub breaks: Option<Dependency>,
+
+    /// Package makes another package better.
+    pub enhances: Option<Dependency>,
 
     /// Packages which must be installed before this binary begins to
     /// unpack.
-    #[cfg_attr(feature = "serde", serde(rename = "Pre-Depends"))]
     pub pre_depends: Option<Dependency>,
 }
 
