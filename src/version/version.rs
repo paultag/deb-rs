@@ -461,6 +461,44 @@ mod test {
         }
     );
 
+    #[test]
+    fn version_sort() {
+        let mut versions = vec![
+            "1.3",
+            "1.0",
+            "1.0+dfsg1-1",
+            "1.0-1",
+            "1.1",
+            "0:1.2",
+            "1:0.1",
+            "1.0+dfsg1",
+            "1.0~dfsg1",
+        ]
+        .into_iter()
+        .map(|v| v.parse::<Version>().unwrap())
+        .collect::<Vec<_>>();
+
+        versions.sort();
+
+        assert_eq!(
+            vec![
+                "1.0~dfsg1",
+                "1.0",
+                "1.0-1",
+                "1.0+dfsg1",
+                "1.0+dfsg1-1",
+                "1.1",
+                "0:1.2",
+                "1.3",
+                "1:0.1",
+            ]
+            .into_iter()
+            .map(|v| v.parse::<Version>().unwrap())
+            .collect::<Vec<_>>(),
+            versions
+        );
+    }
+
     check_fuzz_regression!(long_number, "100:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222221~~~~~~~~~~~~~~~~~1~1~0");
 }
 
