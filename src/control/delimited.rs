@@ -72,6 +72,10 @@ where
     type Err = InnerT::Err;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
+        if input.is_empty() {
+            return Ok(Self(vec![]));
+        }
+
         Ok(Self(
             input
                 .split(DELIM)
@@ -108,6 +112,54 @@ mod serde {
             s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
         }
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{CommaDelimitedStrings, SpaceDelimitedStrings};
+    use crate::control::{def_parse_test, Delimited};
+
+    def_parse_test!(
+        space_parse_empty,
+        SpaceDelimitedStrings,
+        "",
+        Delimited::<' ', String>(vec![])
+    );
+
+    def_parse_test!(
+        comma_parse_empty,
+        CommaDelimitedStrings,
+        "",
+        Delimited::<',', String>(vec![])
+    );
+
+    def_parse_test!(
+        space_parse_easy,
+        SpaceDelimitedStrings,
+        "foo bar",
+        Delimited::<' ', String>(vec!["foo".to_owned(), "bar".to_owned()])
+    );
+
+    def_parse_test!(
+        comma_parse_easy,
+        CommaDelimitedStrings,
+        "foo,bar",
+        Delimited::<',', String>(vec!["foo".to_owned(), "bar".to_owned()])
+    );
+
+    def_parse_test!(
+        space_parse_extra,
+        SpaceDelimitedStrings,
+        "foo  bar",
+        Delimited::<' ', String>(vec!["foo".to_owned(), "".to_owned(), "bar".to_owned()])
+    );
+
+    def_parse_test!(
+        comma_parse_extra,
+        CommaDelimitedStrings,
+        "foo,,bar",
+        Delimited::<',', String>(vec!["foo".to_owned(), "".to_owned(), "bar".to_owned()])
+    );
 }
 
 // vim: foldmethod=marker

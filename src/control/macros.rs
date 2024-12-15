@@ -45,4 +45,29 @@ macro_rules! def_serde_traits_for {
 }
 pub(super) use def_serde_traits_for;
 
+#[cfg(test)]
+macro_rules! def_parse_test {
+    ($name:ident, $type:ty, $from:expr, $compare:expr) => {
+        #[test]
+        fn $name() {
+            let v: $type = $from.parse().unwrap();
+            assert_eq!($compare, v);
+        }
+    };
+}
+#[cfg(test)]
+pub(super) use def_parse_test;
+
+#[cfg(test)]
+macro_rules! def_failing_parse_test {
+    ($name:ident, $type:ty, $from:expr) => {
+        #[test]
+        fn $name() {
+            assert!($from.parse::<$type>().is_err());
+        }
+    };
+}
+#[cfg(test)]
+pub(super) use def_failing_parse_test;
+
 // vim: foldmethod=marker

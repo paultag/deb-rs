@@ -75,7 +75,7 @@
 mod architectures;
 mod checksum;
 mod date_time;
-mod delimited_strings;
+mod delimited;
 mod macros;
 mod paragraph;
 mod pest;
@@ -99,14 +99,15 @@ mod openpgp;
 pub use architectures::Architectures;
 pub use checksum::{Checksum, ChecksumMd5, ChecksumSha1, ChecksumSha256};
 pub use date_time::{DateTime2822, DateTime2822ParseError};
-pub use delimited_strings::{
-    CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings,
-};
+pub use delimited::{CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings};
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};
 pub use traits::FileEntry;
 
 use macros::def_serde_traits_for;
+
+#[cfg(test)]
+use macros::{def_failing_parse_test, def_parse_test};
 
 #[cfg(feature = "sequoia")]
 pub use openpgp::{OpenPgpValidator, OpenPgpValidatorBuilder, OpenPgpValidatorError};

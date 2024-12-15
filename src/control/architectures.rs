@@ -23,4 +23,39 @@ use crate::{architecture::Architecture, control::Delimited};
 /// List of [Architecture] values, seperated with a space.
 pub type Architectures = Delimited<' ', Architecture>;
 
+#[cfg(test)]
+mod tests {
+    use super::Architectures;
+    use crate::{
+        architecture::{self, Architecture},
+        control::{def_failing_parse_test, def_parse_test, Delimited},
+    };
+
+    def_parse_test!(
+        parse_empty,
+        Architectures,
+        "",
+        Delimited::<' ', Architecture>(vec![])
+    );
+    def_parse_test!(
+        parse_amd64,
+        Architectures,
+        "amd64",
+        Delimited::<' ', Architecture>(vec![architecture::AMD64])
+    );
+    def_parse_test!(
+        parse_amd64_arm64,
+        Architectures,
+        "amd64 arm64",
+        Delimited::<' ', Architecture>(vec![architecture::AMD64, architecture::ARM64])
+    );
+    def_failing_parse_test!(
+        parse_amd64_arm64_with_spaces,
+        Architectures,
+        "amd64    arm64"
+    );
+
+    def_failing_parse_test!(fail_bad_arch, Architectures, "foo-bar-baz-bar-foo");
+}
+
 // vim: foldmethod=marker
