@@ -132,4 +132,117 @@ impl TryFrom<Pair<'_, Rule>> for ArchConstraints {
     }
 }
 
+impl ArchConstraint {
+    /// Return true if the provided [Architecture] meets the requirements
+    /// in the [ArchConstraints]
+    pub fn matches(&self, arch: &Architecture) -> bool {
+        let matched = arch.is(&self.arch);
+
+        if self.negated {
+            !matched
+        } else {
+            matched
+        }
+    }
+}
+
+/// Error conditions which may be encountered when validating an
+/// [ArchConstraints] relationship.
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum ArchConstraintsValidationError {
+    /// For the simple case of `[foo bar]`, we need to ensure that we match
+    /// *any* of the arches (we're either foo OR bar).
+    ///
+    /// However, for the case of a negated relation like `[!foo !bar]`, we
+    /// need to match *all* of the arches (we must be not foo AND not bar).
+    ///
+    /// As a result, we're going to do a quick check to ensure that we don't
+    /// have something crazypants like `[foo !bar]` -- see #816473 for the
+    /// last time I ran into validating this. This bug is still open
+    /// at the time of writing.
+    ///
+    /// If the arches aren't all consistent, it'll treat it as broken
+    /// and ignore this package. This is likely different to how dpkg
+    /// handles things.
+    ///
+    /// There's a case to be made that you'd want to treat all the non-negated
+    /// arches as an AND and all the negations as an OR but I'd be inventing
+    /// interpetations here, so I'm going to avoid handling it.
+    MixedNegations,
+}
+
+impl ArchConstraints {
+    /// Return the "Negation Policy" for the [ArchConstraints]. This will return
+    /// `true` if all [Architecture]s are `!*`, `false` otherwise.
+    ///
+    /// If the operators are mixed, this will return an
+    /// [ArchConstraintsValidationError::MixedNegations]. Who knows what
+    /// other fun failure modes I will figure out later.
+    fn negation_policy(&self) -> Result<bool, ArchConstraintsValidationError> {
+        // For the simple case of [foo bar], we need to ensure that we match
+        // *any* of the arches (we're either foo OR bar).
+        //
+        // However, for the case of a negated relation like [!foo !bar], we
+        // need to match *all* of the arches (we must be not foo AND not bar).
+        //
+        // As a result, we're going to do a quick check to ensure that we don't
+        // have something crazypants like [foo !bar] -- see #816473 for the
+        // last time I ran into validating this. This bug is still open
+        // at the time of writing.
+        //
+        // If the arches aren't all consistent, it'll treat it as broken
+        // and ignore this package. This is likely different to how dpkg
+        // handles things.
+
+        let negations = self
+            .arches
+            .iter()
+            .map(|arch_constraint| arch_constraint.negated)
+            .collect::<Vec<_>>();
+
+        if negations.iter().all(|v| *v) {
+            Ok(true)
+        } else if negations.iter().all(|v| !v) {
+            Ok(false)
+        } else {
+            Err(ArchConstraintsValidationError::MixedNegations)
+        }
+    }
+
+    /// Check to determine if the [ArchConstraints] are constructed
+    /// in a way that is possible to compute unambigously.
+    pub fn check(&self) -> Result<(), ArchConstraintsValidationError> {
+        self.negation_policy()?;
+        Ok(())
+    }
+
+    /// Return true if the provided [Architecture] meets the requirements
+    /// in the [ArchConstraints]
+    pub fn matches(&self, arch: &Architecture) -> bool {
+        let negated = match self.negation_policy() {
+            Ok(v) => v,
+            Err(_) => {
+                // we must pass this on if the negations are wonky. We can't
+                // safely ignore it.
+                return true;
+            }
+        };
+
+        let mut matches = self
+            .arches
+            .iter()
+            .map(|arch_constraint| arch_constraint.matches(arch));
+
+        if !negated {
+            // For the simple case of [foo bar], we need to ensure that we match
+            // *any* of the arches (we're either foo OR bar).
+            matches.any(|v| v)
+        } else {
+            // However, for the case of a negated relation like [!foo !bar], we
+            // need to match *all* of the arches (we must be not foo AND not bar).
+            matches.all(|v| v)
+        }
+    }
+}
+
 // vim: foldmethod=marker

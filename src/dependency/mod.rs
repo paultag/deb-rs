@@ -70,13 +70,14 @@ mod architecture;
 mod build_profile;
 #[allow(clippy::module_inception)]
 mod dependency;
+mod dependency_filter;
 mod package;
 mod pest;
 mod relation;
 mod tests;
 mod version;
 
-pub use architecture::{ArchConstraint, ArchConstraints};
+pub use architecture::{ArchConstraint, ArchConstraints, ArchConstraintsValidationError};
 pub use build_profile::{
     BuildProfileConstraint, BuildProfileConstraints, BuildProfileRestrictionFormula,
 };

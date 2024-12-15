@@ -201,6 +201,40 @@ impl FromStr for BuildProfileRestrictionFormula {
     }
 }
 
+impl BuildProfileConstraint {
+    /// Return true if the provided [BuildProfile] meets the requirements
+    /// in the [BuildProfileConstraint].
+    pub fn matches(&self, build_profile: &BuildProfile) -> bool {
+        let matches = self.build_profile == *build_profile;
+
+        if self.negated {
+            !matches
+        } else {
+            matches
+        }
+    }
+}
+
+impl BuildProfileConstraints {
+    /// Return true if the provided [BuildProfile] meets ANY of the
+    /// requirements in this set of [BuildProfileConstraints].
+    pub fn matches(&self, build_profile: &BuildProfile) -> bool {
+        self.build_profiles
+            .iter()
+            .any(|bp| bp.matches(build_profile))
+    }
+}
+
+impl BuildProfileRestrictionFormula {
+    /// Return true if the provided [BuildProfile] meets ALL of the
+    /// [BuildProfileConstraints].
+    pub fn matches(&self, build_profile: &BuildProfile) -> bool {
+        self.build_profile_constraints
+            .iter()
+            .all(|bpc| bpc.matches(build_profile))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -211,6 +245,19 @@ mod tests {
         assert_eq!(2, bprf.build_profile_constraints.len());
         assert_eq!(1, bprf.build_profile_constraints[0].build_profiles.len());
         assert_eq!(1, bprf.build_profile_constraints[1].build_profiles.len());
+    }
+
+    #[test]
+    fn test_build_profile_matches() {
+        let bprf: BuildProfileRestrictionFormula = "<!cross> <!nocheck>".parse().unwrap();
+
+        let cross: BuildProfile = "cross".parse().unwrap();
+        let nocheck: BuildProfile = "nocheck".parse().unwrap();
+        let nodoc: BuildProfile = "nodoc".parse().unwrap();
+
+        assert!(!bprf.matches(&cross));
+        assert!(!bprf.matches(&nocheck));
+        assert!(bprf.matches(&nodoc));
     }
 }
 
