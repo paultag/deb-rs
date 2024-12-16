@@ -25,6 +25,13 @@ use serde::{
 };
 use std::iter::Peekable;
 
+// NOTE for future me:
+//
+// The serde #[serde(flatten)] implementaiton fucks us up here due to an
+// internals bug they have. It only calls deserialize_any when enumerating
+// the map, and since we're not self-describing, it'll cause issues for
+// non-string types.
+
 /// Deserializer for deb822 style Control blocks.
 pub(super) struct Deserializer<'a, IteratorT>
 where
@@ -266,7 +273,7 @@ where
         T: DeserializeSeed<'de>,
     {
         if self.iter.peek().is_some() {
-            return Ok(Some(seed.deserialize(self)?));
+            return seed.deserialize(self).map(Some);
         };
 
         Ok(None)
@@ -321,7 +328,7 @@ where
         K: DeserializeSeed<'de>,
     {
         if self.de.iter.peek().is_some() {
-            return Ok(Some(seed.deserialize(&mut *self.de)?));
+            return seed.deserialize(&mut *self.de).map(Some);
         }
         Ok(None)
     }

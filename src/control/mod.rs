@@ -38,6 +38,25 @@
 //!
 //! ## Restrictions / Rules on `serde` support
 //!
+//! ### Use of `#[serde(flatten)]`
+//!
+//! The Debian RFC 2822-like format is *not* "self describing". There's no
+//! way to know the type of a value except to have knowledge of the type
+//! for a given key.
+//!
+//! There's a long-standing issue due to implementation choices made during
+//! the creation of `flatten` that, when `flatten`ing structs,
+//! the `serde` internals will dispatch to the `_any` helper for the values,
+//! rather than the typed helpers, unlike for a normal deserialization.
+//!
+//! I can't see any real useful workarounds and I don't think serde is going
+//! to fix this anytime soon. As a result, I left the `_any` helper to call
+//! back with `_str`; so flatten will work IFF all fiends are string-based
+//! Deserilizations. Weirdly things will break if you use a prim non-String
+//! type (like i32 or a bool) in the inner struct while using `flatten`.
+//!
+//! ### Multiline Behavior
+//!
 //! There are three types of Debian RFC2822-style key/value types. Those
 //! types are `simple` (the field must be on all one line), `folded` (multiple
 //! lines, but no semantic meaning), and `multiline` (repeated continuation
@@ -85,6 +104,7 @@ mod real_control_tests;
 pub mod archive;
 pub mod changes;
 pub mod dsc;
+pub mod package;
 
 #[cfg(feature = "serde")]
 pub mod de;
