@@ -46,7 +46,7 @@ pub struct Package {
     /// Size of the binary `.deb` file.
     pub size: usize,
 
-    /// MD5 hash of the package's full Description. The [Self::description]
+    /// MD5 hash of the package's full Description. The `description`
     /// field only contains the short description.
     #[cfg_attr(feature = "serde", serde(rename = "Description-md5"))]
     pub description_md5: ChecksumMd5,

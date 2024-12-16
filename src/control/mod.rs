@@ -21,11 +21,12 @@
 //! The `control` module contains support for parsing Debian RFC 2822-style
 //! files into our conventional formats.
 //!
-//! | What                 | File Type                                      | Struct             |
-//! | -------------------- | ---------------------------------------------- | ------------------ |
-//! | Package Upload       | `.changes`.                                    | [changes::Changes] |
-//! | Source Package       | `.dsc`                                         | [dsc::Dsc]         |
-//! | Binary Archive Index | `dists/unstable/*/binary-*/Packages*`          | [archive::Package] |
+//! | What                    | File Type                                      | Struct                   |
+//! | ----------------------- | ---------------------------------------------- | ------------------------ |
+//! | Package Upload          | `.changes`.                                    | [changes::Changes]       |
+//! | Source Package          | `.dsc`                                         | [dsc::Dsc]               |
+//! | Binary Package Control  | `DEBIAN/control`                               | [package::BinaryControl] |
+//! | Binary Archive Index    | `dists/*/*/binary-*/Packages*`                 | [archive::Package]       |
 //!
 //! # Feature `serde`
 //!
