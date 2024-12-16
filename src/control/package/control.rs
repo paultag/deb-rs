@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::control::Priority;
+use crate::control::{Number, Priority};
 use crate::{architecture::Architecture, dependency::Dependency, version::Version};
 
 #[cfg(feature = "serde")]
@@ -61,7 +61,7 @@ pub struct BinaryControl {
 
     /// Size of the package's contents on-disk.
     #[cfg_attr(feature = "serde", serde(rename = "Installed-Size"))]
-    pub installed_size: Option<usize>,
+    pub installed_size: Option<Number<usize>>,
 
     /// Name and email of the package's maintainer.
     pub maintainer: String,

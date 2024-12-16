@@ -18,12 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::{
-    architecture::Architecture,
-    control::{ChecksumMd5, ChecksumSha256, Priority},
-    dependency::Dependency,
-    version::Version,
-};
+use crate::control::{package, ChecksumMd5, ChecksumSha256};
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};
@@ -56,86 +51,9 @@ pub struct Package {
     #[cfg_attr(feature = "serde", serde(rename = "Description-md5"))]
     pub description_md5: ChecksumMd5,
 
-    // Fields copied from BinaryControl here. We can't use #[serde(flatten)],
-    // since this format is "non self describing"
-    /// Binary package name
-    pub package: String,
-
-    /// The value of this field determines the package name, and is used to
-    /// generate file names by most installation tools.
-    pub source: Option<String>,
-
-    /// Typically, this is the original package's [Version] number in whatever
-    /// form the program's author uses. It may also include a Debian revision
-    /// number (for non-native packages).
-    pub version: Version,
-
-    /// Archive Section that this package belongs to.
-    pub section: Option<String>,
-
-    /// Priority of the binary package.
-    pub priority: Option<Priority>,
-
-    /// Lists the [crate::architecture::Architecture] of the files contained
-    /// in this package. Common architectures are `amd64`, `armel`, `i386`,
-    /// ([crate::architecture::AMD64],
-    /// [crate::architecture::ARMEL],
-    /// [crate::architecture::I386]), etc.
-    pub architecture: Option<Architecture>,
-
-    /// If set, and set to "`yes`", this package is an essential package,
-    /// which has special-cased handling in `dpkg` and `apt`.
-    pub essential: Option<String>,
-
-    /// Size of the package's contents on-disk.
-    #[cfg_attr(feature = "serde", serde(rename = "Installed-Size"))]
-    pub installed_size: Option<usize>,
-
-    /// Name and email of the package's maintainer.
-    pub maintainer: String,
-
-    /// Description of this binary package's purpose.
-    pub description: String,
-
-    /// The upstream project home page url.
-    pub homepage: Option<String>,
-
-    /// Packages that this binary package requires be installed in order to
-    /// be fully installed.
-    pub depends: Option<Dependency>,
-
-    /// Packages which this binary package needs to be installed in all but
-    /// the most unusual installs. Removing one may cause breakage if their
-    /// purpose is not understood.
-    pub recommends: Option<Dependency>,
-
-    /// Packages which this binary package must not be installed at the same
-    /// time as.
-    pub conflicts: Option<Dependency>,
-
-    /// Packages which could be interesting to be installed along with this
-    /// package.
-    pub suggests: Option<Dependency>,
-
-    /// Packages that were used to produce this binary file.
-    ///
-    /// This is used from within the archive to ensure that source packages
-    /// are not removed when their source is still included in a binary,
-    /// but it may also be helpful to use when tracking down issues or
-    /// triaging what packages need to be rebuilt.
-    #[cfg_attr(feature = "serde", serde(rename = "Built-Using"))]
-    pub built_using: Option<Dependency>,
-
-    /// Packages which will become broken by the installation of this binary
-    /// package.
-    pub breaks: Option<Dependency>,
-
-    /// Package makes another package better.
-    pub enhances: Option<Dependency>,
-
-    /// Packages which must be installed before this binary begins to
-    /// unpack.
-    pub pre_depends: Option<Dependency>,
+    /// Binary control entry from the `DEBIAN/control` file.
+    #[cfg_attr(feature = "serde", serde(flatten))]
+    pub control: package::BinaryControl,
 }
 
 #[cfg(test)]
@@ -181,13 +99,14 @@ Size: 1226140
 MD5sum: e9ae48ab62d609faaafdd034353a28d7
 SHA256: 7eaf5da83ab47fce0937b348640aec52c96ae5193b809d01168c5c81bd7f4645
 ", |package| {
-            assert_eq!("fluxbox", package.package);
-            assert_eq!(architecture::AMD64, package.architecture.unwrap());
-            assert_eq!(4128, package.installed_size.unwrap());
-            assert!(package.depends.is_some());
-            assert!(package.recommends.is_some());
-            assert!(package.suggests.is_some());
-            assert!(package.conflicts.is_none());
+            assert_eq!("fluxbox", package.control.package);
+            assert_eq!(architecture::AMD64, package.control.architecture.unwrap());
+            // assert_eq!(4128, package.control.installed_size.unwrap());
+            assert!(package.control.depends.is_some());
+            assert!(package.control.recommends.is_some());
+            assert!(package.control.suggests.is_some());
+            assert!(package.control.conflicts.is_none());
+            assert_eq!(4128, *package.control.installed_size.unwrap());
             assert_eq!("pool/main/f/fluxbox/fluxbox_1.3.7-1+b1_amd64.deb", package.filename);
             assert_eq!(1226140, package.size);
         });

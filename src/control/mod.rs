@@ -96,6 +96,7 @@ mod checksum;
 mod date_time;
 mod delimited;
 mod macros;
+mod number;
 mod paragraph;
 mod pest;
 mod priority;
@@ -119,6 +120,7 @@ pub use architectures::Architectures;
 pub use checksum::{Checksum, ChecksumMd5, ChecksumSha1, ChecksumSha256};
 pub use date_time::{DateTime2822, DateTime2822ParseError};
 pub use delimited::{CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings};
+pub use number::Number;
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};
 
