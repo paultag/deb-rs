@@ -18,44 +18,93 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::ChangesParseError;
-use crate::control::Checksum;
+use crate::control::{Digest, DigestParseError};
 use std::str::FromStr;
 
-/// [FileChecksum] is a specific File's hash digest and filesize referenced
-/// by the [crate::control::changes::Changes] file.
+const HASH_LEN_MD5: usize = 16;
+const HASH_LEN_SHA1: usize = 20;
+const HASH_LEN_SHA256: usize = 32;
+const HASH_LEN_SHA512: usize = 64;
+
+/// [FileDigest] is a specific File's hash digest and filesize referenced
+/// by a control file.
 #[derive(Clone, Debug, PartialEq)]
-pub struct FileChecksum<const HASH_LEN: usize> {
+pub struct FileDigest<const HASH_LEN: usize> {
     /// Hash digest of a File contained in this upload. The specific length
     /// of the digest is dicated by the hash algorithm.
-    pub digest: Checksum<HASH_LEN>,
+    pub digest: Digest<HASH_LEN>,
 
     /// File size, in bytes, of the File contained in this upload.
     pub size: usize,
 
-    /// Path of the file relative to the Changes file.
+    /// Path of the file relative to the control file, usually a buildinfo
+    /// or changes.
     pub path: String,
 }
 
-impl<const HASH_LEN: usize> std::fmt::Display for FileChecksum<HASH_LEN> {
+/// A [FileDigest] set to the `HASH_LEN` of MD5, 16 bytes.
+///
+/// MD5 is a broken hashing algorithm and shouldn't be used for cryptographic
+/// purposes.
+pub type FileDigestMd5 = FileDigest<HASH_LEN_MD5>;
+
+/// A [FileDigest] set to the `HASH_LEN` of SHA1, 20 bytes.
+///
+/// SHA1 is a broken hashing algorithm and shouldn't be used for cryptographic
+/// purposes.
+pub type FileDigestSha1 = FileDigest<HASH_LEN_SHA1>;
+
+/// A [FileDigest] set to the `HASH_LEN` of SHA256, 32 bytes.
+pub type FileDigestSha256 = FileDigest<HASH_LEN_SHA256>;
+
+/// A [FileDigest] set to the `HASH_LEN` of SHA512, 64 bytes.
+pub type FileDigestSha512 = FileDigest<HASH_LEN_SHA512>;
+
+impl<const HASH_LEN: usize> std::fmt::Display for FileDigest<HASH_LEN> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         write!(f, "{} {} {}", self.digest, self.size, self.path,)
     }
 }
 
-impl<const HASH_LEN: usize> FromStr for FileChecksum<HASH_LEN> {
-    type Err = ChangesParseError;
+/// Error conditions which may be encountered when working with a
+/// [FileDigest].
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub enum FileDigestParseError {
+    /// Underlying checksum error when parsing the digest into a [Digest].
+    DigestParseError(DigestParseError),
+
+    /// The [FileDigest] line must take the format of `digest size path`,
+    /// space delimited. If the line is malformed or differently structured,
+    /// this will be returned.
+    MalformedFileDigestLine,
+
+    /// The file size couldn't be converted into a number.
+    MalformedFileSize,
+}
+crate::errors::error_enum!(FileDigestParseError);
+
+impl From<DigestParseError> for FileDigestParseError {
+    fn from(cpe: DigestParseError) -> Self {
+        Self::DigestParseError(cpe)
+    }
+}
+
+impl<const HASH_LEN: usize> FromStr for FileDigest<HASH_LEN> {
+    type Err = FileDigestParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let [digest, size, path] = s
             .split(" ")
+            .filter(|v| !v.is_empty())
             .collect::<Vec<_>>()
             .try_into()
-            .map_err(|_| ChangesParseError::Malformed)?;
+            .map_err(|_| FileDigestParseError::MalformedFileDigestLine)?;
 
         Ok(Self {
-            digest: digest.parse().map_err(|_| ChangesParseError::InvalidHash)?,
-            size: size.parse().map_err(|_| ChangesParseError::Malformed)?,
+            digest: digest.parse()?,
+            size: size
+                .parse()
+                .map_err(|_| FileDigestParseError::MalformedFileSize)?,
             path: path.to_owned(),
         })
     }
@@ -63,10 +112,10 @@ impl<const HASH_LEN: usize> FromStr for FileChecksum<HASH_LEN> {
 
 #[cfg(feature = "serde")]
 mod serde {
-    use super::FileChecksum;
+    use super::FileDigest;
     use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
 
-    impl<const HASH_LEN: usize> Serialize for FileChecksum<HASH_LEN> {
+    impl<const HASH_LEN: usize> Serialize for FileDigest<HASH_LEN> {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
             S: Serializer,
@@ -75,7 +124,7 @@ mod serde {
         }
     }
 
-    impl<'de, const HASH_LEN: usize> Deserialize<'de> for FileChecksum<HASH_LEN> {
+    impl<'de, const HASH_LEN: usize> Deserialize<'de> for FileDigest<HASH_LEN> {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
             s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
@@ -87,9 +136,9 @@ mod serde {
 mod hex {
     #![cfg_attr(docsrs, doc(cfg(feature = "hex")))]
 
-    use super::FileChecksum;
+    use super::FileDigest;
 
-    impl<const HASH_LEN: usize> FileChecksum<HASH_LEN> {
+    impl<const HASH_LEN: usize> FileDigest<HASH_LEN> {
         /// Return the parsed digest for this File.
         pub fn digest(&self) -> [u8; HASH_LEN] {
             self.digest.digest()
@@ -98,13 +147,13 @@ mod hex {
 
     #[cfg(test)]
     mod tests {
-        use super::FileChecksum;
-        use crate::control::changes::HASH_LEN_SHA256;
+        const HASH_LEN_SHA256: usize = 32;
+        use super::FileDigest;
         use ::hex;
 
         #[test]
         fn hex_digest_sha256() {
-            let file = FileChecksum::<HASH_LEN_SHA256> {
+            let file = FileDigest::<HASH_LEN_SHA256> {
                 digest: "e8ba61cf5c8e2ef3107cc1c6e4fb7125064947dd5565c22cde1b9a407c6264ba"
                     .parse()
                     .unwrap(),
@@ -123,12 +172,13 @@ mod hex {
 
 #[cfg(test)]
 mod test {
-    use super::super::{HASH_LEN_SHA1, HASH_LEN_SHA256};
+    const HASH_LEN_SHA1: usize = 20;
+    const HASH_LEN_SHA256: usize = 32;
     use super::*;
 
     #[test]
     fn test_parse_sha1() {
-        let file: FileChecksum<HASH_LEN_SHA1> =
+        let file: FileDigest<HASH_LEN_SHA1> =
             "4755bb94240986213836726f9b594e853920f541 1183 hello_2.10-3.dsc"
                 .parse()
                 .unwrap();
@@ -139,7 +189,7 @@ mod test {
 
     #[test]
     fn test_parse_sha256() {
-        let file: FileChecksum<HASH_LEN_SHA256> =
+        let file: FileDigest<HASH_LEN_SHA256> =
              "e8ba61cf5c8e2ef3107cc1c6e4fb7125064947dd5565c22cde1b9a407c6264ba 1183 hello_2.10-3.dsc"
                 .parse()
                 .unwrap();

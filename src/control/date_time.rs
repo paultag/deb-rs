@@ -34,6 +34,8 @@ type InnerDateTime = ::chrono::DateTime<::chrono::FixedOffset>;
 #[derive(Clone, Debug, PartialEq)]
 pub struct DateTime2822(InnerDateTime);
 
+def_serde_traits_for!(DateTime2822);
+
 /// Error conditions which may be encountered when working with a
 /// [DateTime2822].
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -66,15 +68,16 @@ mod not_chrono {
 
 #[cfg(feature = "chrono")]
 mod chrono {
-
     use super::*;
     use ::chrono::{DateTime, FixedOffset};
 
     impl FromStr for DateTime2822 {
         type Err = DateTime2822ParseError;
         fn from_str(when: &str) -> Result<Self, Self::Err> {
+            let when = when.replace("UTC", "UT");
+
             Ok(Self(
-                DateTime::parse_from_rfc2822(when).map_err(DateTime2822ParseError::InvalidDate)?,
+                DateTime::parse_from_rfc2822(&when).map_err(DateTime2822ParseError::InvalidDate)?,
             ))
         }
     }
@@ -110,7 +113,5 @@ mod chrono {
         }
     }
 }
-
-def_serde_traits_for!(DateTime2822);
 
 // vim: foldmethod=marker

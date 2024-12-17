@@ -48,7 +48,7 @@ impl ser::Serializer for &mut Serializer {
     type SerializeStructVariant = Self;
 
     fn serialize_bool(self, v: bool) -> Result<()> {
-        self.output += if v { "true" } else { "false" };
+        self.output += if v { "yes" } else { "no" };
         Ok(())
     }
 

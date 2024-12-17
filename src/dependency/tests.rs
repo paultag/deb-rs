@@ -510,6 +510,36 @@ mod test {
             ..Default::default()
         })
     );
+
+    check_matches!(
+        check_newlines,
+        "\
+foo,
+bar | baz
+",
+        Dependency {
+            relations: vec![
+                Relation {
+                    packages: vec![Package {
+                        name: "foo".to_owned(),
+                        ..Default::default()
+                    },]
+                },
+                Relation {
+                    packages: vec![
+                        Package {
+                            name: "bar".to_owned(),
+                            ..Default::default()
+                        },
+                        Package {
+                            name: "baz".to_owned(),
+                            ..Default::default()
+                        },
+                    ]
+                }
+            ],
+        }
+    );
 }
 
 // vim: foldmethod=marker

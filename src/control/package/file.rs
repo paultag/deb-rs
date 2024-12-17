@@ -19,18 +19,18 @@
 // THE SOFTWARE. }}}
 
 use super::ChangesParseError;
-use crate::control::{def_serde_traits_for, ChecksumMd5, Priority};
+use crate::control::{def_serde_traits_for, DigestMd5, Priority};
 use std::str::FromStr;
 
 /// [File] is a specific File  referenced by the
-/// [crate::control::changes::Changes] file.
+/// [crate::control::package::Changes] file.
 ///
 /// This entry contains a now very antiquated `md5` digest, which should
 /// _not_ be used for basically any purpose.
 #[derive(Clone, Debug, PartialEq)]
 pub struct File {
     /// MD5 hash digest of a File contained in this upload.
-    pub digest: ChecksumMd5,
+    pub digest: DigestMd5,
 
     /// File size, in bytes, of the File contained in this upload.
     pub size: usize,
@@ -44,6 +44,8 @@ pub struct File {
     /// Priority of the file.
     pub priority: Option<Priority>,
 }
+
+def_serde_traits_for!(File);
 
 impl std::fmt::Display for File {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
@@ -90,8 +92,6 @@ impl FromStr for File {
         })
     }
 }
-
-def_serde_traits_for!(File);
 
 #[cfg(feature = "hex")]
 mod hex {

@@ -23,10 +23,13 @@
 //!
 //! | What                    | File Type                                      | Struct                   |
 //! | ----------------------- | ---------------------------------------------- | ------------------------ |
-//! | Package Upload          | `.changes`.                                    | [changes::Changes]       |
-//! | Source Package          | `.dsc`                                         | [dsc::Dsc]               |
+//! | Package Upload          | `.changes`.                                    | [package::Changes]       |
+//! | Source Package          | `.dsc`                                         | [package::Dsc]           |
+//! | Build Info              | `.buildinfo`                                   | [package::Buildinfo]     |
 //! | Binary Package Control  | `DEBIAN/control`                               | [package::BinaryControl] |
+//! | Binary Archive Release  | `dists/*/InRelease`                            | [archive::Release]       |
 //! | Binary Archive Index    | `dists/*/*/binary-*/Packages*`                 | [archive::Package]       |
+//! | `apt` `sources.list`    | `/etc/apt/sources.list/*.sources`              | [apt::SourcesList]       |
 //!
 //! # Feature `serde`
 //!
@@ -93,9 +96,10 @@
 //! [tokio::io::AsyncRead], via [de::from_reader_async]
 
 mod architectures;
-mod checksum;
 mod date_time;
 mod delimited;
+mod digest;
+mod file_digest;
 mod macros;
 mod number;
 mod paragraph;
@@ -103,9 +107,8 @@ mod pest;
 mod priority;
 mod real_control_tests;
 
+pub mod apt;
 pub mod archive;
-pub mod changes;
-pub mod dsc;
 pub mod package;
 
 #[cfg(feature = "serde")]
@@ -118,9 +121,13 @@ pub mod ser;
 mod openpgp;
 
 pub use architectures::Architectures;
-pub use checksum::{Checksum, ChecksumMd5, ChecksumSha1, ChecksumSha256};
 pub use date_time::{DateTime2822, DateTime2822ParseError};
 pub use delimited::{CommaDelimitedStrings, Delimited, DelimitedStrings, SpaceDelimitedStrings};
+pub use digest::{Digest, DigestMd5, DigestParseError, DigestSha1, DigestSha256, DigestSha512};
+pub use file_digest::{
+    FileDigest, FileDigestMd5, FileDigestParseError, FileDigestSha1, FileDigestSha256,
+    FileDigestSha512,
+};
 pub use number::Number;
 pub use paragraph::{Error, RawField, RawParagraph};
 pub use priority::{Priority, PriorityParseError};

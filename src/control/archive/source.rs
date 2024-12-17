@@ -18,17 +18,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-//! Rust types to handle Deserialization of a Debian `.dsc` file.
-
-#[allow(clippy::module_inception)]
-mod dsc;
-mod package_list;
-
-const HASH_LEN_MD5: usize = 16;
-const HASH_LEN_SHA1: usize = 20;
-const HASH_LEN_SHA256: usize = 32;
-
-pub use dsc::{Dsc, DscParseError};
-pub use package_list::PackageList;
-
 // vim: foldmethod=marker

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::control::{package, ChecksumMd5, ChecksumSha256};
+use crate::control::{package, DigestMd5, DigestSha256};
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};
@@ -29,16 +29,20 @@ use ::serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[cfg_attr(feature = "serde", serde(rename_all = "PascalCase"))]
 pub struct Package {
+    /// Binary control entry from the `DEBIAN/control` file.
+    #[cfg_attr(feature = "serde", serde(flatten))]
+    pub control: package::BinaryControl,
+
     /// MD5 hash of the `.deb` file.
     ///
     /// Note: The MD5 checksum is considered weak, and should never be assumed
     /// to be sufficient for secure verification.
     #[cfg_attr(feature = "serde", serde(rename = "MD5sum"))]
-    pub md5sum: ChecksumMd5,
+    pub md5sum: DigestMd5,
 
     /// SHA256 hash of the `.deb` file.
     #[cfg_attr(feature = "serde", serde(rename = "SHA256"))]
-    pub sha256: ChecksumSha256,
+    pub sha256: DigestSha256,
 
     /// Path within the Debian archive to the specific `.deb` file.
     pub filename: String,
@@ -49,11 +53,7 @@ pub struct Package {
     /// MD5 hash of the package's full Description. The `description`
     /// field only contains the short description.
     #[cfg_attr(feature = "serde", serde(rename = "Description-md5"))]
-    pub description_md5: ChecksumMd5,
-
-    /// Binary control entry from the `DEBIAN/control` file.
-    #[cfg_attr(feature = "serde", serde(flatten))]
-    pub control: package::BinaryControl,
+    pub description_md5: DigestMd5,
 }
 
 #[cfg(test)]

@@ -79,7 +79,7 @@
 //!
 //! Enable parsing hashes from ASCII into bytes using the `hex` crate. This
 //! is only really useful in places where you're validating things like
-//! digests over files in [control::changes::Changes] files, or similar.
+//! digests over files in [control::package::Changes] files, or similar.
 //!
 //! # Feature `serde`
 //!

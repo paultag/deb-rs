@@ -18,18 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-//! Rust types to handle Deserialization of a Debian `.changes` file.
+//! Rust types to handle Deserialization of a Debian archive files.
 
-#[allow(clippy::module_inception)]
-mod changes;
-mod file;
-mod file_checksum;
+mod sources_list;
+mod yes_no_force;
 
-const HASH_LEN_SHA1: usize = 20;
-const HASH_LEN_SHA256: usize = 32;
-
-pub use changes::{Changes, ChangesParseError};
-pub use file::File;
-pub use file_checksum::FileChecksum;
+pub use sources_list::SourcesList;
+pub use yes_no_force::YesNoForce;
 
 // vim: foldmethod=marker

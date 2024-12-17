@@ -20,8 +20,11 @@
 
 //! Rust types to handle Deserialization of a Debian archive files.
 
-mod packages;
+mod package;
+mod release;
+mod source;
 
-pub use packages::Package;
+pub use package::Package;
+pub use release::Release;
 
 // vim: foldmethod=marker

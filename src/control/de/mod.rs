@@ -103,7 +103,7 @@ impl de::Error for Error {
 /// Rust type from a [std::io::Read].
 ///
 /// ```no_run
-/// use deb::control::{de, changes::Changes};
+/// use deb::control::{de, package::Changes};
 ///
 /// // Read a .changes file from stdin
 ///
@@ -188,7 +188,7 @@ mod _tokio {
     /// Rust type from a [tokio::io::AsyncRead].
     ///
     /// ```no_run
-    /// use deb::control::{de, changes::Changes};
+    /// use deb::control::{de, package::Changes};
     ///
     /// async fn read_changes() {
     ///     // input can be any AsyncRead, as long as it's wrapped in
@@ -294,7 +294,7 @@ mod _tokio {
     /// iterator should.
     ///
     /// ```no_run
-    /// use deb::control::{de, changes::Changes};
+    /// use deb::control::{de, package::Changes};
     ///
     /// async fn read_changes() {
     ///     // input can be any AsyncRead, as long as it's wrapped in
@@ -454,7 +454,7 @@ mod tests {
                     "\
 Package: something
 Foo: Bar
-True-False: true
+True-False: yes
 ",
                 )
                 .err()
@@ -495,7 +495,7 @@ True-False: true
             "\
 Package: something
 Foo: Bar
-True-False: true
+True-False: yes
 X-A-Number: 10
 ",
         )
@@ -514,7 +514,7 @@ X-A-Number: 10
             "\
 Package: something
 Foo: Bar
-True-False: true
+True-False: yes
 X-A-Number: 10
 Ello: something
         ",
@@ -549,18 +549,18 @@ Ello: something
             "\
 Package: somethingelse
 Foo: Foo
-True-False: false
+True-False: no
 X-A-Number: 100000
 
 Package: sth
 Foo: Foo1
-True-False: true
+True-False: yes
 X-A-Number: 10000
 
 
 Package: else
 Foo: Foo2
-True-False: false
+True-False: no
 X-A-Number: 1000
 Ello: Govnr
 ",
@@ -600,7 +600,7 @@ Ello: Govnr
             "\
 Package: somethingelse
 Foo: Foo
-True-False: false
+True-False: no
 X-A-Number: 100000
 
 Neato: Here

@@ -119,8 +119,8 @@ where
     fn deserialize_bool<V: Visitor<'de>>(self, visitor: V) -> Result<V::Value, Error> {
         if let Some(next) = self.iter.next() {
             return visitor.visit_bool(match next.to_lowercase().as_str() {
-                "true" => true,
-                "false" => false,
+                "yes" => true,
+                "no" => false,
                 _ => return Err(Error::InvalidBool),
             });
         }

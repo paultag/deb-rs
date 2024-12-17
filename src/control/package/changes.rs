@@ -18,10 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{File, FileChecksum, HASH_LEN_SHA1, HASH_LEN_SHA256};
+use super::File;
 use crate::{
     build_profile::BuildProfile,
-    control::{Architectures, DateTime2822, Delimited, PriorityParseError, SpaceDelimitedStrings},
+    control::{
+        Architectures, DateTime2822, Delimited, FileDigestSha1, FileDigestSha256,
+        PriorityParseError, SpaceDelimitedStrings,
+    },
     version::Version,
 };
 
@@ -63,6 +66,10 @@ pub enum ChangesParseError {
     InvalidPriority(PriorityParseError),
 }
 crate::errors::error_enum!(ChangesParseError);
+
+// TODO:
+//   - format enum
+//   - validation of optional fields that are contextually required
 
 /// When preparing a package upload for Debian, the upload action is done
 /// by sending a `.changes` file to the Debian infrastructure, which
@@ -183,7 +190,7 @@ pub struct Changes {
     ///
     /// This field lists all files that make up the upload. The list of files
     /// in this field must match the list of files in the other related
-    /// Checksums fields.
+    /// Digests fields.
     ///
     /// Note: The MD5 checksum is considered weak, and should never be assumed
     /// to be sufficient for secure verification, but this field cannot be
@@ -196,21 +203,21 @@ pub struct Changes {
     ///
     /// These fields list all files that make up the upload. The list of files
     /// in these fields must match the list of files in the Files field and
-    /// the other related Checksums fields.
+    /// the other related Digests fields.
     ///
     /// Note: The SHA-1 checksum is considered weak, and should never be
     /// assumed to be sufficient for secure verification.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha1"))]
-    pub checksum_sha1: Option<Vec<FileChecksum<HASH_LEN_SHA1>>>,
+    pub checksum_sha1: Option<Vec<FileDigestSha1>>,
 
     /// Each line consists of space-separated entries describing the file:
     /// the checksum, the file size, and the file name.
     ///
     /// These fields list all files that make up the upload. The list of files
     /// in these fields must match the list of files in the Files field and
-    /// the other related Checksums fields.
+    /// the other related Digests fields.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha256"))]
-    pub checksum_sha256: Option<Vec<FileChecksum<HASH_LEN_SHA256>>>,
+    pub checksum_sha256: Option<Vec<FileDigestSha256>>,
 }
 
 #[cfg(feature = "serde")]
@@ -221,7 +228,7 @@ mod serde {
             architecture,
             control::{
                 self,
-                changes::{Changes, File},
+                package::{Changes, File},
             },
         };
         use std::io::{BufReader, Cursor};

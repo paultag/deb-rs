@@ -18,20 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-//! Rust types to handle Deserialization of a Debian archive files.
+#[cfg(feature = "serde")]
+use ::serde::{Deserialize, Serialize};
 
-mod binary_control;
-mod buildinfo;
-mod changes;
-mod dsc;
-mod file;
-mod package_list;
+/// "Boolean" value, with a force toggle. This can be in one of three states,
+/// "yes", "no" or "force".
+#[derive(Copy, Clone, Debug, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[cfg_attr(feature = "serde", serde(rename_all = "lowercase"))]
+pub enum YesNoForce {
+    /// "yes" ensures that the setting is enabled.
+    Yes,
 
-pub use binary_control::BinaryControl;
-pub use buildinfo::Buildinfo;
-pub use changes::{Changes, ChangesParseError};
-pub use dsc::{Dsc, DscParseError};
-pub use file::File;
-pub use package_list::PackageList;
+    /// "no" disables a setting.
+    No,
+
+    /// "force" ensures that the setting is enabled, and refuse any fallback
+    /// behaviors.
+    Force,
+}
 
 // vim: foldmethod=marker

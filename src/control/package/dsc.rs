@@ -18,15 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{PackageList, HASH_LEN_MD5, HASH_LEN_SHA1, HASH_LEN_SHA256};
+use super::PackageList;
 use crate::{
-    control::{changes::FileChecksum, Architectures, CommaDelimitedStrings, PriorityParseError},
+    control::{
+        Architectures, CommaDelimitedStrings, FileDigestMd5, FileDigestSha1, FileDigestSha256,
+        PriorityParseError,
+    },
     dependency::Dependency,
     version::Version,
 };
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};
+
+// TODO:
+//   - format enum
+//   - validation of optional fields that are contextually required
 
 /// Error conditions which may be encountered when working with a [Dsc]
 /// file.
@@ -210,33 +217,33 @@ pub struct Dsc {
     ///
     /// This field lists all files that make up the upload. The list of files
     /// in this field must match the list of files in the other related
-    /// Checksums fields.
+    /// Digests fields.
     ///
     /// Note: The MD5 checksum is considered weak, and should never be assumed
     /// to be sufficient for secure verification, but this field cannot be
     /// omitted as it provides metadata not available anywhere else.
-    pub files: Vec<FileChecksum<HASH_LEN_MD5>>,
+    pub files: Vec<FileDigestMd5>,
 
     /// Each line consists of space-separated entries describing the file:
     /// the checksum, the file size, and the file name.
     ///
     /// These fields list all files that make up the upload. The list of files
     /// in these fields must match the list of files in the Files field and
-    /// the other related Checksums fields.
+    /// the other related Digests fields.
     ///
     /// Note: The SHA-1 checksum is considered weak, and should never be
     /// assumed to be sufficient for secure verification.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha1"))]
-    pub checksum_sha1: Option<Vec<FileChecksum<HASH_LEN_SHA1>>>,
+    pub checksum_sha1: Option<Vec<FileDigestSha1>>,
 
     /// Each line consists of space-separated entries describing the file:
     /// the checksum, the file size, and the file name.
     ///
     /// These fields list all files that make up the upload. The list of files
     /// in these fields must match the list of files in the Files field and
-    /// the other related Checksums fields.
+    /// the other related Digests fields.
     #[cfg_attr(feature = "serde", serde(rename = "Checksums-Sha256"))]
-    pub checksum_sha256: Vec<FileChecksum<HASH_LEN_SHA256>>,
+    pub checksum_sha256: Vec<FileDigestSha256>,
 }
 
 /// Information regarding where the package's version control can be

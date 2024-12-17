@@ -22,6 +22,9 @@ use super::DscParseError;
 use crate::control::{def_serde_traits_for, Priority};
 use std::str::FromStr;
 
+// TODO:
+//   - add key-value-list and tests
+
 /// [PackageList] describes one binary package, by listing its name, type,
 /// section and priority separated by spaces.
 ///
@@ -50,6 +53,8 @@ pub struct PackageList {
     /// Priority of the package.
     pub priority: Priority,
 }
+
+def_serde_traits_for!(PackageList);
 
 impl std::fmt::Display for PackageList {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
@@ -81,8 +86,6 @@ impl FromStr for PackageList {
         })
     }
 }
-
-def_serde_traits_for!(PackageList);
 
 #[cfg(test)]
 mod tests {

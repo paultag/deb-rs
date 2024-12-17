@@ -103,7 +103,7 @@ mod tests {
             "\
 Package: foo
 Foo: bar
-True-False: true
+True-False: yes
 X-A-Number: 20
 Ello: Foo
 "

@@ -157,7 +157,6 @@ impl FromStr for Dependency {
             // No dependencies, empty.
             return Ok(Dependency { relations: vec![] });
         };
-
         token.try_into()
     }
 }

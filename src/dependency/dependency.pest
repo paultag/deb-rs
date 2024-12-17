@@ -1,6 +1,6 @@
 alpha = { 'a'..'z' | 'A'..'Z' }
 digit = { '0'..'9' }
-whitespace = { (" " | "\t")+ }
+whitespace = { (" " | "\t" | "\n")+ }
 
 package_name = { (alpha | digit | "-" | "_" | "." | "+")+ }
 

@@ -39,6 +39,13 @@ pub type SpaceDelimitedStrings = DelimitedStrings<' '>;
 /// as seen throughout the `control` module.
 pub type CommaDelimitedStrings = DelimitedStrings<','>;
 
+impl<const DELIM: char, InnerT> Delimited<DELIM, InnerT> {
+    /// Get the inner value as a ref
+    pub fn get_ref(&self) -> &[InnerT] {
+        &self.0
+    }
+}
+
 impl<const DELIM: char, InnerT> Deref for Delimited<DELIM, InnerT> {
     type Target = [InnerT];
     fn deref(&self) -> &[InnerT] {

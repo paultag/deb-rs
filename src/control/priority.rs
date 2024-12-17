@@ -72,6 +72,8 @@ pub enum Priority {
     Extra,
 }
 
+def_serde_traits_for!(Priority);
+
 /// Error conditions which may be encountered when working with a [Priority]
 /// field.
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -117,8 +119,6 @@ impl std::fmt::Display for Priority {
         )
     }
 }
-
-def_serde_traits_for!(Priority);
 
 #[cfg(test)]
 mod tests {
