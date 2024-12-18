@@ -25,6 +25,7 @@
 
 use sequoia_openpgp::{
     cert::CertParser,
+    packet::Signature,
     parse::{
         stream::{MessageLayer, MessageStructure, VerificationHelper, VerifierBuilder},
         Parse,
@@ -86,12 +87,12 @@ impl OpenPgpValidator {
     pub fn validate(
         &self,
         message: &[u8],
-    ) -> Result<(Vec<Fingerprint>, impl Read), OpenPgpValidatorError> {
+    ) -> Result<(Vec<(Cert, Signature)>, impl Read), OpenPgpValidatorError> {
         let p = &StandardPolicy::new();
 
         struct Helper<'a> {
             validator: &'a OpenPgpValidator,
-            results: Vec<Fingerprint>,
+            results: Vec<(Cert, Signature)>,
         }
 
         impl VerificationHelper for &mut Helper<'_> {
@@ -110,8 +111,15 @@ impl OpenPgpValidator {
                                     continue;
                                 };
 
-                                self.results
-                                    .extend(result.sig.issuer_fingerprints().cloned());
+                                let signature = result.sig.clone();
+                                let fingerprints = signature.issuer_fingerprints();
+
+                                for fingerprint in fingerprints {
+                                    let Some(signer) = self.validator.keys.get(fingerprint) else {
+                                        continue;
+                                    };
+                                    self.results.push((signer.clone(), signature.clone()));
+                                }
                             }
                         }
                         _ => return Err(anyhow::anyhow!("Unexpected message structure")),
@@ -168,7 +176,10 @@ impl OpenPgpValidatorBuilder {
                     CertParser::from_file(keyring).map_err(OpenPgpValidatorError::Sequoia)?
                 {
                     let cert = cert.map_err(OpenPgpValidatorError::Sequoia)?;
-                    keys.insert(cert.fingerprint(), cert);
+                    keys.insert(cert.fingerprint(), cert.clone());
+                    for key in cert.keys() {
+                        keys.insert(key.fingerprint(), cert.clone());
+                    }
                 }
             }
             keys
@@ -189,7 +200,7 @@ impl OpenPgpValidatorBuilder {
 pub(crate) fn verify(
     keyring: &Path,
     input: &str,
-) -> Result<(Vec<Fingerprint>, impl Read), OpenPgpValidatorError> {
+) -> Result<(Vec<(Cert, Signature)>, impl Read), OpenPgpValidatorError> {
     let verifier = OpenPgpValidator::build().with_keyring(keyring).build()?;
     verifier.validate(input.as_bytes())
 }

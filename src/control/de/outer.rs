@@ -42,35 +42,11 @@ where
 {
     type Error = Error;
 
-    fn deserialize_any<V: Visitor<'de>>(self, _visitor: V) -> Result<V::Value, Error> {
-        Err(Error::BadType)
-    }
-
-    forward_to_deserialize_any! {
-        char unit
-        u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64
-        bytes byte_buf str string
-        seq
-        identifier bool option
-        tuple unit_struct tuple_struct enum newtype_struct
-        ignored_any
-    }
-
-    fn deserialize_struct<V>(
-        self,
-        _name: &'static str,
-        _fields: &'static [&'static str],
-        visitor: V,
-    ) -> Result<V::Value, Self::Error>
-    where
-        V: Visitor<'de>,
-    {
+    fn deserialize_any<V: Visitor<'de>>(self, visitor: V) -> Result<V::Value, Error> {
         let mut de = paragraph::Deserializer {
             iter: self.iter.clone(),
         };
-
-        let mut uw = paragraph::MapWrapper { de: &mut de };
-        visitor.visit_map(&mut uw)
+        de.deserialize_map(visitor)
     }
 
     fn deserialize_map<V>(self, visitor: V) -> Result<V::Value, Self::Error>
@@ -81,6 +57,16 @@ where
             iter: self.iter.clone(),
         };
         de.deserialize_map(visitor)
+    }
+
+    forward_to_deserialize_any! {
+        char unit
+        u8 u16 u32 u64 u128 i8 i16 i32 i64 i128 f32 f64
+        bytes byte_buf str string
+        seq
+        identifier bool option
+        tuple unit_struct tuple_struct enum newtype_struct struct
+        ignored_any
     }
 }
 

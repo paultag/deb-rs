@@ -34,7 +34,7 @@ use std::{
 use crate::control::openpgp::{self, OpenPgpValidatorError};
 
 #[cfg(feature = "sequoia")]
-use sequoia_openpgp::Fingerprint;
+use sequoia_openpgp::{packet::Signature, Cert};
 
 #[cfg(feature = "sequoia")]
 use std::path::Path;
@@ -389,12 +389,12 @@ pub use _tokio::{from_reader_async, from_reader_async_iter, AsyncControlIterator
 pub fn from_clearsigned_str<'a, 'de, T>(
     keyring: &Path,
     input: &'a str,
-) -> Result<(Vec<Fingerprint>, T), Error>
+) -> Result<(Vec<(Cert, Signature)>, T), Error>
 where
     T: de::Deserialize<'de>,
 {
-    let (fingerprints, input) = openpgp::verify(keyring, input).map_err(Error::OpenPgp)?;
-    Ok((fingerprints, from_reader(&mut BufReader::new(input))?))
+    let (signatures, input) = openpgp::verify(keyring, input).map_err(Error::OpenPgp)?;
+    Ok((signatures, from_reader(&mut BufReader::new(input))?))
 }
 
 /// Return the parsed control file from the input string.

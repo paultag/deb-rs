@@ -109,6 +109,7 @@ mod real_control_tests;
 
 pub mod apt;
 pub mod archive;
+pub mod dak;
 pub mod package;
 
 #[cfg(feature = "serde")]
