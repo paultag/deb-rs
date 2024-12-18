@@ -30,6 +30,7 @@
 //! | Binary Archive Release  | `dists/*/InRelease`                            | [archive::Release]       |
 //! | Binary Archive Index    | `dists/*/*/binary-*/Packages*`                 | [archive::Package]       |
 //! | `apt` `sources.list`    | `/etc/apt/sources.list/*.sources`              | [apt::SourcesList]       |
+//! | `dak` command           | `*.dak-commands`                               | [dak::Command]           |
 //!
 //! # Feature `serde`
 //!
