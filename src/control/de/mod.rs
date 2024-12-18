@@ -461,7 +461,7 @@ True-False: yes
                 .unwrap();
 
                 assert!(
-                    matches!(err, Error::BadType),
+                    matches!(err, Error::De(_)),
                     "expected {} got {}",
                     Error::BadType,
                     err
