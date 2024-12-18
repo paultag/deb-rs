@@ -74,7 +74,8 @@ Version: 1.0-1
         assert_eq!(command.header.archive, "ftp.upload.debian.org");
         assert_eq!(1, command.actions.len());
 
-        let Some(CommandAction::ProcessUpload(process_upload)) = command.actions.next() else {
+        let Some(CommandAction::ProcessUpload(process_upload)) = command.actions.iter().next()
+        else {
             panic!("bad type");
         };
 
