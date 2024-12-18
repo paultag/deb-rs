@@ -18,7 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-//! Rust types to handle Deserialization of a DAK specific files.
+//! Rust types to handle Deserialization of
+//! [dak](https://ftp-master.debian.org/#dak)-specific `.dak-commands`
+//! files used by Debian Developers to control the archive.
+//!
+//! # Dak's `.dak-commands` control types
+//!
+//! A generic dak command can be decoded into a [Command] using something like
+//! [Command::from_reader] or [Command::from_reader_async]. Each command file
+//! starts with a [CommandHeader], followed by any number of [CommandAction]s.
+//!
+//! | What                   | Action Name           | Struct                 |
+//! | ---------------------- | --------------------- | ---------------------- |
+//! | Manage DM Permissions  | `dm`                  | [Dm]                   |
+//! | Break the Archive      | `break-the-archive`   | [BreakTheArchive]      |
+//! | Process an Upload      | `process-upload`      | [ProcessUpload]        |
 
 mod break_the_archive;
 mod dm;
