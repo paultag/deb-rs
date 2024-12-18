@@ -27,7 +27,7 @@ use ::serde::{Deserialize, Serialize};
 #[cfg_attr(feature = "serde", serde(rename_all = "PascalCase"))]
 pub struct BreakTheArchive {}
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde"))]
 mod tests {
     use crate::control::dak::{Command, CommandAction};
     use std::io::{BufReader, Cursor};

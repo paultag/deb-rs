@@ -50,7 +50,7 @@ pub struct ProcessUpload {
     pub version: Version,
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "serde"))]
 mod tests {
     use super::*;
     use crate::control::dak::{Command, CommandAction};
