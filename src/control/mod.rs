@@ -106,12 +106,12 @@ mod number;
 mod paragraph;
 mod pest;
 mod priority;
-mod real_control_tests;
 
 pub mod apt;
 pub mod archive;
 pub mod dak;
 pub mod package;
+pub mod queued;
 
 #[cfg(feature = "serde")]
 pub mod de;

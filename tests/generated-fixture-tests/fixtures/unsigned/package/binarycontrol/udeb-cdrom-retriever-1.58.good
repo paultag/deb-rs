@@ -1,0 +1,12 @@
+Package: cdrom-retriever
+Version: 1.58
+Architecture: all
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 25
+Depends: cdebconf-udeb, cdrom-detect
+Provides: retriever
+Section: debian-installer
+Priority: optional
+Description: Fetch modules from a CDROM
+ This is a retriever module that just symlinks files around since
+ the CDROM is supposed to be mounted on /cdrom.

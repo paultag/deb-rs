@@ -1,0 +1,26 @@
+Format: 3.0 (quilt)
+Source: hello
+Binary: hello
+Architecture: any
+Version: 2.10-3
+Maintainer: Santiago Vila <sanvila@debian.org>
+Homepage: https://www.gnu.org/software/hello/
+Standards-Version: 4.6.2
+Vcs-Browser: https://salsa.debian.org/sanvila/hello
+Vcs-Git: https://salsa.debian.org/sanvila/hello.git
+Testsuite: autopkgtest
+Build-Depends: debhelper-compat (= 13), help2man, texinfo
+Package-List:
+ hello deb devel optional arch=any
+Checksums-Sha1:
+ f7bebf6f9c62a2295e889f66e05ce9bfaed9ace3 725946 hello_2.10.orig.tar.gz
+ 9dc7a584db576910856ac7aa5cffbaeefe9cf427 819 hello_2.10.orig.tar.gz.asc
+ 82e477ec77f09bae910e53592d28319774754af6 12688 hello_2.10-3.debian.tar.xz
+Checksums-Sha256:
+ 31e066137a962676e89f69d1b65382de95a7ef7d914b8cb956f41ea72e0f516b 725946 hello_2.10.orig.tar.gz
+ 4ea69de913428a4034d30dcdcb34ab84f5c4a76acf9040f3091f0d3fac411b60 819 hello_2.10.orig.tar.gz.asc
+ f43ddcca8d7168c5d52b53e1f2a69b78f42f8387633ef8955edd0621c73cf65c 12688 hello_2.10-3.debian.tar.xz
+Files:
+ 6cd0ffea3884a4e79330338dcc2987d6 725946 hello_2.10.orig.tar.gz
+ e6074bb23a0f184e00fdfb5c546b3bc2 819 hello_2.10.orig.tar.gz.asc
+ 16678389ba7fddcdfa05e0707d61f043 12688 hello_2.10-3.debian.tar.xz

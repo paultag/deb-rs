@@ -1,0 +1,213 @@
+// Automatically generated from fixtures/rebuild.sh. Do not manually edit this
+// file.
+
+use super::common::*;
+
+test_good_apt_source!(
+    fixtures_unsigned_apt_sources_ubuntu_good,
+    include_bytes!("fixtures/unsigned/apt/sources/ubuntu.good")
+);
+test_good_apt_source_async!(
+    async_fixtures_unsigned_apt_sources_ubuntu_good,
+    include_bytes!("fixtures/unsigned/apt/sources/ubuntu.good")
+);
+test_bad_apt_source!(
+    fixtures_unsigned_apt_sources_weird_bad,
+    include_bytes!("fixtures/unsigned/apt/sources/weird.bad")
+);
+test_bad_apt_source_async!(
+    async_fixtures_unsigned_apt_sources_weird_bad,
+    include_bytes!("fixtures/unsigned/apt/sources/weird.bad")
+);
+test_good_dak_command!(
+    fixtures_unsigned_dak_command_break_the_archive_simple_good,
+    include_bytes!("fixtures/unsigned/dak/command/break-the-archive/simple.good")
+);
+test_good_dak_command_async!(
+    async_fixtures_unsigned_dak_command_break_the_archive_simple_good,
+    include_bytes!("fixtures/unsigned/dak/command/break-the-archive/simple.good")
+);
+test_bad_dak_command!(
+    fixtures_unsigned_dak_command_blank_bad,
+    include_bytes!("fixtures/unsigned/dak/command/blank.bad")
+);
+test_bad_dak_command_async!(
+    async_fixtures_unsigned_dak_command_blank_bad,
+    include_bytes!("fixtures/unsigned/dak/command/blank.bad")
+);
+test_good_dsc!(
+    fixtures_unsigned_package_dsc_hello_2_10_3_dsc_good,
+    include_bytes!("fixtures/unsigned/package/dsc/hello_2.10-3.dsc.good")
+);
+test_good_dsc_async!(
+    async_fixtures_unsigned_package_dsc_hello_2_10_3_dsc_good,
+    include_bytes!("fixtures/unsigned/package/dsc/hello_2.10-3.dsc.good")
+);
+test_good_dsc!(
+    fixtures_unsigned_package_dsc_gcc_14_14_2_0_9_dsc_good,
+    include_bytes!("fixtures/unsigned/package/dsc/gcc-14_14.2.0-9.dsc.good")
+);
+test_good_dsc_async!(
+    async_fixtures_unsigned_package_dsc_gcc_14_14_2_0_9_dsc_good,
+    include_bytes!("fixtures/unsigned/package/dsc/gcc-14_14.2.0-9.dsc.good")
+);
+test_bad_dsc!(
+    fixtures_unsigned_package_dsc_noversion_hello_2_10_3_dsc_bad,
+    include_bytes!("fixtures/unsigned/package/dsc/noversion-hello_2.10-3.dsc.bad")
+);
+test_bad_dsc_async!(
+    async_fixtures_unsigned_package_dsc_noversion_hello_2_10_3_dsc_bad,
+    include_bytes!("fixtures/unsigned/package/dsc/noversion-hello_2.10-3.dsc.bad")
+);
+test_good_changes!(
+    fixtures_unsigned_package_changes_udeb_wget_changes_good,
+    include_bytes!("fixtures/unsigned/package/changes/udeb-wget.changes.good")
+);
+test_good_changes_async!(
+    async_fixtures_unsigned_package_changes_udeb_wget_changes_good,
+    include_bytes!("fixtures/unsigned/package/changes/udeb-wget.changes.good")
+);
+test_good_changes!(
+    fixtures_unsigned_package_changes_hello_2_10_3_amd64_changes_good,
+    include_bytes!("fixtures/unsigned/package/changes/hello_2.10-3_amd64.changes.good")
+);
+test_good_changes_async!(
+    async_fixtures_unsigned_package_changes_hello_2_10_3_amd64_changes_good,
+    include_bytes!("fixtures/unsigned/package/changes/hello_2.10-3_amd64.changes.good")
+);
+test_bad_changes!(
+    fixtures_unsigned_package_changes_noversion_hello_2_10_3_amd64_changes_bad,
+    include_bytes!("fixtures/unsigned/package/changes/noversion-hello_2.10-3_amd64.changes.bad")
+);
+test_bad_changes_async!(
+    async_fixtures_unsigned_package_changes_noversion_hello_2_10_3_amd64_changes_bad,
+    include_bytes!("fixtures/unsigned/package/changes/noversion-hello_2.10-3_amd64.changes.bad")
+);
+test_good_binarycontrol!(
+    fixtures_unsigned_package_binarycontrol_cargo_1_82_0_dfsg1_2_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/cargo-1.82.0+dfsg1-2.good")
+);
+test_good_binarycontrol_async!(
+    async_fixtures_unsigned_package_binarycontrol_cargo_1_82_0_dfsg1_2_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/cargo-1.82.0+dfsg1-2.good")
+);
+test_good_binarycontrol!(
+    fixtures_unsigned_package_binarycontrol_hello_2_10_3_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/hello_2.10-3.good")
+);
+test_good_binarycontrol_async!(
+    async_fixtures_unsigned_package_binarycontrol_hello_2_10_3_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/hello_2.10-3.good")
+);
+test_good_binarycontrol!(
+    fixtures_unsigned_package_binarycontrol_hdparm_9_65_ds_1_1_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/hdparm-9.65+ds-1.1.good")
+);
+test_good_binarycontrol_async!(
+    async_fixtures_unsigned_package_binarycontrol_hdparm_9_65_ds_1_1_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/hdparm-9.65+ds-1.1.good")
+);
+test_good_binarycontrol!(
+    fixtures_unsigned_package_binarycontrol_udeb_cdrom_retriever_1_58_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/udeb-cdrom-retriever-1.58.good")
+);
+test_good_binarycontrol_async!(
+    async_fixtures_unsigned_package_binarycontrol_udeb_cdrom_retriever_1_58_good,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/udeb-cdrom-retriever-1.58.good")
+);
+test_bad_binarycontrol!(
+    fixtures_unsigned_package_binarycontrol_nopackage_hello_2_10_3_bad,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/nopackage-hello_2.10-3.bad")
+);
+test_bad_binarycontrol_async!(
+    async_fixtures_unsigned_package_binarycontrol_nopackage_hello_2_10_3_bad,
+    include_bytes!("fixtures/unsigned/package/binarycontrol/nopackage-hello_2.10-3.bad")
+);
+test_good_archive_release!(
+    fixtures_unsigned_archive_release_stable_release_good,
+    include_bytes!("fixtures/unsigned/archive/release/stable-release.good")
+);
+test_good_archive_release_async!(
+    async_fixtures_unsigned_archive_release_stable_release_good,
+    include_bytes!("fixtures/unsigned/archive/release/stable-release.good")
+);
+test_bad_archive_release!(
+    fixtures_unsigned_archive_release_stable_release_bad,
+    include_bytes!("fixtures/unsigned/archive/release/stable-release.bad")
+);
+test_bad_archive_release_async!(
+    async_fixtures_unsigned_archive_release_stable_release_bad,
+    include_bytes!("fixtures/unsigned/archive/release/stable-release.bad")
+);
+test_good_archive_package!(
+    fixtures_unsigned_archive_package_small_good,
+    include_bytes!("fixtures/unsigned/archive/package/small.good")
+);
+test_good_archive_package_async!(
+    async_fixtures_unsigned_archive_package_small_good,
+    include_bytes!("fixtures/unsigned/archive/package/small.good")
+);
+test_bad_archive_package!(
+    fixtures_unsigned_archive_package_small_bad,
+    include_bytes!("fixtures/unsigned/archive/package/small.bad")
+);
+test_bad_archive_package_async!(
+    async_fixtures_unsigned_archive_package_small_bad,
+    include_bytes!("fixtures/unsigned/archive/package/small.bad")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_rm_delayed_good,
+    include_bytes!("fixtures/unsigned/queued/rm-delayed.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_rm_delayed_good,
+    include_bytes!("fixtures/unsigned/queued/rm-delayed.good")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_reschedule_good,
+    include_bytes!("fixtures/unsigned/queued/reschedule.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_reschedule_good,
+    include_bytes!("fixtures/unsigned/queued/reschedule.good")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_multi_good,
+    include_bytes!("fixtures/unsigned/queued/multi.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_multi_good,
+    include_bytes!("fixtures/unsigned/queued/multi.good")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_rm_searchdirs_good,
+    include_bytes!("fixtures/unsigned/queued/rm-searchdirs.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_rm_searchdirs_good,
+    include_bytes!("fixtures/unsigned/queued/rm-searchdirs.good")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_rm_hello_good,
+    include_bytes!("fixtures/unsigned/queued/rm-hello.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_rm_hello_good,
+    include_bytes!("fixtures/unsigned/queued/rm-hello.good")
+);
+test_good_queued_command!(
+    fixtures_unsigned_queued_cancel_good,
+    include_bytes!("fixtures/unsigned/queued/cancel.good")
+);
+test_good_queued_command_async!(
+    async_fixtures_unsigned_queued_cancel_good,
+    include_bytes!("fixtures/unsigned/queued/cancel.good")
+);
+test_bad_queued_command!(
+    fixtures_unsigned_queued_empty_bad,
+    include_bytes!("fixtures/unsigned/queued/empty.bad")
+);
+test_bad_queued_command_async!(
+    async_fixtures_unsigned_queued_empty_bad,
+    include_bytes!("fixtures/unsigned/queued/empty.bad")
+);

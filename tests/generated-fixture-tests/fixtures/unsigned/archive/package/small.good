@@ -1,0 +1,53 @@
+Package: 1oom
+Version: 1.11-1
+Installed-Size: 1989
+Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34), libreadline8t64 (>= 6.0), libsamplerate0 (>= 0.1.7), libsdl2-2.0-0 (>= 2.0.18), libsdl2-mixer-2.0-0 (>= 2.6.0)
+Description: Master of Orion engine
+Homepage: https://kilgoretroutmaskreplicant.gitlab.io/plain-html/
+Description-md5: 5f91cd9d6749d593ed0c26e4ada69fa4
+Tag: uitoolkit::sdl
+Section: contrib/games
+Priority: optional
+Filename: pool/contrib/1/1oom/1oom_1.11-1_amd64.deb
+Size: 535696
+MD5sum: f58cdac8beef54050b9eefceebd1e9c4
+SHA256: c9a754ba0b271a9b3354364216fb6a68afff99dd10a04c882056bee63bee861e
+
+Package: alex4
+Source: alex4 (1.1-10)
+Version: 1.1-10+b2
+Installed-Size: 157
+Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+Architecture: amd64
+Depends: alex4-data (>= 1.1) | game-data-packager, libaldmb1t64, liballegro4.4t64 (>= 2:4.4.3.1), libc6 (>= 2.34), libdumb1t64
+Description: Alex the Allegator 4 - a retro platform game
+Homepage: https://allegator.sourceforge.net/
+Description-md5: 3566f87583f865118de0e26a364d6511
+Section: contrib/games
+Priority: optional
+Filename: pool/contrib/a/alex4/alex4_1.1-10+b2_amd64.deb
+Size: 61984
+MD5sum: 7a928ee87b952ed2957c184781ec5e3d
+SHA256: 07f81f533d678c857d05ddc8e887a3ded0b1a3288511964177e682d1b79d066b
+
+Package: alien-arena
+Version: 7.71.3+dfsg-3
+Installed-Size: 2332
+Maintainer: Debian Games Team <pkg-games-devel@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34), libcurl3-gnutls (>= 7.16.2), libfreetype6 (>= 2.3.5), libgcc-s1 (>= 3.0), libjpeg62-turbo (>= 1.3.1), libstdc++6 (>= 5), libvorbisfile3 (>= 1.1.2), libx11-6, libxxf86vm1, zlib1g (>= 1:1.1.4), libopenal1, alien-arena-data (>= 7.71.3~)
+Description: Standalone 3D first person online deathmatch shooter
+Homepage: https://martianbackup.com
+Description-md5: de2b3d0db5845c79b22ffc0c38842f1b
+Tag: game::fps, hardware::input:keyboard, hardware::input:mouse,
+ hardware::opengl, implemented-in::c, interface::3d,
+ interface::graphical, interface::x11, network::client, role::program,
+ uitoolkit::sdl, use::gameplaying, x11::application
+Section: contrib/games
+Priority: optional
+Filename: pool/contrib/a/alien-arena/alien-arena_7.71.3+dfsg-3_amd64.deb
+Size: 863156
+MD5sum: 049fbd4c75d1375b404b14c13a132840
+SHA256: 17cf3b0c5e008fcca690834a1398f6759f43f1c68dcd6aa534179d62e9dd25c8

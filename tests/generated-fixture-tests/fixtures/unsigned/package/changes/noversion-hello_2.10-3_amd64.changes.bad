@@ -1,0 +1,45 @@
+Format: 1.8
+Date: Mon, 26 Dec 2022 16:30:00 +0100
+Source: hello
+Binary: hello hello-dbgsym
+Architecture: source amd64
+Distribution: unstable
+Urgency: medium
+Maintainer: Santiago Vila <sanvila@debian.org>
+Changed-By: Santiago Vila <sanvila@debian.org>
+Description:
+ hello      - example package based on GNU hello
+Closes: 871622 893083
+Changes:
+ hello (2.10-3) unstable; urgency=medium
+ .
+   * Add some autopkgtests. Closes: #871622.
+   * Add Vcs-Git and Vcs-Browser fields to debian/control. Closes: #893083.
+   * Raise debhelper compat level from 9 to 13. This enables autoreconf,
+     and as a result, some additional build-dependencies are required:
+   - Add texinfo to Build-Depends, for a normal build.
+   - Add help2man to Build-Depends, for a build using git.
+   * Use secure URI in Homepage field.
+   * Set upstream metadata fields Bug-Submit, Name and Repository-Browse.
+   * Add upstream signing-key.
+   * Use a common debian/watch file which is valid for most GNU packages.
+   * Sort control fields using wrap-and-sort.
+   * Update standards version to 4.6.2.
+Checksums-Sha1:
+ 3214a02667118b856a6cf141a83104a2f7a9d49b 2095 hello_2.10-3.dsc
+ 82e477ec77f09bae910e53592d28319774754af6 12688 hello_2.10-3.debian.tar.xz
+ 98b4d0ac6df7a36dc24ae01209f4642135dd2e9e 36136 hello-dbgsym_2.10-3_amd64.deb
+ a58c2c5207b0ed72ec1f8817dfe4e48ac08bd686 8707 hello_2.10-3_amd64.buildinfo
+ 19c90c2be39acddeaf1819abf0ff59345958297b 53336 hello_2.10-3_amd64.deb
+Checksums-Sha256:
+ f41c2077bdef6243f6d9d717c74cded0372bb1957863fd6dfa4250e9db9e20eb 2095 hello_2.10-3.dsc
+ f43ddcca8d7168c5d52b53e1f2a69b78f42f8387633ef8955edd0621c73cf65c 12688 hello_2.10-3.debian.tar.xz
+ 6c3c5a25806fd22c9d457d922568226eee742cb6e9eccf9399bbd0f40ce6565f 36136 hello-dbgsym_2.10-3_amd64.deb
+ 90ef0f69ff71541c80e1f8d77608eb184090fa9e8bcb824cc6719963d51d8542 8707 hello_2.10-3_amd64.buildinfo
+ 947b543dae26719aa6b6aeb945a45d94399e99dfdd058daff4f6adbb767261ad 53336 hello_2.10-3_amd64.deb
+Files:
+ fad56359bd1c10ff617e888564c4668d 2095 devel optional hello_2.10-3.dsc
+ 16678389ba7fddcdfa05e0707d61f043 12688 devel optional hello_2.10-3.debian.tar.xz
+ 86b1d90c421b28cc003e498ca1aefaf4 36136 debug optional hello-dbgsym_2.10-3_amd64.deb
+ 2083422b42bc6b52c8acdedd14030bea 8707 devel optional hello_2.10-3_amd64.buildinfo
+ c88c961d89ee3916c05984741cae5426 53336 devel optional hello_2.10-3_amd64.deb

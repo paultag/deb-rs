@@ -1,0 +1,5 @@
+Enabled: yes
+Types: deb deb-src
+URIs: http://archive.ubuntu.com/ubuntu
+Suites: disco disco-updates disco-security disco-backports
+Components: main universe multiverse restricted

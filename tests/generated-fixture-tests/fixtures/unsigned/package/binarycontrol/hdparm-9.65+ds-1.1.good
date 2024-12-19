@@ -1,0 +1,18 @@
+Package: hdparm
+Version: 9.65+ds-1.1
+Installed-Size: 246
+Maintainer: Alexandre Mestiashvili <mestia@debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34)
+Recommends: powermgmt-base
+Description: tune hard disk parameters for high performance
+Homepage: http://sourceforge.net/projects/hdparm/
+Description-md5: 10cd5d89570f5496e89b163ae03a66e5
+Tag: admin::benchmarking, admin::hardware, hardware::storage,
+ implemented-in::c, interface::commandline, role::program
+Section: admin
+Priority: optional
+Filename: pool/main/h/hdparm/hdparm_9.65+ds-1.1_amd64.deb
+Size: 106696
+MD5sum: 3e0c38531e7a1c63964bc179488cf045
+SHA256: 22210a0fba8c711abfdb2416cd8ea6d62959ce3041b3f518c732934067592a0b

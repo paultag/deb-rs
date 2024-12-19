@@ -1,0 +1,49 @@
+Format: 1.8
+Date: Sat, 02 Jan 2021 11:58:25 +0100
+Source: wget
+Binary: wget wget-dbgsym wget-udeb
+Architecture: source amd64
+Version: 1.21-1
+Distribution: unstable
+Urgency: medium
+Maintainer: Noël Köthe <noel@debian.org>
+Changed-By: Noël Köthe <noel@debian.org>
+Description:
+ wget       - retrieves files from the web
+ wget-udeb  - retrieves files from the web (udeb)
+Closes: 928456 974997
+Changes:
+ wget (1.21-1) unstable; urgency=medium
+ .
+   * new upstream release from 2020-12-31
+   * raised Standard-Version, no changes needed
+   * raised debhelper-compat to 13 and removed debian/compat
+   * updated dependency to libidn2-dev closes: Bug#974997
+   * added parallel build patch. Thanks Steve! closes: Bug#928456
+Checksums-Sha1:
+ b85fc7d3fe397f94c3d6686811c4528deaa754e7 2147 wget_1.21-1.dsc
+ 267451bb8de36cc7ac9c7c0403b2dce8854c1d97 4866788 wget_1.21.orig.tar.gz
+ 24fe7630ac019e63cfc983843cc16be516fe9f1a 854 wget_1.21.orig.tar.gz.asc
+ d04bcf4d55ec2809c1c49de0560d91e0078f1640 60528 wget_1.21-1.debian.tar.xz
+ 4741d89f0f2012e3930452ece97c5cc36827e7cd 685824 wget-dbgsym_1.21-1_amd64.deb
+ 513c1dd263bd1a49984963b5ac583643790f2d1c 174728 wget-udeb_1.21-1_amd64.udeb
+ e83f6f00b06617785b1417087ae547907ddaae1d 7154 wget_1.21-1_amd64.buildinfo
+ dfe8ad2f80afbbc167acc8235ad25e75ba7dcaea 963696 wget_1.21-1_amd64.deb
+Checksums-Sha256:
+ 0f643c806036d3ed7367b4ac5333c3c6b30071786ae60d548db630c498e2789e 2147 wget_1.21-1.dsc
+ b3bc1a9bd0c19836c9709c318d41c19c11215a07514f49f89b40b9d50ab49325 4866788 wget_1.21.orig.tar.gz
+ da3a99b8a7bbaf70cc339593a9e0c2942dd673152bc7bfcf8f965ae1c06d50df 854 wget_1.21.orig.tar.gz.asc
+ efacd406cd2bca442e377d130195a36e72d9723932c2bdc69748d80acc21dbcd 60528 wget_1.21-1.debian.tar.xz
+ 0a829d8fa0c619e2852decff9421fa9f69995353aff749e9eeb1427e513062ff 685824 wget-dbgsym_1.21-1_amd64.deb
+ 95d56c65f9de34626400f66c482a27db5a2593544f014125efa48a55030ae68a 174728 wget-udeb_1.21-1_amd64.udeb
+ 1a8928edb31a2246821ffcac1fbc815508f58507868b5bcb3e9873fd0d18305b 7154 wget_1.21-1_amd64.buildinfo
+ 91504ccf54fcf00c37b804cd5c4333b286548785f3f5c4f3a1c7fb6076cc428b 963696 wget_1.21-1_amd64.deb
+Files:
+ b0b66523e8eee41681e98300e4494fbe 2147 web standard wget_1.21-1.dsc
+ 3852118b7a771a7c9c0388883c8f5dbf 4866788 web standard wget_1.21.orig.tar.gz
+ b1946da90b98cd8e0172d87cbf1e2b15 854 web standard wget_1.21.orig.tar.gz.asc
+ c97d9cff46365ce75013b087903f24b1 60528 web standard wget_1.21-1.debian.tar.xz
+ 5fecb7e10dcc74ddf3c569a4d1cbb295 685824 debug optional wget-dbgsym_1.21-1_amd64.deb
+ 10705d2e975f8b99a8738210a7c1ec74 174728 debian-installer optional wget-udeb_1.21-1_amd64.udeb
+ 77d0b9703dafd1163841f3cc208b0a1f 7154 web standard wget_1.21-1_amd64.buildinfo
+ 50468d7fc458ca1b53d9ea318cd6b7d0 963696 web standard wget_1.21-1_amd64.deb

@@ -1,0 +1,18 @@
+Package: cargo
+Source: rustc
+Version: 1.82.0+dfsg1-2
+Installed-Size: 18664
+Maintainer: Debian Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+Architecture: riscv64
+Depends: libc6 (>= 2.39), libcurl4t64 (>= 7.28.0), libgcc-s1 (>= 4.2), libgit2-1.8 (>= 1.8.1), libsqlite3-0 (>= 3.5.9), libssh2-1t64 (>= 1.2.5), libssl3t64 (>= 3.0.0), zlib1g (>= 1:1.2.3.4), rustc (= 1.82.0+dfsg1-2), binutils, gcc | clang | c-compiler
+Suggests: cargo-doc, python3
+Description: Rust package manager
+Multi-Arch: allowed
+Homepage: http://www.rust-lang.org/
+Description-md5: e3c7d8ff9b0415379acb83f0119168b0
+Section: rust
+Priority: optional
+Filename: pool/main/r/rustc/cargo_1.82.0+dfsg1-2_riscv64.deb
+Size: 5687316
+MD5sum: 5d6db6c5c651ebdf63e467c2ffcd4f78
+SHA256: d55cd074cf203b4a07a42c353e1fe5becdb063d2f30a5688cc5cf7f00e12c139
