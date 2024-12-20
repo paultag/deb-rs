@@ -72,10 +72,29 @@ pub enum OpenPgpValidatorError {
 }
 crate::errors::error_enum!(OpenPgpValidatorError);
 
+/// Wrapper type for a `Vec` of [Cert] and [Signature].
+pub type Signatures = Vec<(Cert, Signature)>;
+
 impl OpenPgpValidator {
     /// Return a new [OpenPgpValidatorBuilder].
     pub fn build() -> OpenPgpValidatorBuilder {
         Default::default()
+    }
+
+    /// Load the contents of the provided Read traited object into memory,
+    /// and run it through [Self::validate].
+    pub fn validate_reader<ReadT>(
+        &self,
+        mut message: ReadT,
+    ) -> Result<(Signatures, Cursor<Vec<u8>>), OpenPgpValidatorError>
+    where
+        ReadT: Read,
+    {
+        let mut bytes = vec![];
+        message
+            .read_to_end(&mut bytes)
+            .map_err(OpenPgpValidatorError::Io)?;
+        self.validate(&bytes)
     }
 
     /// Take some pile of bytes, and return the valid fingerprints, as well
@@ -84,15 +103,21 @@ impl OpenPgpValidator {
     /// This is a (very) high-level abstraction, so that we can change underlying
     /// OpenPgp implementation(s) as required down the road. We just want to
     /// give it some clearsigned text, and get back the valid signatures.
+    ///
+    /// Currently this has to load the whole file into memory. This sucks, but
+    /// it's an unfortunate reality; especially since we need to read the
+    /// whole file to validate (hash) it, this may be something we just need
+    /// to eat. This means we may want to do some sort of bounds checking before
+    /// we get here.
     pub fn validate(
         &self,
         message: &[u8],
-    ) -> Result<(Vec<(Cert, Signature)>, impl Read), OpenPgpValidatorError> {
+    ) -> Result<(Signatures, Cursor<Vec<u8>>), OpenPgpValidatorError> {
         let p = &StandardPolicy::new();
 
         struct Helper<'a> {
             validator: &'a OpenPgpValidator,
-            results: Vec<(Cert, Signature)>,
+            results: Signatures,
         }
 
         impl VerificationHelper for &mut Helper<'_> {
@@ -150,6 +175,34 @@ impl OpenPgpValidator {
         }
 
         Ok((results, Cursor::new(content)))
+    }
+}
+
+#[cfg(feature = "tokio")]
+mod _tokio {
+    #![cfg_attr(docsrs, doc(cfg(feature = "tokio")))]
+
+    use super::*;
+    use tokio::io::{AsyncRead, AsyncReadExt};
+
+    impl OpenPgpValidator {
+        /// Load the contents of the provided AsyncRead traited object into memory,
+        /// and run it through [Self::validate].
+        pub async fn validate_reader_async<ReadT>(
+            &self,
+            mut message: ReadT,
+        ) -> Result<(Vec<(Cert, Signature)>, Cursor<Vec<u8>>), OpenPgpValidatorError>
+        where
+            ReadT: AsyncRead,
+            ReadT: Unpin,
+        {
+            let mut bytes = vec![];
+            message
+                .read_to_end(&mut bytes)
+                .await
+                .map_err(OpenPgpValidatorError::Io)?;
+            self.validate(&bytes)
+        }
     }
 }
 
