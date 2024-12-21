@@ -661,7 +661,7 @@ mod chrono {
     /// releases at the time of this function call.
     ///
     /// ```
-    /// use deb::releases::supported_architectures;
+    /// use deb::release::supported_architectures;
     ///
     /// // Print all supported release multiarch tuples.
     /// println!("{}", supported_architectures()
