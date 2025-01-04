@@ -21,13 +21,16 @@
 use crate::{control::def_serde_traits_for, version::Version};
 use std::str::FromStr;
 
-///
+/// Source package name. This is used in places where a control file needs to
+/// refer back to a source package. If the version is specified, it means that
+/// the binary control files' version isn't the same as the source version it
+/// was built from.
 #[derive(Clone, Debug, PartialEq)]
 pub struct SourceName {
-    ///
+    /// Name of the source package.
     pub name: String,
 
-    ///
+    /// Version of the package that the binary was generated from.
     pub version: Option<Version>,
 }
 
@@ -49,13 +52,17 @@ impl std::fmt::Display for SourceName {
 /// package name.
 #[derive(Copy, Clone, Debug)]
 pub enum SourceNameError {
-    ///
+    /// Something was structured funny with the Source line
     Malformed,
-    ///
+
+    /// Version was malformed. Needs to be in the format of
+    /// `SOURCE-NAME (VERSION)` if the version is specified.
     BadVersion,
-    ///
+
+    /// Source is empty, which is invalid.
     Empty,
-    ///
+
+    /// Underlying issue parsing the Version
     VersionError(crate::version::Error),
 }
 
