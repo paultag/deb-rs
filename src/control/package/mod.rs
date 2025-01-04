@@ -27,6 +27,7 @@ mod dsc;
 mod file;
 mod package_list;
 mod source_control;
+mod source_name;
 
 pub use binary_control::BinaryControl;
 pub use buildinfo::Buildinfo;
@@ -35,5 +36,6 @@ pub use dsc::{Dsc, DscParseError};
 pub use file::File;
 pub use package_list::PackageList;
 pub use source_control::SourceControl;
+pub use source_name::{SourceName, SourceNameError};
 
 // vim: foldmethod=marker

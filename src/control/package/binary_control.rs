@@ -18,8 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::control::{Number, Priority};
-use crate::{architecture::Architecture, dependency::Dependency, version::Version};
+use super::SourceName;
+use crate::{
+    architecture::Architecture,
+    control::{Number, Priority},
+    dependency::Dependency,
+    version::Version,
+};
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};
@@ -35,7 +40,7 @@ pub struct BinaryControl {
 
     /// The value of this field determines the package name, and is used to
     /// generate file names by most installation tools.
-    pub source: Option<String>,
+    pub source: Option<SourceName>,
 
     /// Typically, this is the original package's [Version] number in whatever
     /// form the program's author uses. It may also include a Debian revision

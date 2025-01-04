@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::File;
+use super::{File, SourceName};
 use crate::{
     build_profile::BuildProfile,
     control::{
@@ -105,7 +105,7 @@ pub struct Changes {
     /// `source-version` in parenthesis. This can happen when the upload is
     /// a binary-only non-maintainer upload.
     #[cfg_attr(feature = "serde", serde(rename = "Source"))]
-    pub source: String,
+    pub source: SourceName,
 
     /// This folded field is a space-separated list of binary packages to
     /// upload. If the upload is source-only, then the field is omitted
@@ -286,7 +286,7 @@ Files:
 
             let changes: Changes = control::de::from_reader(&mut reader).unwrap();
 
-            assert_eq!("hello", changes.source);
+            assert_eq!("hello", changes.source.name);
             assert_eq!(2, changes.binary.unwrap().len());
             assert_eq!(2, changes.architecture.len());
             assert_eq!(
