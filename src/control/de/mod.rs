@@ -262,7 +262,7 @@ mod _tokio {
         _t: PhantomData<T>,
     }
 
-    impl<'a, 'de, T, ReadT> AsyncControlIterator<'a, 'de, T, ReadT>
+    impl<'de, T, ReadT> AsyncControlIterator<'_, 'de, T, ReadT>
     where
         ReadT: AsyncRead,
         ReadT: Unpin,

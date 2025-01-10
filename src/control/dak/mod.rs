@@ -143,7 +143,7 @@ mod _serde {
 
         impl Command {
             /// Parse a [Command] from a [tokio::io::AsyncRead] traited object.
-            pub async fn from_reader_async<'de, ReadT>(
+            pub async fn from_reader_async<ReadT>(
                 read: &mut BufReader<ReadT>,
             ) -> Result<Command, CommandError>
             where
