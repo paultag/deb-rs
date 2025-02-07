@@ -33,6 +33,7 @@
 //!
 //! | Name         | Version |
 //! | ------------ | ------- |
+//! | [DUKE]       | 15      |
 //! | [FORKY]      | 14      |
 //! | [TRIXIE]     | 13      |
 //! | [BOOKWORM]   | 12      |
@@ -509,7 +510,18 @@ pub const TRIXIE: Release = Release {
 /// Debian 14, Forky
 pub const FORKY: Release = Release {
     name: cow!("forky"),
-    version: cow!("13"),
+    version: cow!("14"),
+    released_on: None,
+    eol_on: None,
+
+    // nothing is known until it releases.
+    architectures: cow!(&[]),
+};
+
+/// Debian 15, Duke
+pub const DUKE: Release = Release {
+    name: cow!("duke"),
+    version: cow!("15"),
     released_on: None,
     eol_on: None,
 
