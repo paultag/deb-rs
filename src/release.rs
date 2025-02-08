@@ -558,7 +558,7 @@ pub const DUKE: Release = Release {
 // get that going after this!
 
 /// All Debian releases, historical, active and future, newest first.
-pub const RELEASES: [Release; 19] = [
+pub const RELEASES: [Release; 20] = [
     DUKE, FORKY, TRIXIE, BOOKWORM, BULLSEYE, BUSTER, STRETCH, JESSIE, WHEEZY, SQUEEZE, LENNY, ETCH,
     SARGE, WOODY, POTATO, SLINK, HAMM, BO, REX, BUZZ,
 ];
