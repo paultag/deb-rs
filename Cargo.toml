@@ -1,6 +1,6 @@
 [package]
 name = "deb"
-version = "0.5.14"
+version = "0.5.15"
 edition = "2021"
 authors = ["Paul Tagliamonte <paultag@debian.org>"]
 license = "MIT"
