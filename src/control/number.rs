@@ -79,7 +79,7 @@ where
 #[cfg(feature = "serde")]
 mod serde {
     use super::Number;
-    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
 
     impl<InnerT> Serialize for Number<InnerT>
     where

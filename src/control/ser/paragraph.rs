@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::Error;
-use serde::{ser, Serialize};
+use serde::{Serialize, ser};
 
 #[derive(Clone, Default)]
 pub(super) struct Serializer {

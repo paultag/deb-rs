@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{pest::Rule, Error};
+use super::{Error, pest::Rule};
 use crate::architecture::Architecture;
 use pest::iterators::Pair;
 
@@ -138,11 +138,7 @@ impl ArchConstraint {
     pub fn matches(&self, arch: &Architecture) -> bool {
         let matched = arch.is(&self.arch);
 
-        if self.negated {
-            !matched
-        } else {
-            matched
-        }
+        if self.negated { !matched } else { matched }
     }
 }
 

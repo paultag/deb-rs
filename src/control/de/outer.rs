@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{paragraph, Error};
+use super::{Error, paragraph};
 use serde::{
     de::{self, Visitor},
     forward_to_deserialize_any,

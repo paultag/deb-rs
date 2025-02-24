@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::pest::{Deb822Parser, Rule};
-use pest::{error::Error as PestError, iterators::Pair, Parser};
+use pest::{Parser, error::Error as PestError, iterators::Pair};
 
 /// [RawParagraph] contains all the raw, unprocessed and fully stringified
 /// [RawField] values from the underlying document. It is possible to construct

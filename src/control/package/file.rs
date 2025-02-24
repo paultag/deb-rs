@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::ChangesParseError;
-use crate::control::{def_serde_traits_for, DigestMd5, Priority};
+use crate::control::{DigestMd5, Priority, def_serde_traits_for};
 use std::str::FromStr;
 
 /// [File] is a specific File  referenced by the

@@ -19,11 +19,11 @@
 // THE SOFTWARE. }}}
 
 use super::{
-    pest::{DependencyParser, Rule},
     Relation,
+    pest::{DependencyParser, Rule},
 };
 use crate::{architecture, build_profile, version};
-use pest::{error::Error as PestError, iterators::Pair, Parser};
+use pest::{Parser, error::Error as PestError, iterators::Pair};
 use std::str::FromStr;
 
 /// A [Dependency] is a set of constraints which must be met in order to
@@ -164,7 +164,7 @@ impl FromStr for Dependency {
 #[cfg(feature = "serde")]
 mod serde {
     use super::Dependency;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl Serialize for Dependency {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

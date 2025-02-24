@@ -213,11 +213,13 @@ Signed-By:
  -----END PGP PUBLIC KEY BLOCK-----
 ",
             |sources| {
-                assert!(sources
-                    .signed_by
-                    .unwrap()
-                    .trim()
-                    .starts_with("-----BEGIN PGP PUBLIC KEY BLOCK-----"));
+                assert!(
+                    sources
+                        .signed_by
+                        .unwrap()
+                        .trim()
+                        .starts_with("-----BEGIN PGP PUBLIC KEY BLOCK-----")
+                );
             }
         );
 

@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::DscParseError;
-use crate::control::{def_serde_traits_for, Priority};
+use crate::control::{Priority, def_serde_traits_for};
 use std::str::FromStr;
 
 // TODO:

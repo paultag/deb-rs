@@ -107,9 +107,11 @@ mod chrono {
 
         #[test]
         fn test_date_time_chrono_wont_parse() {
-            assert!("Tue, 26 Dec 2022 16:30:00 +0100"
-                .parse::<DateTime2822>()
-                .is_err());
+            assert!(
+                "Tue, 26 Dec 2022 16:30:00 +0100"
+                    .parse::<DateTime2822>()
+                    .is_err()
+            );
         }
     }
 }
