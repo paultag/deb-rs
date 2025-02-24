@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{pest::Rule, Error, Package};
+use super::{Error, Package, pest::Rule};
 use pest::iterators::Pair;
 
 /// A [Relation] is a set of [Package] values, any one of which will

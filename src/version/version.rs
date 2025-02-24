@@ -275,7 +275,7 @@ impl std::fmt::Display for Version {
 #[cfg(feature = "serde")]
 mod serde {
     use super::Version;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl Serialize for Version {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -499,7 +499,10 @@ mod test {
         );
     }
 
-    check_fuzz_regression!(long_number, "100:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222221~~~~~~~~~~~~~~~~~1~1~0");
+    check_fuzz_regression!(
+        long_number,
+        "100:222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222221~~~~~~~~~~~~~~~~~1~1~0"
+    );
 }
 
 // vim: foldmethod=marker

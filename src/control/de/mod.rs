@@ -34,7 +34,7 @@ use std::{
 use crate::control::openpgp::{self, OpenPgpValidatorError};
 
 #[cfg(feature = "sequoia")]
-use sequoia_openpgp::{packet::Signature, Cert};
+use sequoia_openpgp::{Cert, packet::Signature};
 
 #[cfg(feature = "sequoia")]
 use std::path::Path;
@@ -375,7 +375,7 @@ Hello: Me
 }
 
 #[cfg(feature = "tokio")]
-pub use _tokio::{from_reader_async, from_reader_async_iter, AsyncControlIterator};
+pub use _tokio::{AsyncControlIterator, from_reader_async, from_reader_async_iter};
 
 /// Check the signature of a clearsigned OpenPGP signature against the provided
 /// keyring, and if the signature is good, parse and return the signed

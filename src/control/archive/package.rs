@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use crate::control::{package, DigestMd5, DigestSha256};
+use crate::control::{DigestMd5, DigestSha256, package};
 
 #[cfg(feature = "serde")]
 use ::serde::{Deserialize, Serialize};

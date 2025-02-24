@@ -247,7 +247,7 @@ mod test {
 #[cfg(feature = "serde")]
 mod serde {
     use super::BuildProfile;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl Serialize for BuildProfile {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

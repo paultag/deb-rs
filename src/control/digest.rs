@@ -133,7 +133,7 @@ mod hex {
 #[cfg(feature = "serde")]
 mod serde {
     use super::Digest;
-    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
 
     impl<const HASH_LEN: usize> Serialize for Digest<HASH_LEN> {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

@@ -28,7 +28,7 @@ mod tests {
     use super::Architectures;
     use crate::{
         architecture::{self, Architecture},
-        control::{def_failing_parse_test, def_parse_test, Delimited},
+        control::{Delimited, def_failing_parse_test, def_parse_test},
     };
 
     def_parse_test!(

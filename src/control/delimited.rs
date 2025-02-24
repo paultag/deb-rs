@@ -95,7 +95,7 @@ where
 #[cfg(feature = "serde")]
 mod serde {
     use super::Delimited;
-    use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
 
     impl<const DELIM: char, InnerT> Serialize for Delimited<DELIM, InnerT>
     where
@@ -124,7 +124,7 @@ mod serde {
 #[cfg(test)]
 mod tests {
     use super::{CommaDelimitedStrings, SpaceDelimitedStrings};
-    use crate::control::{def_parse_test, Delimited};
+    use crate::control::{Delimited, def_parse_test};
 
     def_parse_test!(
         space_parse_empty,

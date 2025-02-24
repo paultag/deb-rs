@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE. }}}
 
-use super::{pest::Rule, Error};
+use super::{Error, pest::Rule};
 use crate::version::Version;
 use pest::iterators::Pair;
 

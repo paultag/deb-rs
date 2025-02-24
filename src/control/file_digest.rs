@@ -113,7 +113,7 @@ impl<const HASH_LEN: usize> FromStr for FileDigest<HASH_LEN> {
 #[cfg(feature = "serde")]
 mod serde {
     use super::FileDigest;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl<const HASH_LEN: usize> Serialize for FileDigest<HASH_LEN> {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

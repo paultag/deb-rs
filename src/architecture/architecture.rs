@@ -156,7 +156,7 @@ impl Architecture {
 #[cfg(feature = "serde")]
 mod serde {
     use super::*;
-    use ::serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use ::serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl Serialize for Architecture {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

@@ -19,7 +19,7 @@
 // THE SOFTWARE. }}}
 
 use super::{
-    pest::Rule, ArchConstraints, BuildProfileRestrictionFormula, Error, VersionConstraint,
+    ArchConstraints, BuildProfileRestrictionFormula, Error, VersionConstraint, pest::Rule,
 };
 use crate::architecture::Architecture;
 use pest::iterators::Pair;

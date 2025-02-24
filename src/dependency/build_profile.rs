@@ -19,12 +19,12 @@
 // THE SOFTWARE. }}}
 
 use super::{
-    pest::{DependencyParser, Rule},
     Error,
+    pest::{DependencyParser, Rule},
 };
 use crate::build_profile::BuildProfile;
-use pest::iterators::Pair;
 use pest::Parser;
+use pest::iterators::Pair;
 use std::str::FromStr;
 
 /// A [BuildProfileConstraint] limits a [crate::dependency::Package] to only be
@@ -207,11 +207,7 @@ impl BuildProfileConstraint {
     pub fn matches(&self, build_profile: &BuildProfile) -> bool {
         let matches = self.build_profile == *build_profile;
 
-        if self.negated {
-            !matches
-        } else {
-            matches
-        }
+        if self.negated { !matches } else { matches }
     }
 }
 
@@ -264,7 +260,7 @@ mod tests {
 #[cfg(feature = "serde")]
 mod serde {
     use super::BuildProfileRestrictionFormula;
-    use serde::{de::Error as DeError, Deserialize, Deserializer, Serialize, Serializer};
+    use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error as DeError};
 
     impl Serialize for BuildProfileRestrictionFormula {
         fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

@@ -23,7 +23,7 @@ macro_rules! def_serde_traits_for {
         #[cfg(feature = "serde")]
         mod serde {
             use super::$type;
-            use serde::{de::Error, Deserialize, Deserializer, Serialize, Serializer};
+            use serde::{Deserialize, Deserializer, Serialize, Serializer, de::Error};
 
             impl Serialize for $type {
                 fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
