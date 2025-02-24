@@ -154,7 +154,7 @@ impl TryFrom<Pair<'_, Rule>> for Package {
                         ret.build_profile_restriction_formula = Some(Default::default());
                     }
 
-                    let Some(ref mut bprf) = &mut ret.build_profile_restriction_formula else {
+                    let Some(bprf) = &mut ret.build_profile_restriction_formula else {
                         unreachable!();
                     };
 
