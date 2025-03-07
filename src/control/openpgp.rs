@@ -24,14 +24,14 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "sequoia")))]
 
 use sequoia_openpgp::{
+    Cert, Fingerprint, KeyHandle, Result as SequoiaResult,
     cert::CertParser,
     packet::Signature,
     parse::{
-        stream::{MessageLayer, MessageStructure, VerificationHelper, VerifierBuilder},
         Parse,
+        stream::{MessageLayer, MessageStructure, VerificationHelper, VerifierBuilder},
     },
     policy::StandardPolicy,
-    Cert, Fingerprint, KeyHandle, Result as SequoiaResult,
 };
 use std::{
     collections::HashMap,
