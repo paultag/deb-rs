@@ -24,14 +24,14 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "sequoia")))]
 
 use sequoia_openpgp::{
-    Cert, Fingerprint, KeyHandle, Result as SequoiaResult,
     cert::CertParser,
     packet::Signature,
     parse::{
-        Parse,
         stream::{MessageLayer, MessageStructure, VerificationHelper, VerifierBuilder},
+        Parse,
     },
     policy::StandardPolicy,
+    Cert, Fingerprint, KeyHandle, Result as SequoiaResult,
 };
 use std::{
     collections::HashMap,
@@ -231,7 +231,7 @@ impl OpenPgpValidatorBuilder {
                     let cert = cert.map_err(OpenPgpValidatorError::Sequoia)?;
                     keys.insert(cert.fingerprint(), cert.clone());
                     for key in cert.keys() {
-                        keys.insert(key.fingerprint(), cert.clone());
+                        keys.insert(key.key().fingerprint(), cert.clone());
                     }
                 }
             }
