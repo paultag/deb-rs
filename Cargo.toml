@@ -29,7 +29,7 @@ tokio = ["dep:tokio"]
 anyhow = { version = "1.0", optional = true }
 chrono = { version = "0.4", optional = true, features = ["serde"] }
 hex = { version = "0.4", optional = true, features = ["serde"] }
-pest = "2.7"
+pest = "2.8"
 pest_derive = "2.7"
 
 # We want rust crypto. The upside way outweighs the downside. We only
