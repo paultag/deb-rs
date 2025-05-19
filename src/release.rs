@@ -502,9 +502,17 @@ pub const TRIXIE: Release = Release {
     released_on: None,
     eol_on: None,
 
-    // nothing is known until it releases. This one should have riscv64,
-    // though!
-    architectures: cow!(&[]),
+    architectures: cow!(&[
+        architecture::AMD64,
+        architecture::ARM64,
+        architecture::ARMEL,
+        architecture::ARMHF,
+        architecture::I386,
+        architecture::MIPSEL,
+        architecture::PPC64EL,
+        architecture::RISCV64,
+        architecture::S390X,
+    ]),
 };
 
 /// Debian 14, Forky
