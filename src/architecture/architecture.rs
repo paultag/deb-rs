@@ -602,7 +602,7 @@ arch_table!(
     (
         "mips64el",
         mips64el,
-        "Debian's `mips64el` arch. First supported in Debian 9",
+        "Debian's `mips64el` arch. Last supported in Debian 13",
         MIPS64EL,
         simple_architecture_tuple!("abi64", "gnu", "linux", "mips64el"),
         simple_multiarch!(Mips64el - Linux - "gnuabi64")
