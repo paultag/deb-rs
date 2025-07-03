@@ -163,7 +163,7 @@ impl std::fmt::Display for BuildProfileRestrictionFormula {
             "{}",
             self.build_profile_constraints
                 .iter()
-                .map(|v| format!("<{}>", v))
+                .map(|v| format!("<{v}>"))
                 .collect::<Vec<_>>()
                 .join(" ")
         )
@@ -274,7 +274,7 @@ mod serde {
     impl<'de> Deserialize<'de> for BuildProfileRestrictionFormula {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
-            s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
+            s.parse().map_err(|e| D::Error::custom(format!("{e:?}")))
         }
     }
 

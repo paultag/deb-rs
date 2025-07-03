@@ -127,7 +127,7 @@ mod serde {
     impl<'de, const HASH_LEN: usize> Deserialize<'de> for FileDigest<HASH_LEN> {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
-            s.parse().map_err(|e| D::Error::custom(format!("{:?}", e)))
+            s.parse().map_err(|e| D::Error::custom(format!("{e:?}")))
         }
     }
 }

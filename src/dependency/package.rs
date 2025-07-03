@@ -94,7 +94,7 @@ impl std::fmt::Display for Package {
         write!(f, "{}", self.name)?;
 
         if let Some(arch) = &self.arch {
-            write!(f, ":{}", arch)?;
+            write!(f, ":{arch}")?;
         }
 
         if let Some(version_constraint) = &self.version_constraint {
@@ -106,12 +106,12 @@ impl std::fmt::Display for Package {
         }
 
         if let Some(arch_constraints) = &self.arch_constraints {
-            write!(f, " [{}]", arch_constraints)?;
+            write!(f, " [{arch_constraints}]")?;
         }
 
         if let Some(bprf) = &self.build_profile_restriction_formula {
             for build_profile_constraints in &bprf.build_profile_constraints {
-                write!(f, " <{}>", build_profile_constraints)?;
+                write!(f, " <{build_profile_constraints}>")?;
             }
         }
 

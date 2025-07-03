@@ -47,13 +47,13 @@ impl std::fmt::Display for Action {
             "{}",
             match self {
                 Self::Cancel(path) => {
-                    format!("cancel {}", path)
+                    format!("cancel {path}")
                 }
                 Self::Reschedule(arg) => {
-                    format!("reschedule {}", arg)
+                    format!("reschedule {arg}")
                 }
                 Self::Rm(args) => {
-                    format!("rm {}", args)
+                    format!("rm {args}")
                 }
                 Self::Unknown(unk) => {
                     unk.clone()
