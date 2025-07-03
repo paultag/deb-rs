@@ -148,7 +148,7 @@ mod serde {
         fn deserialize<D: Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
             let s = String::deserialize(d)?;
             s.parse::<Digest<HASH_LEN>>()
-                .map_err(|e| D::Error::custom(format!("{:?}", e)))
+                .map_err(|e| D::Error::custom(format!("{e:?}")))
         }
     }
 }

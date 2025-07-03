@@ -43,7 +43,7 @@ impl std::error::Error for Error {}
 
 impl std::fmt::Display for Error {
     fn fmt(&self, w: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(w, "{:?}", self)
+        write!(w, "{self:?}")
     }
 }
 

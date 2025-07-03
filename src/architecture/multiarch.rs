@@ -411,9 +411,9 @@ impl std::fmt::Display for Tuple {
             f,
             "{}",
             if abi == userland {
-                format!("{}-{}", isa, abi)
+                format!("{isa}-{abi}")
             } else {
-                format!("{}-{}-{}", isa, abi, userland)
+                format!("{isa}-{abi}-{userland}")
             }
         )
     }
