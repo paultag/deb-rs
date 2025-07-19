@@ -956,6 +956,46 @@ mod test {
         // but, "linux-any" is matched by "any"
         assert!(linux_any.is(&ANY));
     }
+
+    #[test]
+    fn test_against_tupletable() {
+        use std::{
+            fs::File,
+            io::{BufRead, BufReader},
+        };
+
+        let lines = BufReader::new(match File::open("/usr/share/dpkg/tupletable") {
+            Ok(fd) => fd,
+            Err(_e) => {
+                // skip if it's not on the system
+                return;
+            }
+        })
+        .lines();
+
+        for line in lines {
+            let line = line.unwrap();
+            let line = line.trim();
+
+            if line.starts_with("#") {
+                continue;
+            }
+            if line.is_empty() {
+                continue;
+            }
+
+            let line = line.replace("<cpu>", "foo");
+            let tuples: [&str; 2] = line
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap();
+            let [long, short] = tuples;
+
+            let arch = long.parse::<Architecture>().unwrap();
+            assert_eq!(short, arch.to_string());
+        }
+    }
 }
 
 // vim: foldmethod=marker
