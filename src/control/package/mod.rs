@@ -23,6 +23,7 @@
 mod binary_control;
 mod buildinfo;
 mod changes;
+mod common_source_control;
 mod dsc;
 mod file;
 mod package_list;
@@ -32,6 +33,7 @@ mod source_name;
 pub use binary_control::BinaryControl;
 pub use buildinfo::Buildinfo;
 pub use changes::{Changes, ChangesParseError};
+pub use common_source_control::CommonSourceControl;
 pub use dsc::{Dsc, DscParseError};
 pub use file::File;
 pub use package_list::PackageList;
