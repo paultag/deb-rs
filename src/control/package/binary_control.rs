@@ -94,6 +94,9 @@ pub struct BinaryControl {
     /// package.
     pub suggests: Option<Dependency>,
 
+    /// Virtual packages this package provides.
+    pub provides: Option<Dependency>,
+
     /// Packages that were used to produce this binary file.
     ///
     /// This is used from within the archive to ensure that source packages
