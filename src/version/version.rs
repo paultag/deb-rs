@@ -147,10 +147,10 @@ impl Version {
 
     /// Check that the version is permissible.
     fn check(&self) -> Result<(), Error> {
-        if let Some(ch) = self.upstream_version.chars().next() {
-            if !ch.is_ascii_digit() {
-                return Err(Error::InvalidUpstreamVersion);
-            }
+        if let Some(ch) = self.upstream_version.chars().next()
+            && !ch.is_ascii_digit()
+        {
+            return Err(Error::InvalidUpstreamVersion);
         }
         for ch in self.upstream_version.chars() {
             if ch.is_ascii_lowercase()
