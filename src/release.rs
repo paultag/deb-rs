@@ -499,16 +499,13 @@ pub const BOOKWORM: Release = Release {
 pub const TRIXIE: Release = Release {
     name: cow!("trixie"),
     version: cow!("13"),
-    released_on: None,
-    eol_on: None,
+    released_on: date!(2025 / 8 / 9),
+    eol_on: date!(2028 / 08 / 9),
 
     architectures: cow!(&[
         architecture::AMD64,
         architecture::ARM64,
-        architecture::ARMEL,
         architecture::ARMHF,
-        architecture::I386,
-        architecture::MIPSEL,
         architecture::PPC64EL,
         architecture::RISCV64,
         architecture::S390X,
