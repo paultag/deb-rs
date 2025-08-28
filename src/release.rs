@@ -500,7 +500,7 @@ pub const TRIXIE: Release = Release {
     name: cow!("trixie"),
     version: cow!("13"),
     released_on: date!(2025 / 8 / 9),
-    eol_on: date!(2028 / 08 / 9),
+    eol_on: date!(2028 / 8 / 9),
 
     architectures: cow!(&[
         architecture::AMD64,
