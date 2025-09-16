@@ -60,13 +60,13 @@ impl Dependency {
 
     /// Remove any [Package] which is not considered for the desired
     /// [BuildProfile] `profile`.
-    pub fn filter_for_build_profile(&self, profile: &BuildProfile) -> Self {
+    pub fn filter_for_build_profiles(&self, profiles: &[BuildProfile]) -> Self {
         self.filter(|package| {
             let Some(ref bprf) = package.build_profile_restriction_formula else {
                 // if this isn't arch constrained, we are valid.
                 return true;
             };
-            bprf.matches(profile)
+            bprf.matches(profiles)
         })
     }
 }
@@ -173,28 +173,28 @@ mod tests {
         filter_nodoc_nothing,
         "foo, bar | baz",
         "foo, bar | baz",
-        |dep| { dep.filter_for_build_profile(&BuildProfile::NoDoc) }
+        |dep| { dep.filter_for_build_profiles(&[BuildProfile::NoDoc]) }
     );
 
     def_filter_test!(
         filter_nodoc_nodoc,
         "foo, bar | baz <!nodoc>",
         "foo, bar",
-        |dep| { dep.filter_for_build_profile(&BuildProfile::NoDoc) }
+        |dep| { dep.filter_for_build_profiles(&[BuildProfile::NoDoc]) }
     );
 
     def_filter_test!(
         filter_nodoc_nodoc2,
         "foo, bar | baz <!nodoc> <!cross>",
         "foo, bar",
-        |dep| { dep.filter_for_build_profile(&BuildProfile::NoDoc) }
+        |dep| { dep.filter_for_build_profiles(&[BuildProfile::NoDoc]) }
     );
 
     def_filter_test!(
         filter_nodoc_positive,
         "foo, bar <nodoc> | baz",
         "foo, bar <nodoc> | baz",
-        |dep| { dep.filter_for_build_profile(&BuildProfile::NoDoc) }
+        |dep| { dep.filter_for_build_profiles(&[BuildProfile::NoDoc]) }
     );
 }
 

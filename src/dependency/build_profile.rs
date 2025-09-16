@@ -212,19 +212,21 @@ impl BuildProfileConstraint {
 }
 
 impl BuildProfileConstraints {
-    /// Return true if the provided [BuildProfile] meets ANY of the
-    /// requirements in this set of [BuildProfileConstraints].
-    pub fn matches(&self, build_profile: &BuildProfile) -> bool {
-        self.build_profiles
-            .iter()
-            .any(|bp| bp.matches(build_profile))
+    /// Return true if ALL of the provided [BuildProfile]s meets ANY of
+    /// the requirements in this set of [BuildProfileConstraints].
+    pub fn matches(&self, build_profiles: &[BuildProfile]) -> bool {
+        self.build_profiles.iter().any(|bpc| {
+            // for each build profile constraint, we need to check
+            // to see if all of the provided profiles match this
+            build_profiles.iter().all(|bp| bpc.matches(bp))
+        })
     }
 }
 
 impl BuildProfileRestrictionFormula {
-    /// Return true if the provided [BuildProfile] meets ALL of the
+    /// Return true if ALL the provided [BuildProfile]s meet ALL of the
     /// [BuildProfileConstraints].
-    pub fn matches(&self, build_profile: &BuildProfile) -> bool {
+    pub fn matches(&self, build_profile: &[BuildProfile]) -> bool {
         self.build_profile_constraints
             .iter()
             .all(|bpc| bpc.matches(build_profile))
@@ -251,9 +253,26 @@ mod tests {
         let nocheck: BuildProfile = "nocheck".parse().unwrap();
         let nodoc: BuildProfile = "nodoc".parse().unwrap();
 
-        assert!(!bprf.matches(&cross));
-        assert!(!bprf.matches(&nocheck));
-        assert!(bprf.matches(&nodoc));
+        assert!(!bprf.matches(&[cross]));
+        assert!(!bprf.matches(&[nocheck]));
+        assert!(bprf.matches(&[nodoc]));
+    }
+
+    #[test]
+    fn test_build_profile_muiltiple() {
+        let bprf: BuildProfileRestrictionFormula = "<!cross !nodoc>".parse().unwrap();
+
+        assert!(!bprf.matches(&[BuildProfile::Cross, BuildProfile::NoDoc]));
+        assert!(bprf.matches(&[BuildProfile::NoDoc]));
+        assert!(bprf.matches(&[BuildProfile::Cross]));
+
+        let bprf: BuildProfileRestrictionFormula = "<!cross !nodoc> <!nogolang>".parse().unwrap();
+
+        assert!(!bprf.matches(&[BuildProfile::Cross, BuildProfile::NoDoc]));
+        assert!(bprf.matches(&[BuildProfile::NoDoc]));
+        assert!(bprf.matches(&[BuildProfile::Cross]));
+
+        assert!(!bprf.matches(&[BuildProfile::NoGolang]));
     }
 }
 
