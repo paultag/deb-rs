@@ -242,11 +242,7 @@ impl Iterator for VersionCompareIterator<'_> {
         let in_string = self.in_string;
 
         let mut matched = String::new();
-        loop {
-            let Some(ch) = lch else {
-                break;
-            };
-
+        while let Some(ch) = lch {
             let is_digit = is_version_digit(ch);
             let is_string = is_version_string(ch);
 
