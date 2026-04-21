@@ -127,15 +127,14 @@ where
                 }
                 return from_str(&buf);
             }
-            1 => {
+            1
                 // if we pushed back a single char
-                if buf.ends_with('\n') && !buf.trim().is_empty() {
+                if buf.ends_with('\n') && !buf.trim().is_empty() => {
                     // if we pushed a newline and we have something other than
                     // whitespace, lets go and decode. Otherwise we're still
                     // in the leadup maybe.
                     return from_str(&buf);
                 }
-            }
             _ => {}
         }
     }
@@ -218,15 +217,14 @@ mod _tokio {
                     }
                     return from_str(&buf);
                 }
-                1 => {
+                1
                     // if we pushed back a single char
-                    if buf.ends_with('\n') && !buf.trim().is_empty() {
+                    if buf.ends_with('\n') && !buf.trim().is_empty() => {
                         // if we pushed a newline and we have something other than
                         // whitespace, lets go and decode. Otherwise we're still
                         // in the leadup maybe.
                         return from_str(&buf);
                     }
-                }
                 _ => {}
             }
         }
