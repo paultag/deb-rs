@@ -61,8 +61,7 @@ where
         write!(
             f,
             "{}",
-            &self
-                .0
+            self.0
                 .iter()
                 .map(|v| v.to_string())
                 .collect::<Vec<_>>()

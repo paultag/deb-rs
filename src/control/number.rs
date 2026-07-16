@@ -60,7 +60,7 @@ where
     InnerT: std::fmt::Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
-        write!(f, "{}", &self.0)
+        write!(f, "{}", self.0)
     }
 }
 
